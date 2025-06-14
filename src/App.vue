@@ -8,6 +8,11 @@ const contentText = '你想要了解更多关于我的项目吗>_< ...'
 const snowflakes = ref([])
 const stars = ref([])
 
+// 检测是否为移动设备的辅助函数
+const isMobileDevice = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
+
 // 鼠标位置和光晕相关
 const mouseX = ref(0)
 const mouseY = ref(0)
@@ -44,12 +49,13 @@ const typeWriter = (text, displayRef, delay = 100, callback = null) => {
 
 const createStars = () => {
   const starArray = []
-  for (let i = 0; i < 80; i++) {
+  const starCount = isMobileDevice() ? 30 : 80 // 移动端30颗，PC端80颗
+  for (let i = 0; i < starCount; i++) {
     starArray.push({
       id: i,
       left: Math.random() * 100, // 0-100%
       top: Math.random() * 40, // 只在上方40%的区域
-      size: 2 + Math.random() * 4, // 2-6px
+      size: 2 + Math.random() * (isMobileDevice() ? 4 : 4), // 移动端尺寸小一些
       opacity: 0.2 + Math.random() * 0.8, // 0.2-1.0 增加透明度范围
       animationDelay: Math.random() * 6, // 0-6秒延迟，增加随机性
       animationDuration: 1.5 + Math.random() * 2.5, // 1.5-4秒闪烁周期，更快的闪烁
@@ -62,16 +68,16 @@ const createStars = () => {
 // 创建雪花
 const createSnowflakes = () => {
   const flakes = []
-  for (let i = 0; i < 50; i++) {
+  const snowflakeCount = isMobileDevice() ? 20 : 50 // 移动端20片，PC端50片
+  for (let i = 0; i < snowflakeCount; i++) {
     const willDisappear = Math.random() < 0.8 // 80%的雪花会消失
     const animationDuration = 30 + Math.random() * 40 // 30-70秒
     flakes.push({
       id: i,
       left: Math.random() * 100,
-      // 让雪花在整个动画周期内随机分布，确保一开始就有雪花在各个位置
-      animationDelay: -Math.random() * animationDuration * 0.8, // 在动画时长的80%范围内随机开始
+      animationDelay: -Math.random() * animationDuration * 0.8,
       animationDuration: animationDuration,
-      size: 8 + Math.random() * 8, // 增大雪花体积，8-16px
+      size: (isMobileDevice() ? 6 : 8) + Math.random() * (isMobileDevice() ? 8 : 8), // 移动端尺寸小一些
       opacity: 0.4 + Math.random() * 0.6,
       willDisappear: willDisappear
     })
