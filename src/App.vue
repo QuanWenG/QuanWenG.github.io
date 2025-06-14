@@ -324,7 +324,7 @@ onUnmounted(() => {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('./background.webp');
+    background-image: url('/background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
