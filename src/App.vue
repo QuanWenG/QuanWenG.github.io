@@ -164,27 +164,54 @@ const startTypewriter = () => {
   })
 }
 
-onMounted(() => {
-  // 立即开始雪花效果
-  createSnowflakes()
-  createStars()
-  
-  // 添加鼠标移动监听
-  document.addEventListener('mousemove', handleMouseMove)
-  
-  // 页面加载动画时序：
-  // 1. 前2秒毛玻璃隐身
-  setTimeout(() => {
-    // 2. 毛玻璃慢慢现身（1秒渐显动画）
-    showGlassBox()
-    
-    // 3. 毛玻璃完全显示后开始打字机效果
-    setTimeout(() => {
-      startTypewriter()
-    }, 1000) // 等待1秒渐显动画完成
-  }, 1000) // 2秒后开始
-})
+// 添加加载状态
+const isLoading = ref(true)
 
+// 修改onMounted函数
+onMounted(() => {
+  // 预加载背景图片
+  const img = new Image()
+  img.src = '/background.webp'
+  
+  img.onload = () => {
+    // 图片加载完成后，延迟一点时间再隐藏加载页，让用户看到加载完成
+    setTimeout(() => {
+      isLoading.value = false
+      
+      // 图片加载完成后开始原有的动画序列
+      createSnowflakes()
+      createStars()
+      
+      // 添加鼠标移动监听
+      document.addEventListener('mousemove', handleMouseMove)
+      
+      // 页面加载动画时序：
+      setTimeout(() => {
+        showGlassBox()
+        
+        setTimeout(() => {
+          startTypewriter()
+        }, 1000)
+      }, 500) // 缩短等待时间，因为图片已经加载完成
+    }, 300) // 短暂延迟让用户感知到加载完成
+  }
+  
+  img.onerror = () => {
+    // 如果图片加载失败，也要隐藏加载页
+    console.warn('背景图片加载失败')
+    isLoading.value = false
+    // 继续执行原有逻辑
+    createSnowflakes()
+    createStars()
+    document.addEventListener('mousemove', handleMouseMove)
+    setTimeout(() => {
+      showGlassBox()
+      setTimeout(() => {
+        startTypewriter()
+      }, 1000)
+    }, 500)
+  }
+})
 onUnmounted(() => {
   // 清理事件监听
   document.removeEventListener('mousemove', handleMouseMove)
@@ -192,7 +219,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <!-- 加载页面 -->
+  <div v-if="isLoading" class="loading-page">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">少女正在祈祷中...</p>
+    </div>
+  </div>
+  
+  <!-- 主内容 -->
+  <div v-else class="container">
     <!-- 鼠标光晕效果 -->
     <div 
       class="mouse-glow"
@@ -928,4 +964,46 @@ onUnmounted(() => {
     box-shadow: 0 0 5px rgba(135, 206, 235, 0.6);
   }
   
+  /* 加载页面样式 */
+.loading-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-content {
+  text-align: center;
+  color: white;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+.loading-text {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
