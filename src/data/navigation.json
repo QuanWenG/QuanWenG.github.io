@@ -1,0 +1,33 @@
+﻿[
+  {
+    "id": "home",
+    "label": { "zh": "首页", "en": "Home" },
+    "path": "/",
+    "showInNav": true
+  },
+  {
+    "id": "tech",
+    "label": { "zh": "技术栈", "en": "Stack" },
+    "path": "/",
+    "anchor": "tech-stack",
+    "showInNav": true
+  },
+  {
+    "id": "blog",
+    "label": { "zh": "博客", "en": "Blog" },
+    "path": "/blog",
+    "showInNav": true
+  },
+  {
+    "id": "projects",
+    "label": { "zh": "项目", "en": "Projects" },
+    "path": "/projects",
+    "showInNav": true
+  },
+  {
+    "id": "music",
+    "label": { "zh": "音乐", "en": "Music" },
+    "path": "/music",
+    "showInNav": true
+  }
+]

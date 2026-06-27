@@ -1,0 +1,13 @@
+﻿[
+  {
+    "id": "quanweng-github-io",
+    "name": "QuanWenG.github.io",
+    "description": "个人博客与作品集站点。",
+    "url": "https://github.com/QuanWenG/QuanWenG.github.io",
+    "cover": "",
+    "techStack": ["React", "TypeScript", "Vite"],
+    "featured": true,
+    "weight": 100,
+    "status": "active"
+  }
+]

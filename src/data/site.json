@@ -1,0 +1,62 @@
+﻿{
+  "author": "QuanWenG",
+  "title": {
+    "zh": "荃翁龟的博客",
+    "en": "QuanWenG Blog"
+  },
+  "subtitle": {
+    "zh": "记录学习、项目与音乐的清新技术花园。",
+    "en": "A fresh technical garden for notes, projects, and music."
+  },
+  "githubUrl": "https://github.com/QuanWenG",
+  "terminal": {
+    "prompt": "quanweng@blog:~$",
+    "welcome": [
+      {
+        "zh": "你好，欢迎来到荃翁龟的个人博客。",
+        "en": "Hello, welcome to QuanWenG's personal blog."
+      },
+      {
+        "zh": "输入 help 发现可用命令。",
+        "en": "Type help to discover available commands."
+      }
+    ],
+    "commands": {
+      "help": {
+        "zh": "可用命令：about、projects、music、clear。",
+        "en": "Available commands: about, projects, music, clear."
+      },
+      "about": {
+        "zh": "这里记录计算机学习、工程实践和一点音乐心情。",
+        "en": "This place collects computer notes, engineering practice, and a little music."
+      },
+      "projects": {
+        "zh": "正在打开项目页...",
+        "en": "Opening projects..."
+      },
+      "music": {
+        "zh": "正在打开音乐页...",
+        "en": "Opening music..."
+      },
+      "unknown": {
+        "zh": "没有找到这个命令，试试 help。",
+        "en": "Command not found. Try help."
+      }
+    }
+  },
+  "placeholders": {
+    "blog": {
+      "zh": "博客系统下一阶段接入 Markdown 树、渲染和静态批注。",
+      "en": "The blog system will connect Markdown trees, rendering, and static annotations next."
+    },
+    "projects": {
+      "zh": "项目页下一阶段接入精选排序、封面和技术栈卡片。",
+      "en": "The projects page will connect featured sorting, covers, and tech cards next."
+    },
+    "music": {
+      "zh": "音乐页下一阶段接入歌单、底部播放器和全局音乐盒。",
+      "en": "The music page will connect playlists, the bottom player, and global music box next."
+    }
+  }
+}
+

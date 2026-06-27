@@ -1,0 +1,150 @@
+﻿[
+  {
+    "id": "react",
+    "name": "React",
+    "group": "Frontend",
+    "description": {
+      "zh": "构建组件化界面和交互状态的核心框架。",
+      "en": "Core framework for componentized interfaces and interactive state."
+    },
+    "color": "#61dafb",
+    "level": 92,
+    "icon": "react",
+    "iconSource": "https://img.icons8.com/color/512/react-native.png",
+    "stellarType": "blueGiant",
+    "orbitRadius": 2.55,
+    "size": 0.22,
+    "glow": 1.4,
+    "positionBias": [0.45, 0.2, 0]
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "group": "Language",
+    "description": {
+      "zh": "为复杂前端和工程抽象提供类型边界。",
+      "en": "Type boundaries for complex frontend and engineering abstractions."
+    },
+    "color": "#3178c6",
+    "level": 88,
+    "icon": "typescript",
+    "iconSource": "https://img.icons8.com/color/512/typescript.png",
+    "stellarType": "pulsar",
+    "orbitRadius": 3.05,
+    "size": 0.25,
+    "glow": 1.55,
+    "positionBias": [0.1, 0.45, -0.2]
+  },
+  {
+    "id": "java",
+    "name": "Java",
+    "group": "Backend",
+    "description": {
+      "zh": "面向对象、并发和服务端生态的长期主线。",
+      "en": "A long-term path through OOP, concurrency, and backend ecosystems."
+    },
+    "color": "#f89820",
+    "level": 86,
+    "icon": "java",
+    "iconSource": "https://img.icons8.com/color/512/java-coffee-cup-logo.png",
+    "stellarType": "redDwarf",
+    "orbitRadius": 2.15,
+    "size": 0.28,
+    "glow": 1.55,
+    "positionBias": [-0.1, -0.18, 0.2]
+  },
+  {
+    "id": "mysql",
+    "name": "MySQL",
+    "group": "Data",
+    "description": {
+      "zh": "关系数据、索引、事务和查询优化的训练场。",
+      "en": "Training ground for relational data, indexing, transactions, and query optimization."
+    },
+    "color": "#2dbd8f",
+    "level": 82,
+    "icon": "mysql",
+    "iconSource": "https://img.icons8.com/color/512/mysql-logo.png",
+    "stellarType": "whiteDwarf",
+    "orbitRadius": 3.25,
+    "size": 0.25,
+    "glow": 1.35,
+    "positionBias": [-0.42, -0.32, 0.15]
+  },
+  {
+    "id": "redis",
+    "name": "Redis",
+    "group": "Data",
+    "description": {
+      "zh": "缓存、数据结构和高性能读写路径的实践入口。",
+      "en": "A practical entry into caching, data structures, and high-throughput read/write paths."
+    },
+    "color": "#dc382d",
+    "level": 80,
+    "icon": "redis",
+    "iconSource": "https://img.icons8.com/color/512/redis.png",
+    "stellarType": "redDwarf",
+    "orbitRadius": 2.78,
+    "size": 0.23,
+    "glow": 1.32,
+    "positionBias": [0.34, -0.46, 0.22]
+  },
+  {
+    "id": "network",
+    "name": "Computer Network",
+    "group": "Foundation",
+    "description": {
+      "zh": "理解协议、连接、传输和系统边界。",
+      "en": "Understanding protocols, connections, transport, and system boundaries."
+    },
+    "color": "#4f8cff",
+    "level": 80,
+    "icon": "network",
+    "iconSource": "https://img.icons8.com/fluency/512/network.png",
+    "stellarType": "pulsar",
+    "orbitRadius": 3.55,
+    "size": 0.23,
+    "glow": 1.25,
+    "positionBias": [-0.3, 0.1, -0.1]
+  },
+  {
+    "id": "os",
+    "name": "Operating System",
+    "group": "Foundation",
+    "description": {
+      "zh": "进程、内存、调度与并发的底层图景。",
+      "en": "The low-level landscape of processes, memory, scheduling, and concurrency."
+    },
+    "color": "#9b8cff",
+    "level": 78,
+    "icon": "os",
+    "iconSource": "https://img.icons8.com/color/512/linux.png",
+    "stellarType": "whiteDwarf",
+    "orbitRadius": 3.85,
+    "size": 0.22,
+    "glow": 1.2,
+    "positionBias": [-0.05, 0.36, 0.1]
+  },
+  {
+    "id": "three",
+    "name": "Three.js",
+    "group": "Creative",
+    "description": {
+      "zh": "把技术栈可视化成可探索的空间。",
+      "en": "Turning the tech stack into an explorable space."
+    },
+    "color": "#ffffff",
+    "level": 74,
+    "icon": "three",
+    "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/threedotjs.svg converted locally to PNG",
+    "stellarType": "normal",
+    "orbitRadius": 2.35,
+    "size": 0.2,
+    "glow": 1.1,
+    "positionBias": [0.2, -0.38, -0.25]
+  }
+]
+
+
+
+
