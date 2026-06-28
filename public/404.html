@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -6,6 +6,7 @@
     <title>QuanWenG</title>
     <script>
       var path = window.location.pathname + window.location.search + window.location.hash;
+      if (path.charAt(0) !== '/') path = '/';
       window.location.replace('/?p=' + encodeURIComponent(path));
     </script>
   </head>
