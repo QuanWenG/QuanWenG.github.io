@@ -144,7 +144,7 @@ void main() {
   float broadNoise = texture2D(uNoiseTexture, vec2(fract(vUv.x * 3.2 + flow), fract(vUv.y * 1.7))).r;
   float fineNoise = texture2D(uNoiseTexture, vec2(fract(vUv.x * 11.0 - flow * 1.8), fract(vUv.y * 4.0 + 0.37))).r;
   float endpointFade = smoothstep(0.0, 0.07, vUv.x) * (1.0 - smoothstep(0.93, 1.0, vUv.x));
-  float tubeGlow = 0.52 + 0.48 * pow(abs(sin(3.1415926538 * vUv.y)), 0.7);
+  float tubeGlow = 0.64 + 0.36 * pow(abs(sin(3.1415926538 * vUv.y)), 0.62);
   float pulse = 0.86 + 0.14 * sin(uTime * 1.7 + vUv.x * 24.0);
   float filament = 0.28 + broadNoise * 0.52 + fineNoise * 0.34;
   float intensity = endpointFade * tubeGlow * pulse * filament * uBrightness;
@@ -176,6 +176,7 @@ uniform vec3 uInnerColor;
 uniform vec3 uOuterColor;
 
 varying vec2 vUv;
+uniform float uBrightness;
 
 float inverseLerp(float v, float lo, float hi) {
   return (v - lo) / (hi - lo);
@@ -235,7 +236,7 @@ void main() {
   }
 
   float edgesAttenuation = min(inverseLerp(vUv.y, 0.0, 0.02), inverseLerp(vUv.y, 1.0, 0.5));
-  color.rgb = mix(vec3(0.0), color.rgb, edgesAttenuation);
+  color.rgb = mix(vec3(0.0), color.rgb, edgesAttenuation) * uBrightness;
 
   gl_FragColor = color;
 }

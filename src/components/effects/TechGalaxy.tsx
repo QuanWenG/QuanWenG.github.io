@@ -270,7 +270,7 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
   const groupRef = useRef<Group>(null)
   const { size } = useThree()
 
-  const diskGeometry = useMemo(() => new CylinderGeometry(5.8, 1.25, 0, 180, 10, true), [])
+  const diskGeometry = useMemo(() => new CylinderGeometry(5.7, 1.25, 0, 180, 10, true), [])
   const noiseTexture = useMemo(() => createNoiseTexture(), [])
   const infallGeometry = useMemo(() => createInfallGeometry(BLACK_HOLE_PARTICLE_COUNT), [])
 
@@ -304,8 +304,8 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
         </mesh>
 
         {/* 引力透镜像：远侧盘面被弯折到事件视界的上下两侧 */}
-        <mesh rotation={[0, 0, Math.PI * 0.05]} renderOrder={3}>
-          <torusGeometry args={[1.45, 0.12, 14, 160, Math.PI * 0.9]} />
+        <mesh position={[0, 0.08, 0.1]} rotation={[0, 0, Math.PI * 0.04]} renderOrder={3}>
+          <torusGeometry args={[1.6, 0.22, 18, 160, Math.PI * 1.02]} />
           <shaderMaterial
             ref={upperLensArcRef}
             vertexShader={lensedArcVertexShader}
@@ -313,19 +313,20 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
             transparent
             side={DoubleSide}
             depthWrite={false}
+            depthTest={false}
             blending={AdditiveBlending}
             uniforms={{
               uTime: { value: 0 },
-              uBrightness: { value: 1.25 },
+              uBrightness: { value: 1.68 },
               uFlowSpeed: { value: 0.055 },
               uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fffceb') },
-              uOuterColor: { value: new Color('#ff9c32') },
+              uInnerColor: { value: new Color('#fff6c9') },
+              uOuterColor: { value: new Color('#ffc247') },
             }}
           />
         </mesh>
-        <mesh position={[0, -0.18, 0.12]} rotation={[0, 0, Math.PI * 1.05]} renderOrder={4}>
-          <torusGeometry args={[1.42, 0.11, 12, 144, Math.PI * 0.9]} />
+        <mesh position={[0, -0.16, 0.12]} rotation={[0, 0, Math.PI * 1.04]} renderOrder={4}>
+          <torusGeometry args={[1.57, 0.2, 18, 144, Math.PI * 1.02]} />
           <shaderMaterial
             ref={lowerLensArcRef}
             vertexShader={lensedArcVertexShader}
@@ -337,11 +338,11 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
             blending={AdditiveBlending}
             uniforms={{
               uTime: { value: 37 },
-              uBrightness: { value: 1.1 },
+              uBrightness: { value: 1.52 },
               uFlowSpeed: { value: -0.042 },
               uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fff7d6') },
-              uOuterColor: { value: new Color('#f57d22') },
+              uInnerColor: { value: new Color('#fff1b8') },
+              uOuterColor: { value: new Color('#f8aa28') },
             }}
           />
         </mesh>
@@ -358,8 +359,9 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
             uniforms={{
               uTime: { value: 0 },
               uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fffbea') },
-              uOuterColor: { value: new Color('#ff9124') },
+              uInnerColor: { value: new Color('#fff5c2') },
+              uOuterColor: { value: new Color('#ffb52f') },
+              uBrightness: { value: 1.08 },
             }}
           />
         </mesh>
@@ -375,12 +377,12 @@ function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
             blending={AdditiveBlending}
             uniforms={{
               uTime: { value: 0 },
-              uInnerColor: { value: new Color('#fffbea') },
-              uOuterColor: { value: new Color('#ff9124') },
+              uInnerColor: { value: new Color('#fff3ba') },
+              uOuterColor: { value: new Color('#ffb42e') },
               uViewHeight: { value: size.height },
               uSize: { value: 0.01 },
               uInnerRadius: { value: 1.05 },
-              uOuterRadius: { value: 6.05 },
+              uOuterRadius: { value: 5.95 },
             }}
           />
         </points>
