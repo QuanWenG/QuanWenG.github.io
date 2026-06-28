@@ -1,0 +1,21 @@
+.projects-page { background: radial-gradient(circle at 15% 10%, var(--color-primary-soft), transparent 32%), var(--color-bg); }
+.project-waterfall { width: min(1120px, 100%); margin: 0 auto; columns: 3 280px; column-gap: 20px; }
+.project-card { break-inside: avoid; margin: 0 0 20px; overflow: hidden; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-subtle); transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+.project-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-soft); }
+.project-card.is-archived { opacity: .72; }
+.project-card > a { display: block; color: inherit; text-decoration: none; }
+.project-card__cover { display: grid; place-items: center; align-content: center; gap: 12px; min-height: 190px; padding: 24px; color: white; background: linear-gradient(135deg, hsl(var(--project-hue) 58% 42%), hsl(calc(var(--project-hue) + 72deg) 70% 56%)); }
+.project-card:nth-child(3n + 2) .project-card__cover { min-height: 245px; }
+.project-card__cover img { width: 100%; height: 100%; object-fit: cover; }
+.project-card__cover svg { width: 52px; height: 52px; }
+.project-card__cover span { font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.project-card__body { padding: 22px; }
+.project-card__meta { display: flex; align-items: center; min-height: 22px; gap: 8px; color: var(--color-muted); }
+.project-card__meta > span { display: inline-flex; align-items: center; gap: 4px; color: var(--color-primary); font-size: 11px; font-weight: 700; }
+.project-card__meta svg { width: 14px; }
+.project-card__meta > svg { margin-left: auto; }
+.project-card h2 { margin: 12px 0 8px; font-size: 23px; }
+.project-card p { margin: 0; color: var(--color-muted); line-height: 1.65; }
+.project-card__tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+.project-card__tags span { padding: 5px 9px; color: var(--color-primary); background: var(--color-primary-soft); border-radius: 999px; font-size: 11px; font-weight: 700; }
+@media (max-width: 680px) { .project-waterfall { columns: 1; } }

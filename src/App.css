@@ -176,8 +176,7 @@ body.snap-scroll {
 }
 
 .home-hero__eyebrow,
-.tech-section__intro p,
-.placeholder-page p {
+.tech-section__intro p {
   margin: 0 0 12px;
   color: var(--color-primary);
   font-size: 13px;
@@ -615,84 +614,6 @@ body.snap-scroll {
   line-height: 1.62;
 }
 
-.music-dock-stub {
-  position: fixed;
-  z-index: 24;
-  top: 50%;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 164px;
-  min-height: 56px;
-  padding: 8px 12px;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-right: 0;
-  border-radius: 999px 0 0 999px;
-  box-shadow: var(--shadow-subtle);
-  backdrop-filter: blur(16px);
-  transform: translate(106px, -50%);
-  transition: transform var(--duration-base) var(--ease-out);
-}
-
-.music-dock-stub:hover,
-.music-dock-stub:focus-within {
-  transform: translate(0, -50%);
-}
-
-.music-dock-stub__disc {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  color: #ffffff;
-  background: conic-gradient(from 90deg, var(--color-primary), var(--color-sky), var(--color-coral), var(--color-primary));
-  border-radius: 50%;
-}
-
-.music-dock-stub span {
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.placeholder-page {
-  display: grid;
-  place-items: center;
-  min-height: 100svh;
-  padding: 140px var(--space-page) 80px;
-  text-align: center;
-  background: var(--color-bg);
-}
-
-.placeholder-page__icon {
-  display: grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  margin-bottom: 18px;
-  color: var(--color-primary);
-  background: var(--color-primary-soft);
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-}
-
-.placeholder-page h1 {
-  margin: 0;
-  color: var(--color-text);
-  font-size: 48px;
-  letter-spacing: 0;
-}
-
-.placeholder-page span {
-  display: block;
-  width: min(560px, 100%);
-  margin: 18px auto 28px;
-  color: var(--color-muted);
-  line-height: 1.8;
-}
 
 .loading-screen {
   display: grid;
@@ -755,9 +676,6 @@ body.snap-scroll {
   }
 
   .tech-section__intro h2,
-  .placeholder-page h1 {
-    font-size: 34px;
-  }
 
   .tech-galaxy {
     min-height: 460px;
@@ -833,15 +751,6 @@ body.snap-scroll {
     grid-template-columns: 1fr;
     max-height: 62svh;
     overflow: auto;
-  }
-
-  .music-dock-stub {
-    min-width: 58px;
-    transform: translate(8px, -50%);
-  }
-
-  .music-dock-stub span {
-    display: none;
   }
 }
 

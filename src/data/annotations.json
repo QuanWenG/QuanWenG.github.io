@@ -1,1 +1,10 @@
-﻿{}
+{
+  "src/assets/markdown/java/java基础.md": {
+    "b-listItem-0-0": [
+      {
+        "id": "note-java-advantages-001",
+        "content": "Java 的跨平台能力主要来自 JVM 对字节码的统一执行模型。"
+      }
+    ]
+  }
+}

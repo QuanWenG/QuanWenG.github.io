@@ -1,10 +1,10 @@
-﻿export interface MusicTrack {
+export interface MusicTrack {
   id: string
   title: string
   artist: string
   src: string
   cover: string
-  duration: number
+  duration?: number
   accentColor: string
   tags: string[]
 }

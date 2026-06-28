@@ -1,4 +1,6 @@
-﻿export type Locale = 'zh' | 'en'
+import type { BlogArticleMeta } from './blog'
+
+export type Locale = 'zh' | 'en'
 
 export interface LocalizedText {
   zh: string
@@ -48,3 +50,17 @@ export interface AnnotationItem {
 }
 
 export type AnnotationMap = Record<string, Record<string, AnnotationItem[]>>
+export type UiCopy = Record<string, LocalizedText>
+export type ContentKind = 'blog' | 'project' | 'music' | 'technology'
+
+export interface ContentIndexEntry {
+  id: string
+  kind: ContentKind
+  title: string
+  description: string
+  href: string
+  tags: string[]
+  searchableText: string
+}
+
+export type BlogIndex = BlogArticleMeta[]

@@ -1,11 +1,11 @@
-﻿[
+[
   {
     "id": "evo",
     "title": "Evo",
     "artist": "QuanWenG Playlist",
-    "src": "/src/assets/music/Evo.wav",
+    "src": "media/music/evo.mp3",
     "cover": "",
-    "duration": 0,
+    "duration": 121.5,
     "accentColor": "#6ad7c6",
     "tags": ["playlist", "seed"]
   }
