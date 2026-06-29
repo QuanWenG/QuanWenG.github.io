@@ -1,0 +1,146 @@
+{
+  "owner": "QuanWenG",
+  "projects": [
+    {
+      "id": "qwg-skills",
+      "name": "QwG-Skills",
+      "description": "面向 Codex 等 AI Agent 的 SKILL.md 工作流、模板与提示工程集合。",
+      "repositories": [{ "name": "QwG-Skills", "label": "QwG-Skills" }],
+      "category": "ai",
+      "techIds": ["javascript", "shell"],
+      "techStack": ["JavaScript", "PowerShell", "AI Agent", "SKILL.md"],
+      "cover": "",
+      "featured": true,
+      "weight": 120
+    },
+    {
+      "id": "quanweng-github-io",
+      "name": "QuanWenG.github.io",
+      "description": "融合黑洞技术星图、Markdown 博客、批注与全局音乐系统的个人主页。",
+      "repositories": [{ "name": "QuanWenG.github.io", "label": "个人博客" }],
+      "category": "fullstack",
+      "techIds": ["typescript", "react", "three"],
+      "techStack": ["TypeScript", "React", "Vite", "Three.js"],
+      "cover": "",
+      "featured": true,
+      "weight": 115
+    },
+    {
+      "id": "cloud-link",
+      "name": "Cloud Link",
+      "description": "由 React 前端、Kotlin 后端和统一子模块仓库组成的云智链全栈实验。",
+      "repositories": [
+        { "name": "cloud-link", "label": "项目总仓" },
+        { "name": "cloud-link-front", "label": "React 前端" },
+        { "name": "cloud-link-backend", "label": "Kotlin 后端" }
+      ],
+      "category": "fullstack",
+      "techIds": ["react", "javascript", "kotlin"],
+      "techStack": ["React", "Vite", "Kotlin"],
+      "cover": "",
+      "featured": true,
+      "weight": 110
+    },
+    {
+      "id": "zerossl-acme4j",
+      "name": "ZeroSSL-ACME4J",
+      "description": "基于 Spring Boot 的 ZeroSSL 证书申请、CSR 生成与续签巡检工具。",
+      "repositories": [{ "name": "ZeroSSL-ACME4J", "label": "ZeroSSL-ACME4J" }],
+      "category": "backend",
+      "techIds": ["java", "spring-boot", "sqlite"],
+      "techStack": ["Java 21", "Spring Boot", "SQLite", "ACME"],
+      "cover": "media/projects/zerossl-acme4j.jpg",
+      "featured": true,
+      "weight": 105
+    },
+    {
+      "id": "levelup-pvp",
+      "name": "LevelUpPvp",
+      "description": "带签到、成长、属性克制、概率战斗与 LLM 解说的 AstrBot 群聊 PVP 插件。",
+      "repositories": [{ "name": "astrbot_plugin_LevelUpPvp", "label": "LevelUpPvp" }],
+      "category": "plugin",
+      "techIds": ["python", "astrbot", "sqlite"],
+      "techStack": ["Python", "AstrBot", "SQLite", "LLM"],
+      "cover": "media/projects/levelup-pvp.jpg",
+      "featured": false,
+      "weight": 95
+    },
+    {
+      "id": "tiffany",
+      "name": "Tiffany",
+      "description": "面向 NapCat 消息接入的轻量异步机器人内核，通过 WebSocket、Envelope、Context 与 Hook 解耦协议和业务逻辑。",
+      "repositories": [{ "owner": "CyanReef", "name": "Tiffany", "label": "CyanReef / Tiffany" }],
+      "category": "ai",
+      "techIds": ["python", "network"],
+      "techStack": ["Python", "AsyncIO", "WebSocket", "Bot Framework"],
+      "cover": "",
+      "featured": false,
+      "weight": 88
+    },    {
+      "id": "media-morph",
+      "name": "MediaMorph",
+      "description": "读取当前消息或回复媒体，并调用 FFmpeg 完成格式转换的 AstrBot 插件。",
+      "repositories": [{ "name": "astrbot_plugin_MediaMorph", "label": "MediaMorph" }],
+      "category": "plugin",
+      "techIds": ["python", "astrbot", "ffmpeg"],
+      "techStack": ["Python", "AstrBot", "FFmpeg"],
+      "cover": "media/projects/media-morph.jpg",
+      "featured": false,
+      "weight": 90
+    },
+    {
+      "id": "ark-help",
+      "name": "arkHelp",
+      "description": "采用 Spring Security、JWT、MyBatis Plus 与 Nuxt/Vue 的助战管理全栈项目。",
+      "repositories": [
+        { "name": "arkHelp", "label": "Spring Boot 后端" },
+        { "name": "arkHelp-UI", "label": "Nuxt 前端" }
+      ],
+      "category": "fullstack",
+      "techIds": ["java", "spring-boot", "mysql", "vue-nuxt"],
+      "techStack": ["Java", "Spring Boot", "MySQL", "Nuxt", "Vue"],
+      "cover": "",
+      "featured": false,
+      "weight": 82
+    },
+    {
+      "id": "nailong-fabric-mod",
+      "name": "NailongToSugarFabricMod",
+      "description": "围绕 Minecraft Fabric 编写的趣味奶龙制糖模组。",
+      "repositories": [{ "name": "NailongToSugarFabricMod", "label": "Fabric Mod" }],
+      "category": "game",
+      "techIds": ["java", "fabric"],
+      "techStack": ["Java", "Fabric", "Minecraft"],
+      "cover": "",
+      "featured": false,
+      "weight": 72
+    },
+    {
+      "id": "java-2d-game",
+      "name": "Java 2D Game",
+      "description": "用于理解游戏循环、绘制与输入处理的第一个 Java 2D 学习项目。",
+      "repositories": [{ "name": "my2dgame", "label": "my2dgame" }],
+      "category": "game",
+      "techIds": ["java"],
+      "techStack": ["Java", "Java2D"],
+      "cover": "",
+      "featured": false,
+      "weight": 62
+    },
+    {
+      "id": "ffmpeg-utilities",
+      "name": "FFmpeg Utilities",
+      "description": "面向日常音视频转换的 FFmpeg 与 Windows 批处理小工具集合。",
+      "repositories": [
+        { "name": "FFMPEGOggToM4a", "label": "Ogg 转 M4A" },
+        { "name": "ffmpeg-batch", "label": "FFmpeg Batch" }
+      ],
+      "category": "tooling",
+      "techIds": ["ffmpeg", "shell"],
+      "techStack": ["FFmpeg", "Batchfile", "PowerShell"],
+      "cover": "",
+      "featured": false,
+      "weight": 55
+    }
+  ]
+}

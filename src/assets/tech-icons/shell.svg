@@ -1,0 +1,9 @@
+<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <title>Shell Automation</title>
+  <rect x="1.75" y="3.25" width="20.5" height="17.5" rx="3" fill="#101827" stroke="#5391FE" stroke-width="1.5"/>
+  <circle cx="5" cy="6.5" r=".8" fill="#FF6B6B"/>
+  <circle cx="7.6" cy="6.5" r=".8" fill="#FFD166"/>
+  <circle cx="10.2" cy="6.5" r=".8" fill="#63E6BE"/>
+  <path d="m6.5 10 3 2.5-3 2.5" fill="none" stroke="#F8FAFC" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/>
+  <path d="M12 15h5.5" fill="none" stroke="#7DD3FC" stroke-linecap="round" stroke-width="1.7"/>
+</svg>
