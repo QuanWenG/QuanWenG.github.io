@@ -1,27 +1,194 @@
 {
-  "common.loading": { "zh": "加载中…", "en": "Loading…" },
-  "common.retry": { "zh": "重试", "en": "Retry" },
-  "common.backHome": { "zh": "返回首页", "en": "Back home" },
-  "home.readBlog": { "zh": "进入博客", "en": "Read Blog" },
-  "home.knowledgeMap": { "zh": "知识星图", "en": "Knowledge Map" },
-  "home.techTitle": { "zh": "技术栈在这里形成轨道", "en": "A living orbit of the stack" },
-  "home.techDescription": { "zh": "把技术栈放进一片会呼吸的宇宙，后续会连接博客、项目和搜索。", "en": "A breathing cosmos for the stack, connected to notes, projects, and search." },
-  "music.title": { "zh": "音乐花园", "en": "Music Garden" },
-  "music.subtitle": { "zh": "让旋律陪着阅读与探索。", "en": "A soundtrack for reading and exploring." },
-  "music.empty": { "zh": "歌单还是空的。", "en": "The playlist is empty." },
-  "music.play": { "zh": "播放", "en": "Play" },
-  "music.pause": { "zh": "暂停", "en": "Pause" },
-  "blog.title": { "zh": "学习笔记", "en": "Learning Notes" },
-  "blog.subtitle": { "zh": "沿着目录寻找一篇笔记，或搜索全部正文。", "en": "Browse the tree or search every note." },
-  "blog.search": { "zh": "搜索文章与正文", "en": "Search notes and content" },
-  "blog.empty": { "zh": "选择左侧文章开始阅读。", "en": "Choose an article to begin reading." },
-  "blog.annotations": { "zh": "批注", "en": "Annotations" },
-  "blog.noAnnotations": { "zh": "这个内容块暂无批注。", "en": "No annotations for this block." },
-  "projects.title": { "zh": "项目与实验", "en": "Projects & Experiments" },
-  "projects.subtitle": { "zh": "一些正在生长、维护或已经封存的工程记录。", "en": "A collection of growing, maintained, and archived work." },
-  "projects.empty": { "zh": "暂无公开项目。", "en": "No public projects yet." },
-  "notFound.title": { "zh": "这颗星不在航线上", "en": "This star is off the map" },
-  "notFound.body": { "zh": "页面可能已经移动，回到首页重新出发吧。", "en": "The page may have moved. Return home and start again." },
-  "error.title": { "zh": "内容暂时没有到达", "en": "Content did not arrive" },
-  "error.body": { "zh": "本地与远程数据都没有成功加载，请稍后重试。", "en": "Neither local nor remote content could be loaded. Please retry." }
+  "common.loading": {
+    "zh": "加载中…",
+    "en": "Loading…"
+  },
+  "common.retry": {
+    "zh": "重试",
+    "en": "Retry"
+  },
+  "common.backHome": {
+    "zh": "返回首页",
+    "en": "Back home"
+  },
+  "home.readBlog": {
+    "zh": "进入博客",
+    "en": "Read Blog"
+  },
+  "home.knowledgeMap": {
+    "zh": "知识星图",
+    "en": "Knowledge Map"
+  },
+  "home.techTitle": {
+    "zh": "技术栈在这里形成轨道",
+    "en": "A living orbit of the stack"
+  },
+  "home.techDescription": {
+    "zh": "技术栈在宇宙轨道中展开，并连接相关博客、项目与搜索。",
+    "en": "A breathing cosmos for the stack, connected to notes, projects, and search."
+  },
+  "music.title": {
+    "zh": "音乐花园",
+    "en": "Music Garden"
+  },
+  "music.subtitle": {
+    "zh": "让旋律陪着阅读与探索。",
+    "en": "A soundtrack for reading and exploring."
+  },
+  "music.empty": {
+    "zh": "歌单还是空的。",
+    "en": "The playlist is empty."
+  },
+  "music.play": {
+    "zh": "播放",
+    "en": "Play"
+  },
+  "music.pause": {
+    "zh": "暂停",
+    "en": "Pause"
+  },
+  "blog.title": {
+    "zh": "学习笔记",
+    "en": "Learning Notes"
+  },
+  "blog.subtitle": {
+    "zh": "沿着目录寻找一篇笔记，或搜索全部正文。",
+    "en": "Browse the tree or search every note."
+  },
+  "blog.search": {
+    "zh": "搜索文章与正文",
+    "en": "Search notes and content"
+  },
+  "blog.empty": {
+    "zh": "选择左侧文章开始阅读。",
+    "en": "Choose an article to begin reading."
+  },
+  "blog.annotations": {
+    "zh": "批注",
+    "en": "Annotations"
+  },
+  "blog.noAnnotations": {
+    "zh": "这个内容块暂无批注。",
+    "en": "No annotations for this block."
+  },
+  "projects.title": {
+    "zh": "项目与实验",
+    "en": "Projects & Experiments"
+  },
+  "projects.subtitle": {
+    "zh": "一些正在生长、维护或已经封存的工程记录。",
+    "en": "A collection of growing, maintained, and archived work."
+  },
+  "projects.empty": {
+    "zh": "暂无公开项目。",
+    "en": "No public projects yet."
+  },
+  "notFound.title": {
+    "zh": "这颗星不在航线上",
+    "en": "This star is off the map"
+  },
+  "notFound.body": {
+    "zh": "页面可能已经移动，回到首页重新出发吧。",
+    "en": "The page may have moved. Return home and start again."
+  },
+  "error.title": {
+    "zh": "内容暂时没有到达",
+    "en": "Content did not arrive"
+  },
+  "error.body": {
+    "zh": "本地与远程数据都没有成功加载，请稍后重试。",
+    "en": "Neither local nor remote content could be loaded. Please retry."
+  },
+  "projects.repository": {
+    "zh": "仓库",
+    "en": "Repository"
+  },
+  "projects.techCount": {
+    "zh": "关联技术",
+    "en": "Technologies"
+  },
+  "projects.featured": {
+    "zh": "精选项目",
+    "en": "Featured Projects"
+  },
+  "tech.tier.supporting": {
+    "zh": "实践轨",
+    "en": "Supporting orbit"
+  },
+  "projects.category.plugin": {
+    "zh": "机器人插件",
+    "en": "Plugins"
+  },
+  "projects.category.ai": {
+    "zh": "AI 与自动化",
+    "en": "AI & Automation"
+  },
+  "projects.category.game": {
+    "zh": "游戏与模组",
+    "en": "Games & Mods"
+  },
+  "projects.category.tooling": {
+    "zh": "工具与学习",
+    "en": "Tooling & Learning"
+  },
+  "projects.more": {
+    "zh": "更多实验",
+    "en": "More Experiments"
+  },
+  "tech.relatedProjects": {
+    "zh": "关联项目",
+    "en": "Related projects"
+  },
+  "tech.tier.learning": {
+    "zh": "学习外轨",
+    "en": "Learning orbit"
+  },
+  "projects.visitGithub": {
+    "zh": "查看 GitHub 主页",
+    "en": "Visit GitHub Profile"
+  },
+  "tech.tier.primary": {
+    "zh": "主轨",
+    "en": "Primary orbit"
+  },
+  "tech.viewProjects": {
+    "zh": "查看相关项目",
+    "en": "View related projects"
+  },
+  "projects.filterAll": {
+    "zh": "全部",
+    "en": "All"
+  },
+  "projects.category.fullstack": {
+    "zh": "全栈项目",
+    "en": "Full Stack"
+  },
+  "projects.clearFilters": {
+    "zh": "清除筛选",
+    "en": "Clear filters"
+  },
+  "tech.relatedArticles": {
+    "zh": "相关文章",
+    "en": "Related articles"
+  },
+  "projects.noMatches": {
+    "zh": "没有符合当前筛选的项目。",
+    "en": "No projects match the current filters."
+  },
+  "tech.closeDetails": {
+    "zh": "关闭技术详情",
+    "en": "Close technology details"
+  },
+  "projects.projectCount": {
+    "zh": "精选项目",
+    "en": "Selected projects"
+  },
+  "projects.category.backend": {
+    "zh": "后端服务",
+    "en": "Backend"
+  },
+  "projects.updated": {
+    "zh": "更新于",
+    "en": "Updated"
+  }
 }

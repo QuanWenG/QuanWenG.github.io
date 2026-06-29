@@ -1,11 +1,15 @@
-import { Billboard, Html, OrbitControls } from '@react-three/drei'
+import { Billboard, Html, OrbitControls, useTexture } from '@react-three/drei'
+import { ArrowRight, BookOpen, FolderGit2, X } from 'lucide-react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { Link } from 'react-router-dom'
 import {
   AdditiveBlending,
   BufferAttribute,
   BufferGeometry,
   Color,
+  DepthTexture,
+  DoubleSide,
   HalfFloatType,
   LinearFilter,
   Mesh,
@@ -13,25 +17,22 @@ import {
   PlaneGeometry,
   Scene,
   ShaderMaterial,
+  ShapeGeometry,
+  SRGBColorSpace,
   Vector2,
   Vector3,
   WebGLRenderTarget,
 } from 'three'
-import type { Group } from 'three'
-import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+import type { Group, Mesh as ThreeMesh, ShapePath } from 'three'
+import { SVGLoader, type OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import { usePreferences } from '../../app/providers/usePreferences'
-import reactIcon from '../../assets/tech-icons/react.png?url'
-import typescriptIcon from '../../assets/tech-icons/typescript.png?url'
-import javaIcon from '../../assets/tech-icons/java.png?url'
-import mysqlIcon from '../../assets/tech-icons/mysql.png?url'
-import redisIcon from '../../assets/tech-icons/redis.png?url'
-import networkIcon from '../../assets/tech-icons/network.png?url'
-import osIcon from '../../assets/tech-icons/os.png?url'
-import threeIcon from '../../assets/tech-icons/three.png?url'
+
 import { textByLocale } from '../../services/i18n'
-import type { TechStackItem } from '../../types/content'
+import type { TechStackItem, TechTier, UiCopy } from '../../types/content'
+import type { ProjectItem } from '../../types/project'
 import { useMediaQuery } from '../common/useMediaQuery'
 import { starFragmentShader, starVertexShader } from './galaxyShaders'
+import { resolveSvgPaint } from './techIconSvg'
 import {
   createPhysicalBlackHoleUniforms,
   physicalBlackHoleFragmentShader,
@@ -41,6 +42,8 @@ import {
 
 interface TechGalaxyProps {
   items: TechStackItem[]
+  projects: ProjectItem[]
+  ui: UiCopy
 }
 
 interface TechIconBillboardProps {
@@ -48,6 +51,8 @@ interface TechIconBillboardProps {
   index: number
   total: number
   reduceMotion: boolean
+  onSelect: (id: string) => void
+  blackHoleOccluder: RefObject<ThreeMesh | null>
 }
 
 type GalaxyLayer = 'farDistant' | 'galaxyDisk'
@@ -62,30 +67,141 @@ interface VolumetricStarFieldProps {
   warpStrength: number
 }
 
-const techIconUrls: Record<string, string> = {
-  react: reactIcon,
-  typescript: typescriptIcon,
-  java: javaIcon,
-  mysql: mysqlIcon,
-  redis: redisIcon,
-  network: networkIcon,
-  os: osIcon,
-  three: threeIcon,
+interface TechIconAsset {
+  url: string
+  svg?: string
 }
+
+interface SvgIconPart {
+  geometry: BufferGeometry
+  color: string
+  opacity: number
+}
+
+interface SvgPathStyle {
+  fill?: string
+  fillOpacity?: number
+  stroke?: string
+  strokeOpacity?: number
+  strokeWidth?: number
+  strokeLineJoin?: string
+  strokeLineCap?: string
+  strokeMiterLimit?: number
+}
+
+const techIconModules = import.meta.glob('../../assets/tech-icons/*.{png,svg}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>
+
+const techIconSvgModules = import.meta.glob('../../assets/tech-icons/*.svg', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>
+
+const techIconSvgSources = Object.fromEntries(Object.entries(techIconSvgModules).map(([path, source]) => {
+  const filename = path.split('/').pop() || ''
+  return [filename.replace(/\.svg$/i, ''), source]
+})) as Record<string, string>
+
+const techIconAssets = Object.fromEntries(Object.entries(techIconModules).map(([path, url]) => {
+  const filename = path.split('/').pop() || ''
+  const id = filename.replace(/\.(png|svg)$/i, '')
+  return [id, { url, svg: techIconSvgSources[id] }]
+})) as Record<string, TechIconAsset>
 
 const STAR_CENTER_CLEAR_RADIUS: Record<GalaxyLayer, number> = {
   farDistant: 7.2,
   galaxyDisk: 12.4,
 }
-const TECH_ORBIT_SCALE = 2.35
-const TECH_ORBIT_MIN_RADIUS = 6.2
-const TECH_OCCLUSION_DEPTH_MARGIN = 0.25
-const TECH_OCCLUSION_WORLD_RADIUS = 3.3
-const TECH_OCCLUSION_MASK_RADIUS_PX = 150
-const TECH_OCCLUSION_MASK_SOFTNESS_PX = 26
+const TIER_ORBIT_RADIUS: Record<TechTier, number> = { primary: 6.35, supporting: 7.85, learning: 9.25 }
+const TIER_VERTICAL_SPREAD: Record<TechTier, number> = { primary: 1.35, supporting: 2.15, learning: 2.85 }
+const TIER_SIZE_SCALE: Record<TechTier, number> = { primary: 3, supporting: 2.65, learning: 2.25 }
+const TECH_TOOLTIP_Z_INDEX_RANGE: [number, number] = [80, 60]
+const BLACK_HOLE_OCCLUDER_RADIUS = 0.68
+
+function resolveTechIconAsset(item: TechStackItem) {
+  return techIconAssets[item.icon ?? item.id] ?? techIconAssets.network
+}
 
 function resolveTechIcon(item: TechStackItem) {
-  return techIconUrls[item.icon ?? item.id] ?? networkIcon
+  return resolveTechIconAsset(item).url
+}
+
+function RasterTechIcon({ url, size }: { url: string; size: number }) {
+  const texture = useTexture(url)
+  useEffect(() => {
+    texture.colorSpace = SRGBColorSpace
+    texture.needsUpdate = true
+  }, [texture])
+
+  return (
+    <mesh>
+      <planeGeometry args={[size, size]} />
+      <meshBasicMaterial map={texture} transparent alphaTest={0.04} depthTest depthWrite toneMapped={false} fog={false} />
+    </mesh>
+  )
+}
+
+function SvgTechIcon({ source, size }: { source: string; size: number }) {
+  const parsed = useMemo(() => new SVGLoader().parse(source), [source])
+  const { parts, scale, offsetX, offsetY } = useMemo(() => {
+    const viewBox = source.match(/viewBox=["']([^"']+)["']/i)?.[1]?.trim().split(/[\s,]+/).map(Number) ?? [0, 0, 24, 24]
+    const [minX = 0, minY = 0, width = 24, height = 24] = viewBox
+    const iconScale = size / Math.max(width, height, 1)
+    const iconParts: SvgIconPart[] = []
+
+    parsed.paths.forEach((path) => {
+      const style = (path.userData?.style || {}) as SvgPathStyle
+      const fallbackFill = `#${path.color.getHexString()}`
+      const fill = resolveSvgPaint(style.fill || fallbackFill, source, fallbackFill)
+      if (fill !== 'none' && fill !== 'transparent') {
+        SVGLoader.createShapes(path as ShapePath).forEach((shape) => {
+          const geometry = new ShapeGeometry(shape)
+          iconParts.push({ geometry, color: fill, opacity: style.fillOpacity ?? 1 })
+        })
+      }
+
+      if (style.stroke && style.stroke !== 'none' && (style.strokeWidth ?? 1) > 0) {
+        const strokeStyle = SVGLoader.getStrokeStyle(
+          style.strokeWidth ?? 1,
+          style.stroke,
+          style.strokeLineJoin,
+          style.strokeLineCap,
+          style.strokeMiterLimit,
+        )
+        path.subPaths.forEach((subPath) => {
+          const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), strokeStyle)
+          if (geometry.getAttribute('position')?.count) {
+            iconParts.push({ geometry, color: style.stroke || '#ffffff', opacity: style.strokeOpacity ?? 1 })
+          } else {
+            geometry.dispose()
+          }
+        })
+      }
+    })
+
+    return {
+      parts: iconParts,
+      scale: iconScale,
+      offsetX: -(minX + width * 0.5) * iconScale,
+      offsetY: (minY + height * 0.5) * iconScale,
+    }
+  }, [parsed, size, source])
+
+  useEffect(() => () => parts.forEach(({ geometry }) => geometry.dispose()), [parts])
+
+  return (
+    <group position={[offsetX, offsetY, 0]} scale={[scale, -scale, 1]}>
+      {parts.map((part, partIndex) => (
+        <mesh key={part.geometry.uuid} geometry={part.geometry} position={[0, 0, partIndex * 0.0002]}>
+          <meshBasicMaterial color={part.color} opacity={part.opacity} transparent={part.opacity < 1} side={DoubleSide} depthTest depthWrite toneMapped={false} fog={false} />
+        </mesh>
+      ))}
+    </group>
+  )
 }
 
 function createStars(count: number, radius: number, layer: GalaxyLayer) {
@@ -214,127 +330,82 @@ function VolumetricStarField({ count, radius, layer, reduceMotion, dragIntensity
   )
 }
 
-function TechIconBillboard({ item, index, total, reduceMotion }: TechIconBillboardProps) {
+function TechIconBillboard({ item, index, total, reduceMotion, onSelect, blackHoleOccluder }: TechIconBillboardProps) {
   const { locale } = usePreferences()
-  const { camera, size: viewportSize } = useThree()
   const groupRef = useRef<Group>(null)
-  const visualRef = useRef<Group>(null)
-  const iconRef = useRef<HTMLButtonElement>(null)
-  const worldPosRef = useRef(new Vector3())
-  const iconCameraPosRef = useRef(new Vector3())
-  const blackHoleCameraPosRef = useRef(new Vector3())
-  const iconNdcRef = useRef(new Vector3())
-  const blackHoleNdcRef = useRef(new Vector3())
-  const maskRef = useRef({ visible: false, x: -200, y: -200, clipped: false })
+  const iconAsset = resolveTechIconAsset(item)
   const [hovered, setHovered] = useState(false)
   const active = hovered
-  const angle = (index / total) * Math.PI * 2 + index * 0.42
-  const baseOrbitRadius = item.orbitRadius ?? 3.2 + (index % 3) * 0.6
-  const radius = Math.max(TECH_ORBIT_MIN_RADIUS, baseOrbitRadius * TECH_ORBIT_SCALE)
-  const size = (item.size ?? 0.22) * 2.9
+  const tier = item.tier ?? 'supporting'
+  const tierOffset = tier === 'primary' ? 0.2 : tier === 'supporting' ? 0.88 : 1.46
+  const angle = (index / Math.max(total, 1)) * Math.PI * 2 + tierOffset
+  const radius = item.orbitRadius ?? TIER_ORBIT_RADIUS[tier]
+  const size = (item.size ?? 0.22) * TIER_SIZE_SCALE[tier]
   const biasX = item.positionBias?.[0] ?? 0
   const biasY = item.positionBias?.[1] ?? 0
   const biasZ = item.positionBias?.[2] ?? 0
   const position = useMemo<[number, number, number]>(() => {
-    return [Math.cos(angle) * radius + biasX, Math.sin(index * 1.37) * 1.1 + biasY, Math.sin(angle) * radius + biasZ]
-  }, [angle, biasX, biasY, biasZ, index, radius])
-  const iconPixelSize = Math.round(62 + size * 44)
+    return [Math.cos(angle) * radius + biasX, Math.sin(index * 1.618 + tierOffset) * TIER_VERTICAL_SPREAD[tier] + biasY, Math.sin(angle) * radius + biasZ]
+  }, [angle, biasX, biasY, biasZ, index, radius, tier, tierOffset])
+  const iconWorldSize = size * 1.58
+
 
   useFrame(({ clock }, delta) => {
-    if (!groupRef.current) {
-      return
-    }
-    if (!reduceMotion) {
-      groupRef.current.rotation.y += delta * (0.12 + index * 0.01)
-    }
+    if (!groupRef.current) return
+    if (!reduceMotion) groupRef.current.rotation.y += delta * (0.12 + index * 0.01)
     const pulse = 1 + Math.sin(clock.elapsedTime * 1.8 + index) * 0.04
     const target = active ? 1.2 : pulse
     groupRef.current.scale.lerp(new Vector3(target, target, target), 0.12)
-
-    // 黑洞遮挡：先用相机空间判断前后，再用屏幕像素圆做局部裁切。
-    groupRef.current.getWorldPosition(worldPosRef.current)
-    iconCameraPosRef.current.copy(worldPosRef.current).applyMatrix4(camera.matrixWorldInverse)
-    blackHoleCameraPosRef.current.set(0, 0, 0).applyMatrix4(camera.matrixWorldInverse)
-
-    const behindBlackHole = iconCameraPosRef.current.z < blackHoleCameraPosRef.current.z - TECH_OCCLUSION_DEPTH_MARGIN
-    const axisDistance = Math.hypot(iconCameraPosRef.current.x - blackHoleCameraPosRef.current.x, iconCameraPosRef.current.y - blackHoleCameraPosRef.current.y)
-
-    iconNdcRef.current.copy(worldPosRef.current).project(camera)
-    blackHoleNdcRef.current.set(0, 0, 0).project(camera)
-    const rawMaskX = ((blackHoleNdcRef.current.x - iconNdcRef.current.x) * 0.5 * viewportSize.width) / Math.max(iconPixelSize, 1) * 100 + 50
-    const rawMaskY = ((iconNdcRef.current.y - blackHoleNdcRef.current.y) * 0.5 * viewportSize.height) / Math.max(iconPixelSize, 1) * 100 + 50
-    const screenDxPx = (blackHoleNdcRef.current.x - iconNdcRef.current.x) * 0.5 * viewportSize.width
-    const screenDyPx = (iconNdcRef.current.y - blackHoleNdcRef.current.y) * 0.5 * viewportSize.height
-    const overlapsMaskCircle = Math.hypot(screenDxPx, screenDyPx) < TECH_OCCLUSION_MASK_RADIUS_PX + iconPixelSize * 0.62
-    const shouldMask = behindBlackHole && (axisDistance < TECH_OCCLUSION_WORLD_RADIUS || overlapsMaskCircle)
-    const maskX = shouldMask ? rawMaskX : -200
-    const maskY = shouldMask ? rawMaskY : -200
-    const maskRadius = shouldMask ? (TECH_OCCLUSION_MASK_RADIUS_PX / Math.max(iconPixelSize, 1)) * 100 : 0
-    const maskSoftness = (TECH_OCCLUSION_MASK_SOFTNESS_PX / Math.max(iconPixelSize, 1)) * 100
-    const hiddenByMask = shouldMask && Math.hypot(maskX - 50, maskY - 50) < maskRadius - 50
-    if (visualRef.current) {
-      visualRef.current.visible = !shouldMask
-    }
-
-    if (hiddenByMask && hovered) {
-      setHovered(false)
-    }
-    if (iconRef.current) {
-      const lastMask = maskRef.current
-      if (shouldMask !== lastMask.visible || hiddenByMask !== lastMask.clipped || Math.abs(maskX - lastMask.x) > 0.25 || Math.abs(maskY - lastMask.y) > 0.25) {
-        iconRef.current.style.setProperty('--tech-mask-x', `${maskX}%`)
-        iconRef.current.style.setProperty('--tech-mask-y', `${maskY}%`)
-        iconRef.current.style.setProperty('--tech-mask-radius', `${maskRadius}%`)
-        iconRef.current.style.setProperty('--tech-mask-softness', `${maskSoftness}%`)
-        iconRef.current.style.pointerEvents = hiddenByMask ? 'none' : 'auto'
-        maskRef.current = { visible: shouldMask, x: maskX, y: maskY, clipped: hiddenByMask }
-      }
-    }
   })
 
   return (
     <group ref={groupRef} position={position}>
       <Billboard follow>
-        <Html center transform distanceFactor={5.1} className="tech-icon-html">
+        <group
+          renderOrder={6}
+          onClick={(event) => { event.stopPropagation(); onSelect(item.id) }}
+          onPointerOver={(event) => { event.stopPropagation(); setHovered(true) }}
+          onPointerOut={() => setHovered(false)}
+        >
+          {iconAsset.svg
+            ? <SvgTechIcon source={iconAsset.svg} size={iconWorldSize} />
+            : <RasterTechIcon url={iconAsset.url} size={iconWorldSize} />}
+        </group>
+        <Html center zIndexRange={[1, 0]} className="tech-icon-a11y">
           <button
-            ref={iconRef}
             type="button"
-            className={`tech-icon-node${active ? ' tech-icon-node--active' : ''}`}
-            style={{ '--tech-icon-size': `${iconPixelSize}px`, '--tech-icon-glow': item.color } as CSSProperties}
             aria-label={`${item.name} ${item.group}`}
-            onPointerEnter={() => setHovered(true)}
-            onPointerLeave={() => setHovered(false)}
+            onClick={() => onSelect(item.id)}
             onFocus={() => setHovered(true)}
             onBlur={() => setHovered(false)}
           >
-            <img src={resolveTechIcon(item)} alt="" aria-hidden="true" draggable={false} />
+            {item.name}
           </button>
         </Html>
         {active && (
-          <Html center position={[0, -size * 1.35, 0]} className="tech-label tech-label--active">
+          <Html
+            center
+            position={[0, -size * 1.35, 0]}
+            zIndexRange={TECH_TOOLTIP_Z_INDEX_RANGE}
+            occlude={[blackHoleOccluder as RefObject<ThreeMesh>]}
+            onOcclude={(occluded) => { if (occluded) setHovered(false) }}
+            className="tech-label tech-label--active"
+          >
             <span>{item.name}</span>
             <small>{item.group}</small>
             <em>{textByLocale(item.description, locale)}</em>
           </Html>
         )}
       </Billboard>
-      <group ref={visualRef}>
-        <mesh>
-          <sphereGeometry args={[size * 1.45, 32, 32]} />
-          <meshBasicMaterial color={item.color} transparent opacity={active ? 0.14 : 0.055} depthWrite={false} blending={AdditiveBlending} />
-        </mesh>
-        <mesh rotation={[Math.PI * 0.5, 0.2, 0]}>
-          <torusGeometry args={[size * 1.25, 0.006, 8, 128]} />
-          <meshBasicMaterial color={item.color} transparent opacity={active ? 0.74 : 0.22} depthWrite={false} blending={AdditiveBlending} />
-        </mesh>
-      </group>
+
     </group>
   )
 }
 
-function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: boolean }) {
+function GalaxyScene({ items, reduceMotion, onSelect }: { items: TechStackItem[]; reduceMotion: boolean; onSelect: (id: string) => void }) {
   const galaxyRef = useRef<Group>(null)
   const controlsRef = useRef<OrbitControlsImpl>(null)
+  const blackHoleOccluderRef = useRef<ThreeMesh>(null)
   const [dragIntensity, setDragIntensity] = useState(0)
   const dragIntensityRef = useRef(0)
   const isDraggingRef = useRef(false)
@@ -342,21 +413,29 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
   const lastPosRef = useRef({ x: 0, y: 0 })
   const dragDirectionRef = useRef({ x: 1, y: 0 })
   const { gl, scene, camera, size } = useThree()
+  const tierGroups = useMemo(() => ({
+    primary: items.filter((item) => (item.tier ?? 'supporting') === 'primary'),
+    supporting: items.filter((item) => (item.tier ?? 'supporting') === 'supporting'),
+    learning: items.filter((item) => (item.tier ?? 'supporting') === 'learning'),
+  }), [items])
 
   // FBO：空间场景渲染目标
   const fbo = useMemo(() => {
     const w = Math.max(2, Math.floor(size.width * 1.5))
     const h = Math.max(2, Math.floor(size.height * 1.5))
-    return new WebGLRenderTarget(w, h, {
+    const target = new WebGLRenderTarget(w, h, {
       depthBuffer: true,
       stencilBuffer: false,
       type: HalfFloatType,
       minFilter: LinearFilter,
       magFilter: LinearFilter,
     })
+    target.depthTexture = new DepthTexture(w, h)
+    return target
   }, [size.width, size.height])
 
   useEffect(() => () => {
+    fbo.depthTexture?.dispose()
     fbo.dispose()
   }, [fbo])
 
@@ -442,6 +521,8 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
 
     mat.uniforms.uBlackHolePosition.value.set(bhScreen.current.x * 0.5 + 0.5, bhScreen.current.y * 0.5 + 0.5)
     mat.uniforms.uSpaceTexture.value = fbo.texture
+    mat.uniforms.uSpaceDepth.value = fbo.depthTexture
+    mat.uniforms.uBlackHoleDepth.value = bhScreen.current.z * 0.5 + 0.5
     mat.uniforms.uAspect.value = size.width / Math.max(size.height, 1)
     mat.uniforms.uTime.value = state.clock.elapsedTime
 
@@ -481,13 +562,24 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
       <color attach="background" args={['#01040a']} />
       <fog attach="fog" args={['#01040a', 12, 30]} />
       <ambientLight intensity={0.12} />
+      <mesh
+        ref={blackHoleOccluderRef}
+        onPointerOver={(event) => event.stopPropagation()}
+        onPointerMove={(event) => event.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <sphereGeometry args={[BLACK_HOLE_OCCLUDER_RADIUS, 32, 32]} />
+        <meshBasicMaterial colorWrite={false} depthWrite={false} depthTest={false} />
+      </mesh>
       <group ref={galaxyRef} rotation={[0.08, 0, -0.16]}>
         <VolumetricStarField count={1050} radius={19} layer="farDistant" reduceMotion={reduceMotion} dragIntensity={dragIntensity} dragDirection={dragDirectionRef.current} warpStrength={0.14} />
         <VolumetricStarField count={560} radius={18} layer="galaxyDisk" reduceMotion={reduceMotion} dragIntensity={dragIntensity} dragDirection={dragDirectionRef.current} warpStrength={0.48} />
 
-        {items.map((item, index) => (
-          <TechIconBillboard key={item.id} item={item} index={index} total={items.length} reduceMotion={reduceMotion} />
-        ))}
+        {items.map((item) => {
+          const tier = item.tier ?? 'supporting'
+          const tierItems = tierGroups[tier]
+          return <TechIconBillboard key={item.id} item={item} index={tierItems.findIndex(({ id }) => id === item.id)} total={tierItems.length} reduceMotion={reduceMotion} onSelect={onSelect} blackHoleOccluder={blackHoleOccluderRef} />
+        })}
       </group>
       <OrbitControls
         ref={controlsRef}
@@ -507,27 +599,64 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
   )
 }
 
-export function TechGalaxy({ items }: TechGalaxyProps) {
+function TechDetailPanel({ item, projects, ui, locale, onClose }: { item: TechStackItem; projects: ProjectItem[]; ui: UiCopy; locale: 'zh' | 'en'; onClose: () => void }) {
+  const panelRef = useRef<HTMLElement>(null)
+  const relatedProjects = projects.filter((project) => (item.projectIds || []).includes(project.id))
+  const tier = item.tier ?? 'supporting'
+  useEffect(() => { panelRef.current?.focus() }, [item.id])
+
+  return (
+    <aside ref={panelRef} className="tech-detail-panel" tabIndex={-1} aria-labelledby="tech-detail-title">
+      <button className="tech-detail-panel__close" type="button" onClick={onClose} aria-label={textByLocale(ui['tech.closeDetails'], locale)}><X aria-hidden="true" /></button>
+      <span className={`tech-detail-panel__tier is-${tier}`}>{textByLocale(ui[`tech.tier.${tier}`], locale)}</span>
+      <div className="tech-detail-panel__title">
+        <img src={resolveTechIcon(item)} alt="" aria-hidden="true" />
+        <div><h3 id="tech-detail-title">{item.name}</h3><small>{item.group}</small></div>
+      </div>
+      <p>{textByLocale(item.description, locale)}</p>
+      {relatedProjects.length > 0 && <section><h4><FolderGit2 aria-hidden="true" />{textByLocale(ui['tech.relatedProjects'], locale)}</h4><div className="tech-detail-panel__links">{relatedProjects.map((project) => <a key={project.id} href={project.url} target="_blank" rel="noopener noreferrer">{project.name}</a>)}</div></section>}
+      {(item.articles || []).length > 0 && <section><h4><BookOpen aria-hidden="true" />{textByLocale(ui['tech.relatedArticles'], locale)}</h4><div className="tech-detail-panel__links">{item.articles?.map((article) => <Link key={article.slug} to={`/blog/${article.slug}`}>{textByLocale(article.title, locale)}</Link>)}</div></section>}
+      {relatedProjects.length > 0 && <Link className="tech-detail-panel__cta" to="/projects">{textByLocale(ui['tech.viewProjects'], locale)}<ArrowRight aria-hidden="true" /></Link>}
+    </aside>
+  )
+}
+
+function TechTierLegend({ ui, locale }: { ui: UiCopy; locale: 'zh' | 'en' }) {
+  return <div className="tech-tier-legend" aria-label="Technology orbit legend">{(['primary', 'supporting', 'learning'] as TechTier[]).map((tier) => <span key={tier} className={`is-${tier}`}>{textByLocale(ui[`tech.tier.${tier}`], locale)}</span>)}</div>
+}
+
+export function TechGalaxy({ items, projects, ui }: TechGalaxyProps) {
   const { locale } = usePreferences()
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const compact = useMediaQuery('(max-width: 760px)')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selectedItem = items.find((item) => item.id === selectedId) || null
+
+  useEffect(() => {
+    if (!selectedItem) return
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelectedId(null) }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [selectedItem])
 
   if (compact || reduceMotion) {
     return (
       <div className="tech-cosmos-fallback" aria-label="Tech stack list">
         <div className="tech-cosmos-fallback__stars" aria-hidden="true" />
+        <TechTierLegend ui={ui} locale={locale} />
         {items.map((item) => (
-          <article key={item.id} className="tech-cosmos-fallback__item">
+          <button key={item.id} type="button" className={`tech-cosmos-fallback__item is-${item.tier || 'supporting'}`} aria-label={item.name} onClick={() => setSelectedId(item.id)}>
             <span className="tech-cosmos-fallback__icon" style={{ boxShadow: `0 0 22px ${item.color}` }}>
               <img src={resolveTechIcon(item)} alt="" aria-hidden="true" />
             </span>
-            <div>
+            <span>
               <strong>{item.name}</strong>
               <small>{item.group}</small>
               <p>{textByLocale(item.description, locale)}</p>
-            </div>
-          </article>
+            </span>
+          </button>
         ))}
+        {selectedItem && <TechDetailPanel item={selectedItem} projects={projects} ui={ui} locale={locale} onClose={() => setSelectedId(null)} />}
       </div>
     )
   }
@@ -542,8 +671,10 @@ export function TechGalaxy({ items }: TechGalaxyProps) {
           gl.setClearColor('#01040a', 1)
         }}
       >
-        <GalaxyScene items={items} reduceMotion={reduceMotion} />
+        <GalaxyScene items={items} reduceMotion={reduceMotion} onSelect={setSelectedId} />
       </Canvas>
+      <TechTierLegend ui={ui} locale={locale} />
+      {selectedItem && <TechDetailPanel item={selectedItem} projects={projects} ui={ui} locale={locale} onClose={() => setSelectedId(null)} />}
     </div>
   )
 }

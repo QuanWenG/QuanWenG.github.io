@@ -19,15 +19,18 @@ export function buildContentIndex(
       tags: [article.category],
       searchableText: `${article.title} ${article.category}`,
     })),
-    ...projects.map((project) => ({
-      id: `project:${project.id}`,
-      kind: 'project' as const,
-      title: project.name,
-      description: project.description,
-      href: project.url,
-      tags: project.techStack,
-      searchableText: `${project.name} ${project.description} ${project.techStack.join(' ')}`,
-    })),
+    ...projects.map((project) => {
+      const repositories = project.github.repositories.map(({ name }) => name)
+      return {
+        id: `project:${project.id}`,
+        kind: 'project' as const,
+        title: project.name,
+        description: project.description,
+        href: project.url,
+        tags: [...project.techStack, project.category, ...project.techIds],
+        searchableText: `${project.name} ${project.description} ${project.category} ${project.techStack.join(' ')} ${project.techIds.join(' ')} ${repositories.join(' ')}`,
+      }
+    }),
     ...music.map((track) => ({
       id: `music:${track.id}`,
       kind: 'music' as const,
@@ -43,8 +46,8 @@ export function buildContentIndex(
       title: item.name,
       description: item.description.zh,
       href: '/#tech-stack',
-      tags: [item.group],
-      searchableText: `${item.name} ${item.group} ${item.description.zh} ${item.description.en}`,
+      tags: [item.group, item.tier || 'supporting'],
+      searchableText: `${item.name} ${item.group} ${item.tier || 'supporting'} ${item.description.zh} ${item.description.en} ${(item.projectIds || []).join(' ')}`,
     })),
   ]
 }

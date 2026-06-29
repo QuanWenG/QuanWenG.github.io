@@ -1,13 +1,551 @@
-﻿[
+[
+  {
+    "id": "qwg-skills",
+    "name": "QwG-Skills",
+    "description": "面向 Codex 等 AI Agent 的 SKILL.md 工作流、模板与提示工程集合。",
+    "url": "https://github.com/QuanWenG/QwG-Skills",
+    "cover": "",
+    "techStack": [
+      "JavaScript",
+      "PowerShell",
+      "AI Agent",
+      "SKILL.md"
+    ],
+    "techIds": [
+      "javascript",
+      "shell"
+    ],
+    "category": "ai",
+    "links": [
+      {
+        "label": "QwG-Skills",
+        "url": "https://github.com/QuanWenG/QwG-Skills",
+        "repository": "QwG-Skills"
+      }
+    ],
+    "github": {
+      "stars": 1,
+      "updatedAt": "2026-06-24T01:58:29Z",
+      "primaryLanguage": "JavaScript",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "QwG-Skills",
+          "url": "https://github.com/QuanWenG/QwG-Skills",
+          "stars": 1,
+          "updatedAt": "2026-06-24T01:58:29Z",
+          "primaryLanguage": "JavaScript",
+          "archived": false
+        }
+      ]
+    },
+    "featured": true,
+    "weight": 120,
+    "status": "active",
+    "source": "personal"
+  },
   {
     "id": "quanweng-github-io",
     "name": "QuanWenG.github.io",
-    "description": "个人博客与作品集站点。",
+    "description": "融合黑洞技术星图、Markdown 博客、批注与全局音乐系统的个人主页。",
     "url": "https://github.com/QuanWenG/QuanWenG.github.io",
     "cover": "",
-    "techStack": ["React", "TypeScript", "Vite"],
+    "techStack": [
+      "TypeScript",
+      "React",
+      "Vite",
+      "Three.js"
+    ],
+    "techIds": [
+      "typescript",
+      "react",
+      "three"
+    ],
+    "category": "fullstack",
+    "links": [
+      {
+        "label": "个人博客",
+        "url": "https://github.com/QuanWenG/QuanWenG.github.io",
+        "repository": "QuanWenG.github.io"
+      }
+    ],
+    "github": {
+      "stars": 3,
+      "updatedAt": "2026-06-29T05:22:50Z",
+      "primaryLanguage": "TypeScript",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "QuanWenG.github.io",
+          "url": "https://github.com/QuanWenG/QuanWenG.github.io",
+          "stars": 3,
+          "updatedAt": "2026-06-29T05:22:50Z",
+          "primaryLanguage": "TypeScript",
+          "archived": false
+        }
+      ]
+    },
     "featured": true,
-    "weight": 100,
-    "status": "active"
+    "weight": 115,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "cloud-link",
+    "name": "Cloud Link",
+    "description": "由 React 前端、Kotlin 后端和统一子模块仓库组成的云智链全栈实验。",
+    "url": "https://github.com/QuanWenG/cloud-link",
+    "cover": "",
+    "techStack": [
+      "React",
+      "Vite",
+      "Kotlin"
+    ],
+    "techIds": [
+      "react",
+      "javascript",
+      "kotlin"
+    ],
+    "category": "fullstack",
+    "links": [
+      {
+        "label": "项目总仓",
+        "url": "https://github.com/QuanWenG/cloud-link",
+        "repository": "cloud-link"
+      },
+      {
+        "label": "React 前端",
+        "url": "https://github.com/QuanWenG/cloud-link-front",
+        "repository": "cloud-link-front"
+      },
+      {
+        "label": "Kotlin 后端",
+        "url": "https://github.com/QuanWenG/cloud-link-backend",
+        "repository": "cloud-link-backend"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-05-06T15:27:41Z",
+      "primaryLanguage": "JavaScript",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "cloud-link",
+          "url": "https://github.com/QuanWenG/cloud-link",
+          "stars": 0,
+          "updatedAt": "2026-04-28T02:43:27Z",
+          "primaryLanguage": "",
+          "archived": false
+        },
+        {
+          "owner": "QuanWenG",
+          "name": "cloud-link-front",
+          "url": "https://github.com/QuanWenG/cloud-link-front",
+          "stars": 0,
+          "updatedAt": "2026-05-06T15:27:41Z",
+          "primaryLanguage": "JavaScript",
+          "archived": false
+        },
+        {
+          "owner": "QuanWenG",
+          "name": "cloud-link-backend",
+          "url": "https://github.com/QuanWenG/cloud-link-backend",
+          "stars": 0,
+          "updatedAt": "2026-05-06T15:26:42Z",
+          "primaryLanguage": "Kotlin",
+          "archived": false
+        }
+      ]
+    },
+    "featured": true,
+    "weight": 110,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "zerossl-acme4j",
+    "name": "ZeroSSL-ACME4J",
+    "description": "基于 Spring Boot 的 ZeroSSL 证书申请、CSR 生成与续签巡检工具。",
+    "url": "https://github.com/QuanWenG/ZeroSSL-ACME4J",
+    "cover": "media/projects/zerossl-acme4j.jpg",
+    "techStack": [
+      "Java 21",
+      "Spring Boot",
+      "SQLite",
+      "ACME"
+    ],
+    "techIds": [
+      "java",
+      "spring-boot",
+      "sqlite"
+    ],
+    "category": "backend",
+    "links": [
+      {
+        "label": "ZeroSSL-ACME4J",
+        "url": "https://github.com/QuanWenG/ZeroSSL-ACME4J",
+        "repository": "ZeroSSL-ACME4J"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-06-17T00:53:08Z",
+      "primaryLanguage": "Java",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "ZeroSSL-ACME4J",
+          "url": "https://github.com/QuanWenG/ZeroSSL-ACME4J",
+          "stars": 0,
+          "updatedAt": "2026-06-17T00:53:08Z",
+          "primaryLanguage": "Java",
+          "archived": false
+        }
+      ]
+    },
+    "featured": true,
+    "weight": 105,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "levelup-pvp",
+    "name": "LevelUpPvp",
+    "description": "带签到、成长、属性克制、概率战斗与 LLM 解说的 AstrBot 群聊 PVP 插件。",
+    "url": "https://github.com/QuanWenG/astrbot_plugin_LevelUpPvp",
+    "cover": "media/projects/levelup-pvp.jpg",
+    "techStack": [
+      "Python",
+      "AstrBot",
+      "SQLite",
+      "LLM"
+    ],
+    "techIds": [
+      "python",
+      "astrbot",
+      "sqlite"
+    ],
+    "category": "plugin",
+    "links": [
+      {
+        "label": "LevelUpPvp",
+        "url": "https://github.com/QuanWenG/astrbot_plugin_LevelUpPvp",
+        "repository": "astrbot_plugin_LevelUpPvp"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-06-22T19:29:33Z",
+      "primaryLanguage": "Python",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "astrbot_plugin_LevelUpPvp",
+          "url": "https://github.com/QuanWenG/astrbot_plugin_LevelUpPvp",
+          "stars": 0,
+          "updatedAt": "2026-06-22T19:29:33Z",
+          "primaryLanguage": "Python",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 95,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "tiffany",
+    "name": "Tiffany",
+    "description": "面向 NapCat 消息接入的轻量异步机器人内核，通过 WebSocket、Envelope、Context 与 Hook 解耦协议和业务逻辑。",
+    "url": "https://github.com/CyanReef/Tiffany",
+    "cover": "",
+    "techStack": [
+      "Python",
+      "AsyncIO",
+      "WebSocket",
+      "Bot Framework"
+    ],
+    "techIds": [
+      "python",
+      "network"
+    ],
+    "category": "ai",
+    "links": [
+      {
+        "label": "CyanReef / Tiffany",
+        "url": "https://github.com/CyanReef/Tiffany",
+        "repository": "Tiffany"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-06-25T00:30:50Z",
+      "primaryLanguage": "Python",
+      "repositories": [
+        {
+          "owner": "CyanReef",
+          "name": "Tiffany",
+          "url": "https://github.com/CyanReef/Tiffany",
+          "stars": 0,
+          "updatedAt": "2026-06-25T00:30:50Z",
+          "primaryLanguage": "Python",
+          "archived": false
+        }
+      ]
+    },
+    "featured": true,
+    "weight": 88,
+    "status": "active",
+    "source": "organization"
+  },
+  {
+    "id": "media-morph",
+    "name": "MediaMorph",
+    "description": "读取当前消息或回复媒体，并调用 FFmpeg 完成格式转换的 AstrBot 插件。",
+    "url": "https://github.com/QuanWenG/astrbot_plugin_MediaMorph",
+    "cover": "media/projects/media-morph.jpg",
+    "techStack": [
+      "Python",
+      "AstrBot",
+      "FFmpeg"
+    ],
+    "techIds": [
+      "python",
+      "astrbot",
+      "ffmpeg"
+    ],
+    "category": "plugin",
+    "links": [
+      {
+        "label": "MediaMorph",
+        "url": "https://github.com/QuanWenG/astrbot_plugin_MediaMorph",
+        "repository": "astrbot_plugin_MediaMorph"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-06-16T23:45:35Z",
+      "primaryLanguage": "Python",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "astrbot_plugin_MediaMorph",
+          "url": "https://github.com/QuanWenG/astrbot_plugin_MediaMorph",
+          "stars": 0,
+          "updatedAt": "2026-06-16T23:45:35Z",
+          "primaryLanguage": "Python",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 90,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "ark-help",
+    "name": "arkHelp",
+    "description": "采用 Spring Security、JWT、MyBatis Plus 与 Nuxt/Vue 的助战管理全栈项目。",
+    "url": "https://github.com/QuanWenG/arkHelp",
+    "cover": "",
+    "techStack": [
+      "Java",
+      "Spring Boot",
+      "MySQL",
+      "Nuxt",
+      "Vue"
+    ],
+    "techIds": [
+      "java",
+      "spring-boot",
+      "mysql",
+      "vue-nuxt"
+    ],
+    "category": "fullstack",
+    "links": [
+      {
+        "label": "Spring Boot 后端",
+        "url": "https://github.com/QuanWenG/arkHelp",
+        "repository": "arkHelp"
+      },
+      {
+        "label": "Nuxt 前端",
+        "url": "https://github.com/QuanWenG/arkHelp-UI",
+        "repository": "arkHelp-UI"
+      }
+    ],
+    "github": {
+      "stars": 2,
+      "updatedAt": "2025-12-10T09:27:10Z",
+      "primaryLanguage": "Java",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "arkHelp",
+          "url": "https://github.com/QuanWenG/arkHelp",
+          "stars": 1,
+          "updatedAt": "2025-12-10T09:27:10Z",
+          "primaryLanguage": "Java",
+          "archived": false
+        },
+        {
+          "name": "arkHelp-UI",
+          "url": "https://github.com/QuanWenG/arkHelp-UI",
+          "stars": 1,
+          "updatedAt": "2025-11-28T10:26:03Z",
+          "primaryLanguage": "Vue",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 82,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "nailong-fabric-mod",
+    "name": "NailongToSugarFabricMod",
+    "description": "围绕 Minecraft Fabric 编写的趣味奶龙制糖模组。",
+    "url": "https://github.com/QuanWenG/NailongToSugarFabricMod",
+    "cover": "",
+    "techStack": [
+      "Java",
+      "Fabric",
+      "Minecraft"
+    ],
+    "techIds": [
+      "java",
+      "fabric"
+    ],
+    "category": "game",
+    "links": [
+      {
+        "label": "Fabric Mod",
+        "url": "https://github.com/QuanWenG/NailongToSugarFabricMod",
+        "repository": "NailongToSugarFabricMod"
+      }
+    ],
+    "github": {
+      "stars": 1,
+      "updatedAt": "2024-11-22T20:11:43Z",
+      "primaryLanguage": "Java",
+      "repositories": [
+        {
+          "owner": "QuanWenG",
+          "name": "NailongToSugarFabricMod",
+          "url": "https://github.com/QuanWenG/NailongToSugarFabricMod",
+          "stars": 1,
+          "updatedAt": "2024-11-22T20:11:43Z",
+          "primaryLanguage": "Java",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 72,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "java-2d-game",
+    "name": "Java 2D Game",
+    "description": "用于理解游戏循环、绘制与输入处理的第一个 Java 2D 学习项目。",
+    "url": "https://github.com/QuanWenG/my2dgame",
+    "cover": "",
+    "techStack": [
+      "Java",
+      "Java2D"
+    ],
+    "techIds": [
+      "java"
+    ],
+    "category": "game",
+    "links": [
+      {
+        "label": "my2dgame",
+        "url": "https://github.com/QuanWenG/my2dgame",
+        "repository": "my2dgame"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2026-02-28T21:27:29Z",
+      "primaryLanguage": "Java",
+      "repositories": [
+        {
+          "name": "my2dgame",
+          "url": "https://github.com/QuanWenG/my2dgame",
+          "stars": 0,
+          "updatedAt": "2026-02-28T21:27:29Z",
+          "primaryLanguage": "Java",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 62,
+    "status": "active",
+    "source": "personal"
+  },
+  {
+    "id": "ffmpeg-utilities",
+    "name": "FFmpeg Utilities",
+    "description": "面向日常音视频转换的 FFmpeg 与 Windows 批处理小工具集合。",
+    "url": "https://github.com/QuanWenG/FFMPEGOggToM4a",
+    "cover": "",
+    "techStack": [
+      "FFmpeg",
+      "Batchfile",
+      "PowerShell"
+    ],
+    "techIds": [
+      "ffmpeg",
+      "shell"
+    ],
+    "category": "tooling",
+    "links": [
+      {
+        "label": "Ogg 转 M4A",
+        "url": "https://github.com/QuanWenG/FFMPEGOggToM4a",
+        "repository": "FFMPEGOggToM4a"
+      },
+      {
+        "label": "FFmpeg Batch",
+        "url": "https://github.com/QuanWenG/ffmpeg-batch",
+        "repository": "ffmpeg-batch"
+      }
+    ],
+    "github": {
+      "stars": 0,
+      "updatedAt": "2025-12-18T08:36:56Z",
+      "primaryLanguage": "Batchfile",
+      "repositories": [
+        {
+          "name": "FFMPEGOggToM4a",
+          "url": "https://github.com/QuanWenG/FFMPEGOggToM4a",
+          "stars": 0,
+          "updatedAt": "2025-12-15T14:26:53Z",
+          "primaryLanguage": "Batchfile",
+          "archived": false
+        },
+        {
+          "owner": "QuanWenG",
+          "name": "ffmpeg-batch",
+          "url": "https://github.com/QuanWenG/ffmpeg-batch",
+          "stars": 0,
+          "updatedAt": "2025-12-18T08:36:56Z",
+          "primaryLanguage": "Batchfile",
+          "archived": false
+        }
+      ]
+    },
+    "featured": false,
+    "weight": 55,
+    "status": "active",
+    "source": "personal"
   }
 ]

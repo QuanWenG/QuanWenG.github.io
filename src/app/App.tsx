@@ -5,6 +5,7 @@ import { HomePage } from '../pages/HomePage/HomePage'
 import { dataSource } from '../services'
 import type { NavigationItem, SiteConfig, TechStackItem, UiCopy } from '../types/content'
 import type { MusicTrack } from '../types/music'
+import type { ProjectItem } from '../types/project'
 import { AppProviders } from './providers/AppProviders'
 
 const BlogPage = lazy(() => import('../pages/BlogPage/BlogPage').then((module) => ({ default: module.BlogPage })))
@@ -17,6 +18,7 @@ interface AppData {
   ui: UiCopy
   navigation: NavigationItem[]
   techStack: TechStackItem[]
+  projects: ProjectItem[]
   musicTracks: MusicTrack[]
 }
 
@@ -27,9 +29,9 @@ function LoadingScreen({ error, onRetry }: { error?: boolean; onRetry?: () => vo
 function AppRoutes({ data }: { data: AppData }) {
   const fallback = <LoadingScreen />
   return <BrowserRouter><Suspense fallback={fallback}><Routes><Route element={<AppLayout navigation={data.navigation} />}>
-    <Route index element={<HomePage site={data.site} techStack={data.techStack} ui={data.ui} />} />
+    <Route index element={<HomePage site={data.site} techStack={data.techStack} projects={data.projects} ui={data.ui} />} />
     <Route path="blog/*" element={<BlogPage ui={data.ui} />} />
-    <Route path="projects" element={<ProjectsPage ui={data.ui} />} />
+    <Route path="projects" element={<ProjectsPage ui={data.ui} projects={data.projects} />} />
     <Route path="music" element={<MusicPage ui={data.ui} />} />
     <Route path="*" element={<NotFoundPage ui={data.ui} />} />
   </Route></Routes></Suspense></BrowserRouter>
@@ -42,10 +44,10 @@ function App() {
   const load = useCallback(async () => {
     setError(false)
     try {
-      const [site, ui, navigation, techStack, musicTracks] = await Promise.all([
-        dataSource.getSiteConfig(), dataSource.getUiCopy(), dataSource.getNavigation(), dataSource.getTechStack(), dataSource.getMusicTracks(),
+      const [site, ui, navigation, techStack, projects, musicTracks] = await Promise.all([
+        dataSource.getSiteConfig(), dataSource.getUiCopy(), dataSource.getNavigation(), dataSource.getTechStack(), dataSource.getProjects(), dataSource.getMusicTracks(),
       ])
-      setData({ site, ui, navigation, techStack, musicTracks })
+      setData({ site, ui, navigation, techStack, projects, musicTracks })
     } catch {
       setError(true)
     }

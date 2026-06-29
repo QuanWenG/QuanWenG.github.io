@@ -1,5 +1,7 @@
 import { localDataSource } from './localDataSource'
 import type { DataSource } from './dataSource'
+import { normalizeProjects } from './projects'
+import type { ProjectItem } from '../types/project'
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
 
@@ -19,7 +21,7 @@ export const remoteDataSource: DataSource = {
   getUiCopy: () => readRemote('/ui', localDataSource.getUiCopy),
   getNavigation: () => readRemote('/navigation', localDataSource.getNavigation),
   getTechStack: () => readRemote('/tech-stack', localDataSource.getTechStack),
-  getProjects: () => readRemote('/projects', localDataSource.getProjects),
+  getProjects: async () => normalizeProjects(await readRemote<ProjectItem[]>('/projects', localDataSource.getProjects)),
   getMusicTracks: () => readRemote('/music', localDataSource.getMusicTracks),
   getAnnotations: () => readRemote('/annotations', localDataSource.getAnnotations),
   getBlogIndex: () => readRemote('/blog', localDataSource.getBlogIndex),

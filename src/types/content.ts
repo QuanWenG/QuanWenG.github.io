@@ -28,6 +28,13 @@ export interface NavigationItem {
   showInNav: boolean
 }
 
+export type TechTier = 'primary' | 'supporting' | 'learning'
+
+export interface TechArticleLink {
+  title: LocalizedText
+  slug: string
+}
+
 export interface TechStackItem {
   id: string
   name: string
@@ -35,6 +42,9 @@ export interface TechStackItem {
   description: LocalizedText
   color: string
   level: number
+  tier?: TechTier
+  projectIds?: string[]
+  articles?: TechArticleLink[]
   icon?: string
   iconSource?: string
   stellarType?: 'normal' | 'pulsar' | 'blueGiant' | 'redDwarf' | 'whiteDwarf'

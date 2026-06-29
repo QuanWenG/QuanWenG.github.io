@@ -27,6 +27,10 @@ jobs:
           cache: npm
       - name: Install
         run: npm ci
+      - name: Sync GitHub projects
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run sync:github
       - name: Lint
         run: npm run lint
       - name: Test

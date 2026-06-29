@@ -9,6 +9,7 @@ import { GridWaveBackground } from '../../components/effects/GridWaveBackground'
 import { HeroTerminal } from '../../components/effects/HeroTerminal'
 import { textByLocale } from '../../services/i18n'
 import type { SiteConfig, TechStackItem, UiCopy } from '../../types/content'
+import type { ProjectItem } from '../../types/project'
 
 const LazyTechGalaxy = lazy(() =>
   import('../../components/effects/TechGalaxy').then((module) => ({ default: module.TechGalaxy })),
@@ -17,6 +18,7 @@ const LazyTechGalaxy = lazy(() =>
 interface HomePageProps {
   site: SiteConfig
   techStack: TechStackItem[]
+  projects: ProjectItem[]
   ui: UiCopy
 }
 
@@ -46,7 +48,7 @@ class CosmicMapBoundary extends Component<CosmicMapBoundaryProps, CosmicMapBound
   }
 }
 
-export function HomePage({ site, techStack, ui }: HomePageProps) {
+export function HomePage({ site, techStack, projects, ui }: HomePageProps) {
   const { locale } = usePreferences()
   useScrollSnap()
 
@@ -77,13 +79,11 @@ export function HomePage({ site, techStack, ui }: HomePageProps) {
         <div className="tech-section__intro">
           <p>{textByLocale(ui['home.knowledgeMap'], locale)}</p>
           <h2 id="tech-title">{textByLocale(ui['home.techTitle'], locale)}</h2>
-          <span>
-            {textByLocale(ui['home.techDescription'], locale)}
-          </span>
+          <span>{textByLocale(ui['home.techDescription'], locale)}</span>
         </div>
         <CosmicMapBoundary>
           <Suspense fallback={<div className="tech-loading">Loading cosmic map...</div>}>
-            <LazyTechGalaxy items={techStack} />
+            <LazyTechGalaxy items={techStack} projects={projects} ui={ui} />
           </Suspense>
         </CosmicMapBoundary>
       </section>

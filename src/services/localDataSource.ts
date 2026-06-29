@@ -10,13 +10,14 @@ import type { MusicTrack } from '../types/music'
 import type { ProjectItem } from '../types/project'
 import { getLocalBlogArticle, getLocalBlogIndex } from './blogContent'
 import type { DataSource } from './dataSource'
+import { normalizeProjects } from './projects'
 
 export const localDataSource: DataSource = {
   getSiteConfig: async () => siteConfig,
   getUiCopy: async () => uiCopy as UiCopy,
   getNavigation: async () => navigation,
   getTechStack: async () => techStack as TechStackItem[],
-  getProjects: async () => projects as ProjectItem[],
+  getProjects: async () => normalizeProjects(projects as ProjectItem[]),
   getMusicTracks: async () => musicTracks as MusicTrack[],
   getAnnotations: async () => annotations as AnnotationMap,
   getBlogIndex: async () => getLocalBlogIndex(),

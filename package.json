@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "vitest run",
-    "preview": "vite preview"
+    "test": "vitest run && node --test scripts/sync-github.node-test.mjs",
+    "preview": "vite preview",
+    "sync:github": "node scripts/sync-github.mjs"
   },
   "dependencies": {
     "@heroui/react": "^3.2.1",

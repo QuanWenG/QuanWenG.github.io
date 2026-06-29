@@ -1,150 +1,136 @@
-﻿[
+[
   {
-    "id": "react",
-    "name": "React",
-    "group": "Frontend",
-    "description": {
-      "zh": "构建组件化界面和交互状态的核心框架。",
-      "en": "Core framework for componentized interfaces and interactive state."
-    },
-    "color": "#61dafb",
-    "level": 92,
-    "icon": "react",
-    "iconSource": "https://img.icons8.com/color/512/react-native.png",
-    "stellarType": "blueGiant",
-    "orbitRadius": 2.55,
-    "size": 0.22,
-    "glow": 1.4,
-    "positionBias": [0.45, 0.2, 0]
+    "id": "typescript", "name": "TypeScript", "group": "Language", "tier": "primary",
+    "description": { "zh": "复杂前端与工程抽象的类型边界。", "en": "Type boundaries for complex frontend systems and abstractions." },
+    "color": "#3178c6", "level": 92, "icon": "typescript", "stellarType": "pulsar", "size": 0.25, "glow": 1.55,
+    "projectIds": ["quanweng-github-io"]
   },
   {
-    "id": "typescript",
-    "name": "TypeScript",
-    "group": "Language",
-    "description": {
-      "zh": "为复杂前端和工程抽象提供类型边界。",
-      "en": "Type boundaries for complex frontend and engineering abstractions."
-    },
-    "color": "#3178c6",
-    "level": 88,
-    "icon": "typescript",
-    "iconSource": "https://img.icons8.com/color/512/typescript.png",
-    "stellarType": "pulsar",
-    "orbitRadius": 3.05,
-    "size": 0.25,
-    "glow": 1.55,
-    "positionBias": [0.1, 0.45, -0.2]
+    "id": "react", "name": "React", "group": "Frontend", "tier": "primary",
+    "description": { "zh": "组件化界面、状态管理和交互体验的主线。", "en": "The main path for componentized interfaces, state, and interaction." },
+    "color": "#61dafb", "level": 92, "icon": "react", "stellarType": "blueGiant", "size": 0.25, "glow": 1.5,
+    "projectIds": ["quanweng-github-io", "cloud-link"]
   },
   {
-    "id": "java",
-    "name": "Java",
-    "group": "Backend",
-    "description": {
-      "zh": "面向对象、并发和服务端生态的长期主线。",
-      "en": "A long-term path through OOP, concurrency, and backend ecosystems."
-    },
-    "color": "#f89820",
-    "level": 86,
-    "icon": "java",
-    "iconSource": "https://img.icons8.com/color/512/java-coffee-cup-logo.png",
-    "stellarType": "redDwarf",
-    "orbitRadius": 2.15,
-    "size": 0.28,
-    "glow": 1.55,
-    "positionBias": [-0.1, -0.18, 0.2]
+    "id": "java", "name": "Java", "group": "Language", "tier": "primary",
+    "description": { "zh": "服务端、面向对象、并发与 JVM 生态的长期主线。", "en": "A long-term path through backend systems, concurrency, and the JVM." },
+    "color": "#f89820", "level": 88, "icon": "java", "stellarType": "redDwarf", "size": 0.27, "glow": 1.55,
+    "projectIds": ["zerossl-acme4j", "ark-help", "nailong-fabric-mod", "java-2d-game"],
+    "articles": [
+      { "title": { "zh": "Java 基础", "en": "Java Fundamentals" }, "slug": "java/java基础" },
+      { "title": { "zh": "Java 集合", "en": "Java Collections" }, "slug": "java/java集合" }
+    ]
   },
   {
-    "id": "mysql",
-    "name": "MySQL",
-    "group": "Data",
-    "description": {
-      "zh": "关系数据、索引、事务和查询优化的训练场。",
-      "en": "Training ground for relational data, indexing, transactions, and query optimization."
-    },
-    "color": "#2dbd8f",
-    "level": 82,
-    "icon": "mysql",
-    "iconSource": "https://img.icons8.com/color/512/mysql-logo.png",
-    "stellarType": "whiteDwarf",
-    "orbitRadius": 3.25,
-    "size": 0.25,
-    "glow": 1.35,
-    "positionBias": [-0.42, -0.32, 0.15]
+    "id": "spring-boot", "name": "Spring Boot", "group": "Backend", "tier": "primary",
+    "description": { "zh": "构建 Java 服务、认证、任务调度与数据访问。", "en": "Building Java services, authentication, scheduling, and data access." },
+    "color": "#6db33f", "level": 84, "icon": "spring-boot", "stellarType": "normal", "size": 0.23, "glow": 1.35,
+    "projectIds": ["zerossl-acme4j", "ark-help"]
   },
   {
-    "id": "redis",
-    "name": "Redis",
-    "group": "Data",
-    "description": {
-      "zh": "缓存、数据结构和高性能读写路径的实践入口。",
-      "en": "A practical entry into caching, data structures, and high-throughput read/write paths."
-    },
-    "color": "#dc382d",
-    "level": 80,
-    "icon": "redis",
-    "iconSource": "https://img.icons8.com/color/512/redis.png",
-    "stellarType": "redDwarf",
-    "orbitRadius": 2.78,
-    "size": 0.23,
-    "glow": 1.32,
-    "positionBias": [0.34, -0.46, 0.22]
+    "id": "python", "name": "Python", "group": "Language", "tier": "primary",
+    "description": { "zh": "机器人插件、媒体处理和快速自动化的实践语言。", "en": "A practical language for bot plugins, media processing, and automation." },
+    "color": "#3776ab", "level": 82, "icon": "python", "stellarType": "blueGiant", "size": 0.24, "glow": 1.4,
+    "projectIds": ["levelup-pvp", "tiffany", "media-morph"]
   },
   {
-    "id": "network",
-    "name": "Computer Network",
-    "group": "Foundation",
-    "description": {
-      "zh": "理解协议、连接、传输和系统边界。",
-      "en": "Understanding protocols, connections, transport, and system boundaries."
-    },
-    "color": "#4f8cff",
-    "level": 80,
-    "icon": "network",
-    "iconSource": "https://img.icons8.com/fluency/512/network.png",
-    "stellarType": "pulsar",
-    "orbitRadius": 3.55,
-    "size": 0.23,
-    "glow": 1.25,
-    "positionBias": [-0.3, 0.1, -0.1]
+    "id": "kotlin", "name": "Kotlin", "group": "Language", "tier": "primary",
+    "description": { "zh": "面向 JVM 后端的现代语言实验。", "en": "Modern JVM language experiments for backend development." },
+    "color": "#7f52ff", "level": 78, "icon": "kotlin", "stellarType": "pulsar", "size": 0.22, "glow": 1.35,
+    "projectIds": ["cloud-link"]
   },
   {
-    "id": "os",
-    "name": "Operating System",
-    "group": "Foundation",
-    "description": {
-      "zh": "进程、内存、调度与并发的底层图景。",
-      "en": "The low-level landscape of processes, memory, scheduling, and concurrency."
-    },
-    "color": "#9b8cff",
-    "level": 78,
-    "icon": "os",
-    "iconSource": "https://img.icons8.com/color/512/linux.png",
-    "stellarType": "whiteDwarf",
-    "orbitRadius": 3.85,
-    "size": 0.22,
-    "glow": 1.2,
-    "positionBias": [-0.05, 0.36, 0.1]
+    "id": "javascript", "name": "JavaScript", "group": "Language", "tier": "primary",
+    "description": { "zh": "Web、脚本和 AI 工作流工具的通用运行语言。", "en": "A shared runtime for the web, scripting, and AI workflow tools." },
+    "color": "#f7df1e", "level": 84, "icon": "javascript", "stellarType": "normal", "size": 0.22, "glow": 1.3,
+    "projectIds": ["qwg-skills", "cloud-link"]
   },
   {
-    "id": "three",
-    "name": "Three.js",
-    "group": "Creative",
-    "description": {
-      "zh": "把技术栈可视化成可探索的空间。",
-      "en": "Turning the tech stack into an explorable space."
-    },
-    "color": "#ffffff",
-    "level": 74,
-    "icon": "three",
-    "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/threedotjs.svg converted locally to PNG",
-    "stellarType": "normal",
-    "orbitRadius": 2.35,
-    "size": 0.2,
-    "glow": 1.1,
-    "positionBias": [0.2, -0.38, -0.25]
+    "id": "three", "name": "Three.js", "group": "Creative", "tier": "supporting",
+    "description": { "zh": "把技术栈与黑洞渲染成可探索空间。", "en": "Rendering the stack and black hole as an explorable space." },
+    "color": "#ffffff", "level": 78, "icon": "three", "stellarType": "whiteDwarf", "size": 0.2, "glow": 1.15,
+    "projectIds": ["quanweng-github-io"]
+  },
+  {
+    "id": "vue-nuxt", "name": "Vue / Nuxt", "group": "Frontend", "tier": "supporting",
+    "description": { "zh": "Vue 组件开发与 Nuxt 应用结构实践。", "en": "Vue component development and Nuxt application structure." },
+    "color": "#42b883", "level": 74, "icon": "vue-nuxt", "stellarType": "normal", "size": 0.2, "glow": 1.2,
+    "projectIds": ["ark-help"]
+  },
+  {
+    "id": "astrbot", "name": "AstrBot", "group": "AI / Bot", "tier": "supporting",
+    "description": { "zh": "群聊机器人、LLM 能力和插件生命周期实践。", "en": "Chatbot plugins, LLM capabilities, and plugin lifecycle practice." },
+    "color": "#8b5cf6", "level": 78, "icon": "astrbot", "stellarType": "pulsar", "size": 0.21, "glow": 1.3,
+    "projectIds": ["levelup-pvp", "media-morph"]
+  },
+  {
+    "id": "mysql", "name": "MySQL", "group": "Data", "tier": "supporting",
+    "description": { "zh": "关系数据、索引、事务与查询优化。", "en": "Relational data, indexing, transactions, and query optimization." },
+    "color": "#2dbd8f", "level": 82, "icon": "mysql", "stellarType": "whiteDwarf", "size": 0.21, "glow": 1.25,
+    "projectIds": ["ark-help"],
+    "articles": [{ "title": { "zh": "MySQL 数据库", "en": "MySQL Database" }, "slug": "数据库/mysql数据库" }]
+  },
+  {
+    "id": "redis", "name": "Redis", "group": "Data", "tier": "supporting",
+    "description": { "zh": "缓存、消息流与高性能数据结构。", "en": "Caching, streams, and high-throughput data structures." },
+    "color": "#dc382d", "level": 78, "icon": "redis", "stellarType": "redDwarf", "size": 0.2, "glow": 1.25,
+    "projectIds": [],
+    "articles": [{ "title": { "zh": "Redis 数据库", "en": "Redis Database" }, "slug": "数据库/redis数据库" }]
+  },
+  {
+    "id": "sqlite", "name": "SQLite", "group": "Data", "tier": "supporting",
+    "description": { "zh": "轻量持久化、插件状态与本地服务数据。", "en": "Lightweight persistence for plugin state and local services." },
+    "color": "#44a2d7", "level": 76, "icon": "sqlite", "stellarType": "whiteDwarf", "size": 0.19, "glow": 1.15,
+    "projectIds": ["zerossl-acme4j", "levelup-pvp"]
+  },
+  {
+    "id": "ffmpeg", "name": "FFmpeg", "group": "Media", "tier": "supporting",
+    "description": { "zh": "音视频探测、转码与批处理工具链。", "en": "Media probing, transcoding, and batch-processing workflows." },
+    "color": "#007808", "level": 76, "icon": "ffmpeg", "stellarType": "normal", "size": 0.2, "glow": 1.2,
+    "projectIds": ["media-morph", "ffmpeg-utilities"]
+  },
+  {
+    "id": "fabric", "name": "Fabric", "group": "Game Modding", "tier": "supporting",
+    "description": { "zh": "Minecraft 模组结构、注册与游戏内容扩展。", "en": "Minecraft mod structure, registration, and content extension." },
+    "color": "#d9c7a1", "level": 68, "icon": "fabric", "stellarType": "redDwarf", "size": 0.19, "glow": 1.1,
+    "projectIds": ["nailong-fabric-mod"]
+  },
+  {
+    "id": "shell", "name": "Shell Automation", "group": "Tooling", "tier": "supporting",
+    "description": { "zh": "PowerShell、Bash 与 Batch 的自动化脚本实践。", "en": "Automation with PowerShell, Bash, and Windows batch scripts." },
+    "color": "#5391fe", "level": 76, "icon": "shell", "stellarType": "pulsar", "size": 0.2, "glow": 1.2,
+    "projectIds": ["qwg-skills", "ffmpeg-utilities"]
+  },
+  {
+    "id": "go", "name": "Go", "group": "Language", "tier": "learning",
+    "description": { "zh": "面向并发服务与基础设施工具的学习方向。", "en": "Exploring concurrent services and infrastructure tooling." },
+    "color": "#00add8", "level": 52, "icon": "go", "stellarType": "blueGiant", "size": 0.17, "glow": 0.95,
+    "projectIds": []
+  },
+  {
+    "id": "cpp", "name": "C++", "group": "Language", "tier": "learning",
+    "description": { "zh": "理解性能、内存与底层抽象的学习方向。", "en": "Exploring performance, memory, and lower-level abstractions." },
+    "color": "#00599c", "level": 48, "icon": "cpp", "stellarType": "whiteDwarf", "size": 0.17, "glow": 0.9,
+    "projectIds": []
+  },
+  {
+    "id": "platforms", "name": "Linux / Windows", "group": "Platform", "tier": "learning",
+    "description": { "zh": "开发、部署与自动化脚本运行环境。", "en": "Development, deployment, and automation environments." },
+    "color": "#fcc624", "level": 72, "icon": "platforms", "stellarType": "normal", "size": 0.18, "glow": 1.0,
+    "projectIds": ["zerossl-acme4j", "ffmpeg-utilities"]
+  },
+  {
+    "id": "network", "name": "Computer Networks", "group": "Foundation", "tier": "learning",
+    "description": { "zh": "协议、连接、传输与系统边界。", "en": "Protocols, connections, transport, and system boundaries." },
+    "color": "#4f8cff", "level": 76, "icon": "network", "stellarType": "pulsar", "size": 0.18, "glow": 1.0,
+    "projectIds": ["tiffany"],
+    "articles": [{ "title": { "zh": "计算机网络", "en": "Computer Networks" }, "slug": "计算机网络/计算机网络" }]
+  },
+  {
+    "id": "os", "name": "Operating Systems", "group": "Foundation", "tier": "learning",
+    "description": { "zh": "进程、内存、调度与并发的底层图景。", "en": "Processes, memory, scheduling, and concurrency foundations." },
+    "color": "#9b8cff", "level": 74, "icon": "os", "stellarType": "whiteDwarf", "size": 0.18, "glow": 1.0,
+    "projectIds": [],
+    "articles": [{ "title": { "zh": "操作系统", "en": "Operating Systems" }, "slug": "操作系统/操作系统" }]
   }
 ]
-
-
-
-
