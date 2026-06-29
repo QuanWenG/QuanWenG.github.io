@@ -2,6 +2,46 @@
 
 一个使用 React、TypeScript、Vite 和 Three.js 构建的静态个人博客。站点包含双屏首页、技术星图、Markdown 笔记、静态批注、项目瀑布流、全局音乐盒以及中英文/深浅色切换。
 
+### 首页
+
+<img src="./public/media/screenshots/home.png" alt="博客首页" width="800">
+
+- 展示个人简介，并提供博客与 GitHub 的主要入口。
+- 内置交互式终端，可通过命令快速访问站点内容。
+- 向下滚动即可进入技术星图。
+
+### 技术星图
+
+<img src="./public/media/screenshots/tech-galaxy.png" alt="技术星图" width="800">
+
+- 使用 Three.js 呈现黑洞、星场和三层技术轨道。
+- 技术节点支持交互查看详情、关联项目和相关文章。
+- 提供移动端降级与减少动态效果支持。
+
+### 博客阅读
+
+<img src="./public/media/screenshots/blog.png" alt="博客阅读页" width="800">
+
+- 自动整理 Markdown 目录，并提供全文搜索与深层链接。
+- 正文按内容块关联只读批注，方便补充解释和勘误。
+- 桌面端采用目录、正文和批注三栏布局。
+
+### 项目瀑布流
+
+<img src="./public/media/screenshots/projects.png" alt="项目瀑布流" width="800">
+
+- 以不定高度瀑布流展示个人与 CyanReef 组织项目。
+- 卡片包含技术栈、Stars、更新时间和仓库入口。
+- 项目资料来自人工配置与构建期 GitHub 快照。
+
+### 音乐页面
+
+<img src="./public/media/screenshots/music.png" alt="音乐页面" width="800">
+
+- 提供播放、切歌、进度、音量和循环模式控制。
+- 音乐页面与侧边音乐盒共享播放状态。
+- 自动保存歌曲、进度、音量和播放意图。
+
 ## 本地开发
 
 ```bash
