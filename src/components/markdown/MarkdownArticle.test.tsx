@@ -20,6 +20,7 @@ describe('MarkdownArticle', () => {
     const article = getLocalBlogArticle('java/java基础')
     expect(article).not.toBeNull()
     render(<MarkdownArticle content={article?.content || ''} sourcePath={article?.sourcePath || ''} annotations={annotations as AnnotationMap} onSelectBlock={() => undefined} />)
-    expect(await screen.findByRole('button', { name: 'Annotations: 1' })).toBeInTheDocument()
+    const expectedCount = Object.keys((annotations as AnnotationMap)[article?.sourcePath || ''] || {}).length
+    expect(await screen.findAllByRole('button', { name: 'Annotations: 1' })).toHaveLength(expectedCount)
   })
 })

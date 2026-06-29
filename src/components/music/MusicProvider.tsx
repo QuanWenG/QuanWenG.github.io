@@ -1,25 +1,40 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { MusicTrack } from '../../types/music'
 import { MusicContext, type RepeatMode } from './musicContext'
-import { initialVolume, MUSIC_VOLUME_KEY } from './musicUtils'
+import {
+  initialVolume,
+  MUSIC_VOLUME_KEY,
+  readMusicPlaybackState,
+  writeMusicPlaybackState,
+} from './musicUtils'
 
 function resolveMediaPath(src: string) {
   if (/^(https?:|data:|blob:)/.test(src)) return src
   return `${import.meta.env.BASE_URL}${src.replace(/^\/+/, '')}`
 }
 
+function isAutoplayBlock(error: unknown) {
+  return error instanceof DOMException && error.name === 'NotAllowedError'
+}
+
 export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; children: ReactNode }) {
+  const restoredStateRef = useRef(readMusicPlaybackState())
+  const restoredState = restoredStateRef.current
+  const restoredTrackId = restoredState?.currentId && tracks.some((track) => track.id === restoredState.currentId)
+    ? restoredState.currentId
+    : tracks[0]?.id || null
+  const restoredTimeRef = useRef(restoredTrackId === restoredState?.currentId ? restoredState?.currentTime || 0 : 0)
+  const playIntentRef = useRef(restoredState?.wasPlaying ?? true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
-  const autoplayRef = useRef(false)
   const frameRef = useRef(0)
-  const [currentId, setCurrentId] = useState<string | null>(tracks[0]?.id || null)
+  const [currentId, setCurrentId] = useState<string | null>(restoredTrackId)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(tracks[0]?.duration || 0)
+  const [currentTime, setCurrentTime] = useState(restoredTimeRef.current)
+  const [duration, setDuration] = useState(tracks.find((track) => track.id === restoredTrackId)?.duration || 0)
   const [volume, setVolumeState] = useState(initialVolume)
-  const [repeatMode, setRepeatMode] = useState<RepeatMode>('all')
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>(restoredState?.repeatMode || 'all')
   const [energy, setEnergy] = useState(0)
   const [spectrum, setSpectrum] = useState([0, 0, 0, 0, 0])
   const [error, setError] = useState<string | null>(null)
@@ -50,42 +65,62 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
     if (audioContextRef.current.state === 'suspended') await audioContextRef.current.resume()
   }, [])
 
-  const play = useCallback(async () => {
+  const play = useCallback(async (fromUserGesture = true) => {
     const audio = audioRef.current
     if (!audio || !currentTrack) return
+    playIntentRef.current = true
     try {
       setError(null)
-      await ensureAudioGraph()
+      if (fromUserGesture) await ensureAudioGraph()
       await audio.play()
-    } catch {
-      setError('Unable to play this track.')
+    } catch (playError) {
+      if (!isAutoplayBlock(playError)) setError('Unable to play this track.')
       setIsPlaying(false)
     }
   }, [currentTrack, ensureAudioGraph])
 
+  const pause = useCallback(() => {
+    playIntentRef.current = false
+    audioRef.current?.pause()
+  }, [])
+
   const next = useCallback(() => {
     if (!tracks.length) return
-    autoplayRef.current = isPlaying
+    restoredTimeRef.current = 0
     setCurrentId(tracks[(Math.max(currentIndex, 0) + 1) % tracks.length].id)
-  }, [currentIndex, isPlaying, tracks])
+  }, [currentIndex, tracks])
 
   const previous = useCallback(() => {
     if (!tracks.length) return
-    autoplayRef.current = isPlaying
+    restoredTimeRef.current = 0
     setCurrentId(tracks[(Math.max(currentIndex, 0) - 1 + tracks.length) % tracks.length].id)
-  }, [currentIndex, isPlaying, tracks])
+  }, [currentIndex, tracks])
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio || !currentTrack) return
-    audio.src = resolveMediaPath(currentTrack.src)
-    audio.load()
-    setCurrentTime(0)
-    setDuration(currentTrack.duration || 0)
-    if (autoplayRef.current) {
-      autoplayRef.current = false
-      void play()
+    let restored = false
+    const restoreAndMaybePlay = () => {
+      if (restored) return
+      restored = true
+      const savedTime = restoredTimeRef.current
+      const upperBound = Number.isFinite(audio.duration) ? Math.max(0, audio.duration - 0.25) : savedTime
+      const nextTime = Math.min(savedTime, upperBound)
+      if (nextTime > 0) audio.currentTime = nextTime
+      setCurrentTime(nextTime)
+      restoredTimeRef.current = 0
+      if (playIntentRef.current) void play(false)
     }
+
+    audio.pause()
+    audio.src = resolveMediaPath(currentTrack.src)
+    setCurrentTime(restoredTimeRef.current)
+    setDuration(currentTrack.duration || 0)
+    audio.addEventListener('loadedmetadata', restoreAndMaybePlay, { once: true })
+    audio.load()
+    if (audio.readyState >= HTMLMediaElement.HAVE_METADATA) restoreAndMaybePlay()
+
+    return () => audio.removeEventListener('loadedmetadata', restoreAndMaybePlay)
   }, [currentTrack, play])
 
   useEffect(() => {
@@ -99,9 +134,10 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
     const onEnded = () => {
       if (repeatMode === 'one') {
         audio.currentTime = 0
-        void play()
+        void play(false)
       } else {
-        autoplayRef.current = true
+        playIntentRef.current = true
+        restoredTimeRef.current = 0
         setCurrentId((id) => {
           const index = tracks.findIndex((track) => track.id === id)
           return tracks[(Math.max(index, 0) + 1) % Math.max(tracks.length, 1)]?.id || null
@@ -125,6 +161,45 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
       audio.removeEventListener('ended', onEnded)
     }
   }, [play, repeatMode, tracks])
+
+  useEffect(() => {
+    const unlockAudio = () => {
+      const audio = audioRef.current
+      if (!audio) return
+      if (playIntentRef.current && audio.paused) void play(true)
+      else void ensureAudioGraph()
+    }
+    window.addEventListener('pointerdown', unlockAudio, { capture: true, once: true })
+    window.addEventListener('keydown', unlockAudio, { capture: true, once: true })
+    window.addEventListener('touchstart', unlockAudio, { capture: true, once: true })
+    return () => {
+      window.removeEventListener('pointerdown', unlockAudio, true)
+      window.removeEventListener('keydown', unlockAudio, true)
+      window.removeEventListener('touchstart', unlockAudio, true)
+    }
+  }, [ensureAudioGraph, play])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      writeMusicPlaybackState({ currentId, currentTime, repeatMode, wasPlaying: playIntentRef.current })
+    }, 250)
+    return () => window.clearTimeout(timer)
+  }, [currentId, currentTime, isPlaying, repeatMode])
+
+  useEffect(() => {
+    const saveBeforeLeaving = () => {
+      writeMusicPlaybackState({
+        currentId,
+        currentTime: Number.isFinite(audioRef.current?.currentTime)
+          ? audioRef.current?.currentTime || 0
+          : currentTime,
+        repeatMode,
+        wasPlaying: playIntentRef.current,
+      })
+    }
+    window.addEventListener('pagehide', saveBeforeLeaving)
+    return () => window.removeEventListener('pagehide', saveBeforeLeaving)
+  }, [currentId, currentTime, repeatMode])
 
   useEffect(() => {
     if (!isPlaying || !analyserRef.current) {
@@ -163,8 +238,8 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
       artist: currentTrack.artist,
       artwork: currentTrack.cover ? [{ src: resolveMediaPath(currentTrack.cover) }] : [],
     })
-    navigator.mediaSession.setActionHandler('play', () => void play())
-    navigator.mediaSession.setActionHandler('pause', () => audioRef.current?.pause())
+    navigator.mediaSession.setActionHandler('play', () => void play(true))
+    navigator.mediaSession.setActionHandler('pause', pause)
     navigator.mediaSession.setActionHandler('previoustrack', previous)
     navigator.mediaSession.setActionHandler('nexttrack', next)
     return () => {
@@ -173,7 +248,7 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
       navigator.mediaSession.setActionHandler('previoustrack', null)
       navigator.mediaSession.setActionHandler('nexttrack', null)
     }
-  }, [currentTrack, next, play, previous])
+  }, [currentTrack, next, pause, play, previous])
 
   useEffect(() => () => {
     audioRef.current?.pause()
@@ -192,18 +267,21 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
     spectrum,
     error,
     playTrack: (id: string) => {
+      playIntentRef.current = true
       if (id === currentTrack?.id) {
-        void play()
+        void play(true)
       } else {
-        autoplayRef.current = true
+        restoredTimeRef.current = 0
         setCurrentId(id)
       }
     },
-    togglePlay: () => isPlaying ? audioRef.current?.pause() : void play(),
+    togglePlay: () => isPlaying ? pause() : void play(true),
     previous,
     next,
     seek: (time: number) => {
-      if (audioRef.current) audioRef.current.currentTime = Math.max(0, Math.min(time, duration || 0))
+      const nextTime = Math.max(0, Math.min(time, duration || 0))
+      if (audioRef.current) audioRef.current.currentTime = nextTime
+      setCurrentTime(nextTime)
     },
     setVolume: (nextVolume: number) => {
       const normalized = Math.max(0, Math.min(nextVolume, 1))
@@ -212,7 +290,7 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
       setVolumeState(normalized)
     },
     toggleRepeat: () => setRepeatMode((mode) => mode === 'all' ? 'one' : 'all'),
-  }), [currentTime, currentTrack, duration, energy, error, isPlaying, next, play, previous, repeatMode, spectrum, tracks, volume])
+  }), [currentTime, currentTrack, duration, energy, error, isPlaying, next, pause, play, previous, repeatMode, spectrum, tracks, volume])
 
   return <MusicContext.Provider value={value}>{children}</MusicContext.Provider>
 }

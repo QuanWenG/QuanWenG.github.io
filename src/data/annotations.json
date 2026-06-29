@@ -1,9 +1,145 @@
 {
   "src/assets/markdown/java/java基础.md": {
-    "b-listItem-0-0": [
+    "b-heading-6": [
       {
-        "id": "note-java-advantages-001",
-        "content": "Java 的跨平台能力主要来自 JVM 对字节码的统一执行模型。"
+        "id": "note-java-jit-001",
+        "content": "以 HotSpot 为例，JIT 生成的机器码通常保存在进程内的 Code Cache 中；默认情况下，进程退出后不会把这些机器码当作普通可执行文件永久保存。"
+      }
+    ],
+    "b-paragraph-14": [
+      {
+        "id": "note-java-memory-001",
+        "content": "Java 语言和 JVM 规范描述的是变量、对象与运行时数据区的抽象语义，不承诺每个值的物理位置。JIT 可能通过逃逸分析进行标量替换，甚至消除对象分配。"
+      }
+    ],
+    "b-listItem-17-3": [
+      {
+        "id": "note-java-box-cache-001",
+        "content": "语言规范对部分常量表达式的小值装箱身份提供最低保证，例如 boolean、部分 char，以及 -128～127 范围内的若干整数类型；实现可以缓存更大范围。Float 和 Double 不应依赖引用身份判断数值。"
+      }
+    ],
+    "b-paragraph-29": [
+      {
+        "id": "note-java-interface-001",
+        "content": "默认方法和静态接口方法自 Java 8 起可用，私有接口方法自 Java 9 起可用。接口字段仍隐式为 public static final。"
+      }
+    ]
+  },
+  "src/assets/markdown/java/java集合.md": {
+    "b-paragraph-3": [
+      {
+        "id": "note-collections-order-001",
+        "content": "面试语境里的“有序”经常含混。最好明确说出是 insertion order、access order、sorted order，还是只保证索引顺序。"
+      }
+    ],
+    "b-paragraph-18": [
+      {
+        "id": "note-hashmap-tree-001",
+        "content": "OpenJDK 当前实现常见树化阈值为桶内 8 个节点，且表容量至少为 64；容量较小时会优先扩容。这些常量属于实现细节，不是 Map 接口的长期契约。"
+      }
+    ],
+    "b-paragraph-25": [
+      {
+        "id": "note-concurrent-map-001",
+        "content": "线程安全容器只保证其文档声明的操作语义。containsKey 后再 put 是两个步骤，仍可能发生竞争；应优先使用 putIfAbsent、compute 等原子复合操作。"
+      }
+    ]
+  },
+  "src/assets/markdown/操作系统/操作系统.md": {
+    "b-paragraph-10": [
+      {
+        "id": "note-os-switch-001",
+        "content": "系统调用一定涉及受控的特权级转换，但不一定切换到另一个进程或线程。只有调度器决定让其他执行流运行时，才发生通常所说的任务上下文切换。"
+      }
+    ],
+    "b-paragraph-15": [
+      {
+        "id": "note-os-page-fault-001",
+        "content": "缺页既可能只是建立一个尚未使用的匿名页或恢复已有映射，也可能需要从存储设备读取页面。后者通常成本高得多，因此不能把所有缺页等同于磁盘交换。"
+      }
+    ]
+  },
+  "src/assets/markdown/计算机网络/计算机网络.md": {
+    "b-paragraph-3": [
+      {
+        "id": "note-network-layers-001",
+        "content": "OSI 是七层参考模型，互联网协议族通常用四层或五层模型描述。两者不是由同一套规范逐层绑定，因此“对应”只能看作教学上的近似。"
+      }
+    ],
+    "b-listItem-8-4": [
+      {
+        "id": "note-network-arp-001",
+        "content": "ARP 报文直接封装在链路层帧中，却服务于 IPv4 地址到链路地址的解析，所以不同教材可能把它放在网络层、链路层或两者之间。"
+      }
+    ],
+    "b-paragraph-14": [
+      {
+        "id": "note-network-tls-001",
+        "content": "HTTPS 保护的是客户端与 TLS 终点之间的传输。终点之后的日志、数据库和第三方调用仍需单独保护；证书认证域名身份也不等于为网站内容背书。"
+      }
+    ],
+    "b-paragraph-20": [
+      {
+        "id": "note-network-http-direction-001",
+        "content": "HTTP/2、HTTP/3 可以在一个连接上并发多个流，但应用语义仍以请求和响应为中心。WebSocket 升级后则使用自己的消息帧协议。"
+      }
+    ],
+    "b-paragraph-24": [
+      {
+        "id": "note-network-sse-001",
+        "content": "SSE 的事件 ID 可帮助重连后从指定位置继续，但服务器是否保留历史事件以及能否真正补发，仍由应用实现决定。"
+      }
+    ]
+  },
+  "src/assets/markdown/数据库/mysql数据库.md": {
+    "b-paragraph-3": [
+      {
+        "id": "note-mysql-query-cache-001",
+        "content": "服务器查询缓存在数据变化频繁时失效成本很高，MySQL 5.7 已默认关闭，并在 8.0 中移除。应用缓存、InnoDB Buffer Pool 与查询缓存是不同层次的机制。"
+      }
+    ],
+    "b-paragraph-12": [
+      {
+        "id": "note-mysql-rr-001",
+        "content": "InnoDB 的普通一致性读通常读取快照；SELECT ... FOR UPDATE 等锁定读会读取并锁定较新的记录。范围更新或锁定读还可能通过 next-key 锁限制间隙插入，因此分析幻读必须说明具体语句。"
+      }
+    ],
+    "b-paragraph-21": [
+      {
+        "id": "note-mysql-cardinality-001",
+        "content": "低基数索引也可能在数据倾斜明显、查询可被覆盖或只选择极少比例行时有价值。是否使用最终由成本模型和统计信息决定。"
+      }
+    ],
+    "b-paragraph-24": [
+      {
+        "id": "note-mysql-explain-analyze-001",
+        "content": "EXPLAIN ANALYZE 会实际执行语句并报告运行信息。用于 UPDATE、DELETE 等有副作用语句时要格外谨慎，先确认测试环境与事务边界。"
+      }
+    ]
+  },
+  "src/assets/markdown/数据库/redis数据库.md": {
+    "b-paragraph-12": [
+      {
+        "id": "note-redis-pubsub-001",
+        "content": "at-most-once 表示一条消息最多交付一次：没有确认与重投机制，因此也可能一次都收不到。它与“每个订阅者只消费一次”的业务去重不是同一概念。"
+      }
+    ],
+    "b-paragraph-15": [
+      {
+        "id": "note-redis-streams-001",
+        "content": "消费组的 PEL 能追踪已投递但未确认的消息，便于其他消费者认领和重试；如果消费者在完成业务后、ACK 前崩溃，消息仍可能被再次处理。"
+      }
+    ],
+    "b-paragraph-19": [
+      {
+        "id": "note-redis-delay-001",
+        "content": "队列组件只能保证其覆盖范围内的投递协议。任务从 Redis 取出后到业务提交之间仍有故障窗口，通常要依靠确认、重试、租约和幂等键共同处理。"
+      }
+    ],
+    "b-paragraph-21": [
+      {
+        "id": "note-redis-threading-001",
+        "content": "“命令串行执行”是理解原子命令的重要基础，但 Lua 脚本和高复杂度命令也会独占主执行线程。I/O 线程不会把普通命令自动变成并行执行。"
       }
     ]
   }

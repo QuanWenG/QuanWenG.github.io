@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { formatTime, initialVolume } from './musicUtils'
+import { beforeEach, describe, expect, it } from 'vitest'
+import {
+  formatTime,
+  initialVolume,
+  MUSIC_PLAYBACK_STATE_KEY,
+  readMusicPlaybackState,
+  writeMusicPlaybackState,
+} from './musicUtils'
+
+beforeEach(() => window.localStorage.clear())
 
 describe('formatTime', () => {
   it('formats media seconds safely', () => {
@@ -7,14 +15,27 @@ describe('formatTime', () => {
     expect(formatTime(Number.NaN)).toBe('0:00')
   })
 })
+
 describe('initialVolume', () => {
   it('defaults to full volume when no preference is stored', () => {
-    window.localStorage.removeItem('quanweng-music-volume')
     expect(initialVolume()).toBe(1)
   })
 
   it('keeps an explicitly stored volume', () => {
     window.localStorage.setItem('quanweng-music-volume', '0.4')
     expect(initialVolume()).toBe(0.4)
+  })
+})
+
+describe('music playback persistence', () => {
+  it('round-trips the selected track, time, mode and play intent', () => {
+    const state = { currentId: 'evo', currentTime: 42.5, repeatMode: 'one' as const, wasPlaying: true }
+    writeMusicPlaybackState(state)
+    expect(readMusicPlaybackState()).toEqual(state)
+  })
+
+  it('ignores malformed stored state', () => {
+    window.localStorage.setItem(MUSIC_PLAYBACK_STATE_KEY, '{"currentTime":-1}')
+    expect(readMusicPlaybackState()).toBeNull()
   })
 })
