@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import {
-  formatTime,
-  initialVolume,
-  MUSIC_PLAYBACK_STATE_KEY,
-  readMusicPlaybackState,
-  writeMusicPlaybackState,
-} from './musicUtils'
+import { STORAGE_KEYS } from '../../config/storageKeys'
+import { formatTime, initialVolume, readMusicPlaybackState, writeMusicPlaybackState } from './musicUtils'
 
 beforeEach(() => window.localStorage.clear())
 
@@ -22,7 +17,7 @@ describe('initialVolume', () => {
   })
 
   it('keeps an explicitly stored volume', () => {
-    window.localStorage.setItem('quanweng-music-volume', '0.4')
+    window.localStorage.setItem(STORAGE_KEYS.musicVolume, '0.4')
     expect(initialVolume()).toBe(0.4)
   })
 })
@@ -35,7 +30,7 @@ describe('music playback persistence', () => {
   })
 
   it('ignores malformed stored state', () => {
-    window.localStorage.setItem(MUSIC_PLAYBACK_STATE_KEY, '{"currentTime":-1}')
+    window.localStorage.setItem(STORAGE_KEYS.musicPlaybackState, '{"currentTime":-1}')
     expect(readMusicPlaybackState()).toBeNull()
   })
 })

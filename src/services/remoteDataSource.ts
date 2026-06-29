@@ -1,29 +1,41 @@
-import { localDataSource } from './localDataSource'
+import type { ProjectItem } from '../types/project'
+import { API_ENDPOINTS } from './apiEndpoints'
 import type { DataSource } from './dataSource'
 import { normalizeProjects } from './projects'
-import type { ProjectItem } from '../types/project'
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
-
-async function readRemote<T>(endpoint: string, fallback: () => Promise<T>): Promise<T> {
-  if (!apiBaseUrl) return fallback()
-  try {
-    const response = await fetch(`${apiBaseUrl}${endpoint}`)
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`)
-    return (await response.json()) as T
-  } catch {
-    return fallback()
-  }
+export interface RemoteDataSourceOptions {
+  baseUrl: string
+  fallback: DataSource
+  fetcher?: typeof fetch
 }
 
-export const remoteDataSource: DataSource = {
-  getSiteConfig: () => readRemote('/site', localDataSource.getSiteConfig),
-  getUiCopy: () => readRemote('/ui', localDataSource.getUiCopy),
-  getNavigation: () => readRemote('/navigation', localDataSource.getNavigation),
-  getTechStack: () => readRemote('/tech-stack', localDataSource.getTechStack),
-  getProjects: async () => normalizeProjects(await readRemote<ProjectItem[]>('/projects', localDataSource.getProjects)),
-  getMusicTracks: () => readRemote('/music', localDataSource.getMusicTracks),
-  getAnnotations: () => readRemote('/annotations', localDataSource.getAnnotations),
-  getBlogIndex: () => readRemote('/blog', localDataSource.getBlogIndex),
-  getBlogArticle: (id) => readRemote(`/blog/${encodeURIComponent(id)}`, () => localDataSource.getBlogArticle(id)),
+export function createRemoteDataSource({
+  baseUrl,
+  fallback,
+  fetcher = fetch,
+}: RemoteDataSourceOptions): DataSource {
+  const normalizedBaseUrl = baseUrl.replace(/\/$/, '')
+
+  async function readRemote<T>(endpoint: string, readFallback: () => Promise<T>): Promise<T> {
+    try {
+      const response = await fetcher(`${normalizedBaseUrl}${endpoint}`)
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`)
+      return (await response.json()) as T
+    } catch {
+      // 远程接口是可替换的数据细节；不可用时由同一能力的本地实现兜底。
+      return readFallback()
+    }
+  }
+
+  return {
+    getSiteConfig: () => readRemote(API_ENDPOINTS.site, fallback.getSiteConfig),
+    getUiCopy: () => readRemote(API_ENDPOINTS.ui, fallback.getUiCopy),
+    getNavigation: () => readRemote(API_ENDPOINTS.navigation, fallback.getNavigation),
+    getTechStack: () => readRemote(API_ENDPOINTS.techStack, fallback.getTechStack),
+    getProjects: async () => normalizeProjects(await readRemote<ProjectItem[]>(API_ENDPOINTS.projects, fallback.getProjects)),
+    getMusicTracks: () => readRemote(API_ENDPOINTS.music, fallback.getMusicTracks),
+    getAnnotations: () => readRemote(API_ENDPOINTS.annotations, fallback.getAnnotations),
+    getBlogIndex: () => readRemote(API_ENDPOINTS.blogIndex, fallback.getBlogIndex),
+    getBlogArticle: (id) => readRemote(API_ENDPOINTS.blogArticle(id), () => fallback.getBlogArticle(id)),
+  }
 }

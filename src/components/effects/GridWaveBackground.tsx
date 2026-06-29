@@ -1,4 +1,5 @@
-﻿import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { MEDIA_QUERIES } from '../../config/mediaQueries'
 import { useMediaQuery } from '../common/useMediaQuery'
 
 interface Sparkle {
@@ -67,7 +68,7 @@ function createSparkles(width: number, height: number) {
 
 export function GridWaveBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const reduceMotion = useMediaQuery(MEDIA_QUERIES.reducedMotion)
 
   useEffect(() => {
     const canvas = canvasRef.current

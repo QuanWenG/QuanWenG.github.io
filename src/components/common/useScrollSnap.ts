@@ -1,5 +1,7 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+
+const HASH_SCROLL_DELAY_MS = 120
 
 export function useScrollSnap() {
   const location = useLocation()
@@ -21,6 +23,6 @@ export function useScrollSnap() {
     const targetId = decodeURIComponent(location.hash.slice(1))
     window.setTimeout(() => {
       document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 120)
+    }, HASH_SCROLL_DELAY_MS)
   }, [location])
 }

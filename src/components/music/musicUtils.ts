@@ -1,5 +1,4 @@
-export const MUSIC_VOLUME_KEY = 'quanweng-music-volume'
-export const MUSIC_PLAYBACK_STATE_KEY = 'quanweng-music-playback-state'
+import { STORAGE_KEYS } from '../../config/storageKeys'
 
 export interface StoredMusicPlaybackState {
   currentId: string | null
@@ -9,7 +8,7 @@ export interface StoredMusicPlaybackState {
 }
 
 export function initialVolume(storage: Pick<Storage, 'getItem'> = window.localStorage) {
-  const stored = storage.getItem(MUSIC_VOLUME_KEY)
+  const stored = storage.getItem(STORAGE_KEYS.musicVolume)
   if (stored === null) return 1
   const saved = Number(stored)
   return Number.isFinite(saved) && saved >= 0 && saved <= 1 ? saved : 1
@@ -19,7 +18,7 @@ export function readMusicPlaybackState(
   storage: Pick<Storage, 'getItem'> = window.localStorage,
 ): StoredMusicPlaybackState | null {
   try {
-    const raw = storage.getItem(MUSIC_PLAYBACK_STATE_KEY)
+    const raw = storage.getItem(STORAGE_KEYS.musicPlaybackState)
     if (!raw) return null
     const value = JSON.parse(raw) as Partial<StoredMusicPlaybackState>
     if (
@@ -46,7 +45,7 @@ export function writeMusicPlaybackState(
   storage: Pick<Storage, 'setItem'> = window.localStorage,
 ) {
   try {
-    storage.setItem(MUSIC_PLAYBACK_STATE_KEY, JSON.stringify(state))
+    storage.setItem(STORAGE_KEYS.musicPlaybackState, JSON.stringify(state))
   } catch {
     // Storage can be unavailable in privacy-restricted browser contexts.
   }

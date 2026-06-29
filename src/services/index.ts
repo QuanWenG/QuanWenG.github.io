@@ -1,7 +1,6 @@
-﻿import { localDataSource } from './localDataSource'
-import { remoteDataSource } from './remoteDataSource'
-import type { DataSource } from './dataSource'
-
-export const dataSource: DataSource = import.meta.env.VITE_API_BASE_URL
-  ? remoteDataSource
-  : localDataSource
+export { createContentService } from './contentService'
+export type { AppContent, BlogLibrary, ContentService } from './contentService'
+export type { DataSource } from './dataSource'
+export { localDataSource } from './localDataSource'
+export { createRemoteDataSource } from './remoteDataSource'
+export type { RemoteDataSourceOptions } from './remoteDataSource'

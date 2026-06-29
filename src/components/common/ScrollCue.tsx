@@ -1,11 +1,12 @@
-﻿import { ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import type { MouseEvent } from 'react'
+import { TECH_STACK_ANCHOR_ID } from '../../config/routes'
 
 interface ScrollCueProps {
   targetId?: string
 }
 
-export function ScrollCue({ targetId = 'tech-stack' }: ScrollCueProps) {
+export function ScrollCue({ targetId = TECH_STACK_ANCHOR_ID }: ScrollCueProps) {
   const scrollToTarget = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
     document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })

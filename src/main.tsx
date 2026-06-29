@@ -1,6 +1,7 @@
-﻿import { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import { createContentService, createRemoteDataSource, localDataSource } from './services'
 import './styles/fonts.css'
 import './styles/tokens.css'
 import './styles/global.css'
@@ -11,8 +12,14 @@ if (redirectPath) {
   window.history.replaceState(null, '', redirectPath)
 }
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
+const dataSource = apiBaseUrl
+  ? createRemoteDataSource({ baseUrl: apiBaseUrl, fallback: localDataSource })
+  : localDataSource
+const contentService = createContentService(dataSource)
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <App contentService={contentService} />
   </StrictMode>,
 )

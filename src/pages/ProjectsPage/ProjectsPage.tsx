@@ -2,23 +2,26 @@ import { Archive, ArrowUpRight, Clock3, Code2, GitBranch, Sparkles, Star } from 
 import { useMemo, type CSSProperties } from 'react'
 import { usePreferences } from '../../app/providers/usePreferences'
 import { useMediaQuery } from '../../components/common/useMediaQuery'
+import { MEDIA_QUERIES } from '../../config/mediaQueries'
 import { textByLocale } from '../../services/i18n'
+import { resolvePublicAssetPath } from '../../services/publicAssetPath'
 import { sortProjects } from '../../services/projects'
 import type { UiCopy } from '../../types/content'
 import type { ProjectItem } from '../../types/project'
 import './ProjectsPage.css'
+const PROJECT_HUE_MULTIPLIER = 31
+const PROJECT_HUE_MODULUS = 360
+const PROJECT_HUE_SEED = 137
+const PROJECT_COVER_BASE_HEIGHT_PX = 176
+const PROJECT_COVER_HEIGHT_VARIANTS = 4
+const PROJECT_COVER_HEIGHT_STEP_PX = 28
 
 function stableHue(id: string) {
-  return [...id].reduce((value, character) => (value * 31 + character.charCodeAt(0)) % 360, 137)
+  return [...id].reduce((value, character) => (value * PROJECT_HUE_MULTIPLIER + character.charCodeAt(0)) % PROJECT_HUE_MODULUS, PROJECT_HUE_SEED)
 }
 
 function coverHeight(id: string) {
-  return 176 + (stableHue(id) % 4) * 28
-}
-
-function resolveCoverPath(cover: string) {
-  if (!cover || /^(https?:|data:|blob:)/.test(cover)) return cover
-  return `${import.meta.env.BASE_URL}${cover.replace(/^\/+/, '')}`
+  return PROJECT_COVER_BASE_HEIGHT_PX + (stableHue(id) % PROJECT_COVER_HEIGHT_VARIANTS) * PROJECT_COVER_HEIGHT_STEP_PX
 }
 
 function formatUpdatedAt(value: string, locale: 'zh' | 'en') {
@@ -37,7 +40,7 @@ function ProjectCard({ project, ui, locale }: { project: ProjectItem; ui: UiCopy
   return (
     <article className={`project-card${project.featured ? ' is-featured' : ''}${project.status === 'archived' ? ' is-archived' : ''}`}>
       <div className="project-card__cover" style={coverStyle}>
-        {project.cover ? <img src={resolveCoverPath(project.cover)} alt="" loading="lazy" /> : <><Code2 aria-hidden="true" /><span>{project.techStack.slice(0, 3).join(' · ')}</span></>}
+        {project.cover ? <img src={resolvePublicAssetPath(project.cover)} alt="" loading="lazy" /> : <><Code2 aria-hidden="true" /><span>{project.techStack.slice(0, 3).join(' · ')}</span></>}
       </div>
       <div className="project-card__body">
         <div className="project-card__meta">
@@ -63,8 +66,8 @@ function ProjectCard({ project, ui, locale }: { project: ProjectItem; ui: UiCopy
 
 export function ProjectsPage({ ui, projects }: { ui: UiCopy; projects: ProjectItem[] }) {
   const { locale } = usePreferences()
-  const compact = useMediaQuery('(max-width: 640px)')
-  const tablet = useMediaQuery('(max-width: 980px)')
+  const compact = useMediaQuery(MEDIA_QUERIES.projectsSingleColumn)
+  const tablet = useMediaQuery(MEDIA_QUERIES.projectsAtMostTwoColumns)
   const laneCount = compact ? 1 : tablet ? 2 : 3
   const sortedProjects = useMemo(() => sortProjects(projects), [projects])
   const lanes = useMemo(() => Array.from({ length: laneCount }, (_, laneIndex) => sortedProjects.filter((_, projectIndex) => projectIndex % laneCount === laneIndex)), [laneCount, sortedProjects])

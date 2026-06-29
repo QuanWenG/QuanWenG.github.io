@@ -1,9 +1,13 @@
-﻿import { CornerDownRight } from 'lucide-react'
+import { CornerDownRight } from 'lucide-react'
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePreferences } from '../../app/providers/usePreferences'
+import { APP_ROUTES } from '../../config/routes'
 import { textByLocale } from '../../services/i18n'
 import type { SiteConfig } from '../../types/content'
+
+const TERMINAL_TYPING_INTERVAL_MS = 26
+const TERMINAL_HISTORY_LIMIT = 2
 
 interface HeroTerminalProps {
   site: SiteConfig
@@ -28,13 +32,13 @@ export function HeroTerminal({ site }: HeroTerminalProps) {
       if (index >= welcomeText.length) {
         window.clearInterval(timer)
       }
-    }, 26)
+    }, TERMINAL_TYPING_INTERVAL_MS)
 
     return () => window.clearInterval(timer)
   }, [welcomeText])
 
   const pushHistory = (line: string) => {
-    setHistory((current) => [...current, line].slice(-2))
+    setHistory((current) => [...current, line].slice(-TERMINAL_HISTORY_LIMIT))
   }
 
   const runCommand = (command: string) => {
@@ -50,13 +54,13 @@ export function HeroTerminal({ site }: HeroTerminalProps) {
 
     if (normalized === 'projects') {
       pushHistory(textByLocale(site.terminal.commands.projects, locale))
-      navigate('/projects')
+      navigate(APP_ROUTES.projects)
       return
     }
 
     if (normalized === 'music') {
       pushHistory(textByLocale(site.terminal.commands.music, locale))
-      navigate('/music')
+      navigate(APP_ROUTES.music)
       return
     }
 

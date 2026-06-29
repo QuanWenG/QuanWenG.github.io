@@ -14,3 +14,8 @@ export function resolveSvgPaint(paint: string, source: string, fallback: string)
   mixed.lerp(new Color(stopColors.at(-1)), 0.5)
   return `#${mixed.getHexString()}`
 }
+export function inlineSvgPaintReferences(source: string) {
+  return source.replace(/\b(fill|stroke)=(["'])(url\(#([^)]+)\))\2/gi, (_match, attribute: string, quote: string, paint: string) => {
+    return `${attribute}=${quote}${resolveSvgPaint(paint, source, '#ffffff')}${quote}`
+  })
+}

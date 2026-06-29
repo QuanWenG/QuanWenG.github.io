@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { SVGLoader } from 'three-stdlib'
-import { resolveSvgPaint } from './techIconSvg'
+import { inlineSvgPaintReferences, resolveSvgPaint } from './techIconSvg'
 
 const svgModules = import.meta.glob('../../assets/tech-icons/*.svg', {
   eager: true,
@@ -23,5 +23,6 @@ describe('technology SVG assets', () => {
     const color = resolveSvgPaint('url(#a)', astrBotSource || '', '#ffffff')
     expect(color).toMatch(/^#[0-9a-f]{6}$/i)
     expect(color.toLowerCase()).not.toBe('#ffffff')
+    expect(inlineSvgPaintReferences(astrBotSource || '')).not.toContain('url(#a)')
   })
 })

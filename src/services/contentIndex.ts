@@ -1,3 +1,4 @@
+import { APP_ROUTES, buildBlogArticleRoute, TECH_STACK_ROUTE } from '../config/routes'
 import type { BlogArticleMeta } from '../types/blog'
 import type { ContentIndexEntry, TechStackItem } from '../types/content'
 import type { MusicTrack } from '../types/music'
@@ -15,7 +16,7 @@ export function buildContentIndex(
       kind: 'blog' as const,
       title: article.title,
       description: article.category,
-      href: `/blog/${article.slug}`,
+      href: buildBlogArticleRoute(article.slug),
       tags: [article.category],
       searchableText: `${article.title} ${article.category}`,
     })),
@@ -36,7 +37,7 @@ export function buildContentIndex(
       kind: 'music' as const,
       title: track.title,
       description: track.artist,
-      href: '/music',
+      href: APP_ROUTES.music,
       tags: track.tags,
       searchableText: `${track.title} ${track.artist} ${track.tags.join(' ')}`,
     })),
@@ -45,7 +46,7 @@ export function buildContentIndex(
       kind: 'technology' as const,
       title: item.name,
       description: item.description.zh,
-      href: '/#tech-stack',
+      href: TECH_STACK_ROUTE,
       tags: [item.group, item.tier || 'supporting'],
       searchableText: `${item.name} ${item.group} ${item.tier || 'supporting'} ${item.description.zh} ${item.description.en} ${(item.projectIds || []).join(' ')}`,
     })),

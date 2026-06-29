@@ -3,6 +3,7 @@ import { Component, lazy, Suspense } from 'react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { usePreferences } from '../../app/providers/usePreferences'
+import { APP_ROUTES, TECH_STACK_ANCHOR_ID } from '../../config/routes'
 import { ScrollCue } from '../../components/common/ScrollCue'
 import { useScrollSnap } from '../../components/common/useScrollSnap'
 import { GridWaveBackground } from '../../components/effects/GridWaveBackground'
@@ -61,7 +62,7 @@ export function HomePage({ site, techStack, projects, ui }: HomePageProps) {
           <h1 id="home-title">{textByLocale(site.title, locale)}</h1>
           <p className="home-hero__subtitle">{textByLocale(site.subtitle, locale)}</p>
           <div className="home-hero__actions">
-            <Link className="primary-link" to="/blog">
+            <Link className="primary-link" to={APP_ROUTES.blog}>
               {textByLocale(ui['home.readBlog'], locale)}
               <ArrowRight size={18} aria-hidden="true" />
             </Link>
@@ -75,7 +76,7 @@ export function HomePage({ site, techStack, projects, ui }: HomePageProps) {
         <ScrollCue />
       </section>
 
-      <section className="tech-section snap-panel" id="tech-stack" aria-labelledby="tech-title">
+      <section className="tech-section snap-panel" id={TECH_STACK_ANCHOR_ID} aria-labelledby="tech-title">
         <div className="tech-section__intro">
           <p>{textByLocale(ui['home.knowledgeMap'], locale)}</p>
           <h2 id="tech-title">{textByLocale(ui['home.techTitle'], locale)}</h2>
