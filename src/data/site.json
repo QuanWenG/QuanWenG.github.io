@@ -1,4 +1,4 @@
-﻿{
+{
   "author": "QuanWenG",
   "title": {
     "zh": "荃翁龟的博客",
@@ -46,16 +46,16 @@
   },
   "placeholders": {
     "blog": {
-      "zh": "博客系统下一阶段接入 Markdown 树、渲染和静态批注。",
-      "en": "The blog system will connect Markdown trees, rendering, and static annotations next."
+      "zh": "按目录浏览 Markdown 笔记，并通过全文搜索与静态批注定位内容。",
+      "en": "Browse Markdown notes by topic with full-text search and static annotations."
     },
     "projects": {
-      "zh": "项目页下一阶段接入精选排序、封面和技术栈卡片。",
-      "en": "The projects page will connect featured sorting, covers, and tech cards next."
+      "zh": "项目页汇总精选工程、仓库状态、封面与技术栈信息。",
+      "en": "The projects page presents selected work, repository status, covers, and technologies."
     },
     "music": {
-      "zh": "音乐页下一阶段接入歌单、底部播放器和全局音乐盒。",
-      "en": "The music page will connect playlists, the bottom player, and global music box next."
+      "zh": "音乐页与全局音乐盒共享歌单、播放进度和音量状态。",
+      "en": "The music page and global music box share the playlist, progress, and volume state."
     }
   }
 }

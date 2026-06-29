@@ -20,10 +20,12 @@ export const physicalBlackHoleFragmentShader = /* glsl */ `
 precision highp float;
 
 uniform sampler2D uSpaceTexture;
+uniform sampler2D uSpaceDepth;
 uniform vec2 uBlackHolePosition;
 uniform vec2 uDiskDirection;
 uniform float uAspect;
 uniform float uShadowRadius;
+uniform float uBlackHoleDepth;
 uniform float uObserverElevation;
 uniform float uObserverAzimuth;
 uniform float uTime;
@@ -108,6 +110,14 @@ void main() {
     return;
   }
 
+  // Preserve real scene geometry in front of the black-hole plane. Geometry behind it
+  // remains in the space texture and follows the same curved-ray integration as stars.
+  float sceneDepth = texture2D(uSpaceDepth, vUv).r;
+  if (sceneDepth < uBlackHoleDepth - 0.00015) {
+    gl_FragColor = vec4(originalBackground, 1.0);
+    return;
+  }
+
   // 2.598 = 3√3/2, mapping the visible shadow edge to the critical impact parameter.
   // A near edge-on observer keeps the direct disk thin while lensing the far side
   // into the characteristic bright arcs above and below the shadow.
@@ -176,7 +186,10 @@ void main() {
 
   vec2 escapedMetric = diskAxis * escapedLocal.x + diskPerp * escapedLocal.y;
   vec2 backgroundUv = uBlackHolePosition + escapedMetric / vec2(uAspect, 1.0);
-  vec3 warpedBackground = texture2D(uSpaceTexture, clamp(backgroundUv, vec2(0.001), vec2(0.999))).rgb;
+  vec2 safeBackgroundUv = clamp(backgroundUv, vec2(0.001), vec2(0.999));
+  vec3 warpedBackground = texture2D(uSpaceTexture, safeBackgroundUv).rgb;
+  float warpedDepth = texture2D(uSpaceDepth, safeBackgroundUv).r;
+  if (warpedDepth < uBlackHoleDepth - 0.00015) warpedBackground = originalBackground;
   float lensBlend = 1.0 - smoothstep(1.55, 2.65, screenRadius);
   vec3 background = mix(originalBackground, warpedBackground, lensBlend);
   if (captured) background = vec3(0.0);
@@ -198,10 +211,12 @@ void main() {
 export interface PhysicalBlackHoleUniforms {
   [uniform: string]: IUniform<unknown>
   uSpaceTexture: { value: Texture | null }
+  uSpaceDepth: { value: Texture | null }
   uBlackHolePosition: { value: Vector2 }
   uDiskDirection: { value: Vector2 }
   uAspect: { value: number }
   uShadowRadius: { value: number }
+  uBlackHoleDepth: { value: number }
   uObserverElevation: { value: number }
   uObserverAzimuth: { value: number }
   uTime: { value: number }
@@ -210,10 +225,12 @@ export interface PhysicalBlackHoleUniforms {
 export function createPhysicalBlackHoleUniforms(): PhysicalBlackHoleUniforms {
   return {
     uSpaceTexture: { value: null },
+    uSpaceDepth: { value: null },
     uBlackHolePosition: { value: new Vector2(0.5, 0.5) },
     uDiskDirection: { value: new Vector2(1.0, 0.0) },
     uAspect: { value: 1.0 },
     uShadowRadius: { value: 0.066 },
+    uBlackHoleDepth: { value: 0.5 },
     uObserverElevation: { value: 0.13 },
     uObserverAzimuth: { value: 0 },
     uTime: { value: 0 },
