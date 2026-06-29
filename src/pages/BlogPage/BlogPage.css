@@ -1,5 +1,5 @@
-.blog-page { display: grid; grid-template-columns: 280px minmax(0, 1fr) 300px; min-height: 100svh; padding-top: 72px; background: var(--color-bg); }
-.blog-sidebar, .annotation-panel { position: sticky; top: 72px; height: calc(100svh - 72px); overflow: auto; background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bg)); }
+.blog-page { display: grid; grid-template-columns: 280px minmax(0, 1fr) 300px; min-height: 100svh; background: var(--color-bg); }
+.blog-sidebar, .annotation-panel { position: sticky; top: 0; height: 100svh; overflow: auto; background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bg)); }
 .blog-sidebar { padding: 28px 18px; border-right: 1px solid var(--color-border); }
 .annotation-panel { padding: 28px 22px; border-left: 1px solid var(--color-border); }
 .blog-sidebar__title { display: grid; gap: 5px; margin-bottom: 22px; text-decoration: none; }
@@ -15,7 +15,7 @@
 .blog-tree__folder > div { padding-left: 24px; }
 .blog-search-results button { display: grid; gap: 2px; }
 .blog-search-results span { font-size: 11px; }
-.blog-reader { min-width: 0; padding: 38px clamp(22px, 5vw, 76px) 100px; }
+.blog-reader { min-width: 0; padding: 88px clamp(22px, 5vw, 76px) 100px; }
 .blog-landing { display: grid; align-content: center; min-height: calc(100svh - 180px); max-width: 820px; margin: auto; }
 .blog-landing > p { margin: 0 0 10px; color: var(--color-primary); font-size: 12px; font-weight: 700; letter-spacing: .12em; }
 .blog-landing h1 { margin: 0; font-size: clamp(44px, 8vw, 88px); }

@@ -21,6 +21,37 @@ body.snap-scroll {
   overflow-x: clip;
 }
 
+.content-page {
+  min-height: 100svh;
+  padding: 72px var(--space-page) 96px;
+  background: var(--color-bg);
+}
+
+.content-page__header {
+  width: min(1120px, 100%);
+  margin: 0 auto 40px;
+}
+
+.content-page__header > p {
+  margin: 0 0 10px;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.content-page__header h1 {
+  margin: 0;
+  font-size: clamp(38px, 7vw, 72px);
+  line-height: 1.06;
+}
+
+.content-page__header > span {
+  display: block;
+  margin-top: 14px;
+  color: var(--color-muted);
+  font-size: 18px;
+}
 .snap-panel {
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -765,3 +796,9 @@ body.snap-scroll {
 
 
 
+
+@media (max-width: 560px) {
+  .content-page {
+    padding-top: 72px;
+  }
+}

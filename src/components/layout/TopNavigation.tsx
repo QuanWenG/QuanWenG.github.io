@@ -57,7 +57,7 @@ export function TopNavigation({ items }: { items: NavigationItem[] }) {
   return <header className={visible ? 'top-nav top-nav--visible' : 'top-nav'} onMouseEnter={() => setVisible(true)} onMouseLeave={() => setVisible(false)} onFocus={() => setVisible(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setVisible(false) }}>
     <Link className="top-nav__brand" to="/" aria-label="QuanWenG home" onClick={() => setVisible(false)}><span>Q</span><strong>QuanWenG</strong></Link>
     <nav className="top-nav__links" aria-label="Primary navigation">{items.filter((item) => item.showInNav).map((item) => {
-      const active = item.anchor ? activeAnchor === item.anchor : item.path === location.pathname
+      const active = item.anchor ? activeAnchor === item.anchor : item.path === location.pathname && !activeAnchor
       return item.anchor ? <button key={item.id} className={active ? 'is-active' : undefined} type="button" onClick={() => openItem(item)}>{textByLocale(item.label, locale)}</button> : <Link key={item.id} className={active ? 'is-active' : undefined} to={item.path} onClick={() => setVisible(false)}>{textByLocale(item.label, locale)}</Link>
     })}</nav>
     <div className="top-nav__actions"><button type="button" className="icon-button" onClick={toggleTheme} aria-label={locale === 'zh' ? '切换主题' : 'Toggle theme'}>{theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}</button><button type="button" className="icon-button" onClick={toggleLocale} aria-label={locale === 'zh' ? '切换语言' : 'Toggle language'}><Languages size={16} /><span>{locale === 'zh' ? '中' : 'EN'}</span></button></div>

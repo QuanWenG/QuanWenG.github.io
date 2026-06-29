@@ -1,5 +1,6 @@
 import { Disc3, Music2 } from 'lucide-react'
 import { MusicControls } from './MusicControls'
+import { MusicVisualizer } from './MusicVisualizer'
 import { useMusicPlayer } from './useMusicPlayer'
 import './music.css'
 
@@ -16,6 +17,7 @@ export function MusicDock() {
       <div className="music-dock__body">
         <strong>{player.currentTrack?.title || 'Music box'}</strong>
         <span>{player.currentTrack?.artist || 'QuanWenG'}</span>
+        <MusicVisualizer className="music-dock__equalizer" spectrum={player.spectrum} isPlaying={player.isPlaying} />
         <MusicControls compact />
         {player.error && <small role="status">{player.error}</small>}
       </div>

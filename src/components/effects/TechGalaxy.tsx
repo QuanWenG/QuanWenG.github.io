@@ -6,19 +6,13 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  CylinderGeometry,
-  DataTexture,
-  DoubleSide,
   HalfFloatType,
   LinearFilter,
   Mesh,
   OrthographicCamera,
   PlaneGeometry,
-  RedFormat,
-  RepeatWrapping,
   Scene,
   ShaderMaterial,
-  UnsignedByteType,
   Vector2,
   Vector3,
   WebGLRenderTarget,
@@ -37,19 +31,12 @@ import threeIcon from '../../assets/tech-icons/three.png?url'
 import { textByLocale } from '../../services/i18n'
 import type { TechStackItem } from '../../types/content'
 import { useMediaQuery } from '../common/useMediaQuery'
+import { starFragmentShader, starVertexShader } from './galaxyShaders'
 import {
-  accretionFragmentShader,
-  accretionVertexShader,
-  compositeFragmentShader,
-  compositeVertexShader,
-  createCompositeUniforms,
-  infallFragmentShader,
-  infallVertexShader,
-  lensedArcFragmentShader,
-  lensedArcVertexShader,
-  starFragmentShader,
-  starVertexShader,
-} from './galaxyShaders'
+  createPhysicalBlackHoleUniforms,
+  physicalBlackHoleFragmentShader,
+  physicalBlackHoleVertexShader,
+} from './schwarzschildBlackHoleShader'
 
 
 interface TechGalaxyProps {
@@ -96,8 +83,6 @@ const TECH_OCCLUSION_DEPTH_MARGIN = 0.25
 const TECH_OCCLUSION_WORLD_RADIUS = 3.3
 const TECH_OCCLUSION_MASK_RADIUS_PX = 150
 const TECH_OCCLUSION_MASK_SOFTNESS_PX = 26
-const BLACK_HOLE_ROTATION: [number, number, number] = [0.09, 0.02, -0.035]
-const BLACK_HOLE_PARTICLE_COUNT = 4200
 
 function resolveTechIcon(item: TechStackItem) {
   return techIconUrls[item.icon ?? item.id] ?? networkIcon
@@ -194,39 +179,6 @@ function createStars(count: number, radius: number, layer: GalaxyLayer) {
   return geometry
 }
 
-function createNoiseTexture(size = 128) {
-  const data = new Uint8Array(size * size)
-  for (let index = 0; index < data.length; index += 1) {
-    data[index] = Math.floor(Math.random() * 256)
-  }
-  const texture = new DataTexture(data, size, size, RedFormat, UnsignedByteType)
-  texture.wrapS = RepeatWrapping
-  texture.wrapT = RepeatWrapping
-  texture.needsUpdate = true
-  return texture
-}
-
-function createInfallGeometry(count: number) {
-  const position = new Float32Array(count * 3)
-  const progress = new Float32Array(count)
-  const sizes = new Float32Array(count)
-  const randoms = new Float32Array(count)
-  for (let i = 0; i < count; i += 1) {
-    position[i * 3] = 0
-    position[i * 3 + 1] = 0
-    position[i * 3 + 2] = 0
-    progress[i] = Math.random()
-    sizes[i] = Math.random()
-    randoms[i] = Math.random()
-  }
-  const geometry = new BufferGeometry()
-  geometry.setAttribute('position', new BufferAttribute(position, 3))
-  geometry.setAttribute('aProgress', new BufferAttribute(progress, 1))
-  geometry.setAttribute('aSize', new BufferAttribute(sizes, 1))
-  geometry.setAttribute('aRandom', new BufferAttribute(randoms, 1))
-  return geometry
-}
-
 function VolumetricStarField({ count, radius, layer, reduceMotion, dragIntensity, dragDirection, warpStrength }: VolumetricStarFieldProps) {
   const materialRef = useRef<ShaderMaterial>(null)
   const geometry = useMemo(() => createStars(count, radius, layer), [count, layer, radius])
@@ -262,139 +214,11 @@ function VolumetricStarField({ count, radius, layer, reduceMotion, dragIntensity
   )
 }
 
-function BlackHoleSystem({ reduceMotion }: { reduceMotion: boolean }) {
-  const diskRef = useRef<ShaderMaterial>(null)
-  const infallRef = useRef<ShaderMaterial>(null)
-  const upperLensArcRef = useRef<ShaderMaterial>(null)
-  const lowerLensArcRef = useRef<ShaderMaterial>(null)
-  const groupRef = useRef<Group>(null)
-  const { size } = useThree()
-
-  const diskGeometry = useMemo(() => new CylinderGeometry(5.7, 1.25, 0, 180, 10, true), [])
-  const noiseTexture = useMemo(() => createNoiseTexture(), [])
-  const infallGeometry = useMemo(() => createInfallGeometry(BLACK_HOLE_PARTICLE_COUNT), [])
-
-  useFrame(({ clock }, delta) => {
-    const elapsed = reduceMotion ? 0 : clock.elapsedTime
-    if (diskRef.current) {
-      diskRef.current.uniforms.uTime.value = elapsed
-    }
-    if (infallRef.current) {
-      infallRef.current.uniforms.uTime.value = elapsed + 9999
-      infallRef.current.uniforms.uViewHeight.value = size.height
-    }
-    if (upperLensArcRef.current) {
-      upperLensArcRef.current.uniforms.uTime.value = elapsed
-    }
-    if (lowerLensArcRef.current) {
-      lowerLensArcRef.current.uniforms.uTime.value = elapsed + 37
-    }
-    if (groupRef.current && !reduceMotion) {
-      groupRef.current.rotation.y += delta * 0.04
-    }
-  })
-
-  return (
-    <group rotation={BLACK_HOLE_ROTATION}>
-      <group ref={groupRef}>
-        {/* 事件视界：纯黑球体，遮挡背后的星光 */}
-        <mesh>
-          <sphereGeometry args={[1.0, 64, 64]} />
-          <meshBasicMaterial color="#000000" />
-        </mesh>
-
-        {/* 引力透镜像：远侧盘面被弯折到事件视界的上下两侧 */}
-        <mesh position={[0, 0.08, 0.1]} rotation={[0, 0, Math.PI * 0.04]} renderOrder={3}>
-          <torusGeometry args={[1.6, 0.22, 18, 160, Math.PI * 1.02]} />
-          <shaderMaterial
-            ref={upperLensArcRef}
-            vertexShader={lensedArcVertexShader}
-            fragmentShader={lensedArcFragmentShader}
-            transparent
-            side={DoubleSide}
-            depthWrite={false}
-            depthTest={false}
-            blending={AdditiveBlending}
-            uniforms={{
-              uTime: { value: 0 },
-              uBrightness: { value: 1.68 },
-              uFlowSpeed: { value: 0.055 },
-              uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fff6c9') },
-              uOuterColor: { value: new Color('#ffc247') },
-            }}
-          />
-        </mesh>
-        <mesh position={[0, -0.16, 0.12]} rotation={[0, 0, Math.PI * 1.04]} renderOrder={4}>
-          <torusGeometry args={[1.57, 0.2, 18, 144, Math.PI * 1.02]} />
-          <shaderMaterial
-            ref={lowerLensArcRef}
-            vertexShader={lensedArcVertexShader}
-            fragmentShader={lensedArcFragmentShader}
-            transparent
-            side={DoubleSide}
-            depthWrite={false}
-            depthTest={false}
-            blending={AdditiveBlending}
-            uniforms={{
-              uTime: { value: 37 },
-              uBrightness: { value: 1.52 },
-              uFlowSpeed: { value: -0.042 },
-              uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fff1b8') },
-              uOuterColor: { value: new Color('#f8aa28') },
-            }}
-          />
-        </mesh>
-        {/* 着色器吸积盘：移植自参考文件 G_ */}
-        <mesh geometry={diskGeometry}>
-          <shaderMaterial
-            ref={diskRef}
-            vertexShader={accretionVertexShader}
-            fragmentShader={accretionFragmentShader}
-            transparent
-            side={DoubleSide}
-            depthWrite={false}
-            blending={AdditiveBlending}
-            uniforms={{
-              uTime: { value: 0 },
-              uNoiseTexture: { value: noiseTexture },
-              uInnerColor: { value: new Color('#fff5c2') },
-              uOuterColor: { value: new Color('#ffb52f') },
-              uBrightness: { value: 1.08 },
-            }}
-          />
-        </mesh>
-
-        {/* 坠入粒子：移植自参考文件 W_，内快外慢螺旋坠入 */}
-        <points geometry={infallGeometry} frustumCulled={false}>
-          <shaderMaterial
-            ref={infallRef}
-            vertexShader={infallVertexShader}
-            fragmentShader={infallFragmentShader}
-            transparent
-            depthWrite={false}
-            blending={AdditiveBlending}
-            uniforms={{
-              uTime: { value: 0 },
-              uInnerColor: { value: new Color('#fff3ba') },
-              uOuterColor: { value: new Color('#ffb42e') },
-              uViewHeight: { value: size.height },
-              uSize: { value: 0.01 },
-              uInnerRadius: { value: 1.05 },
-              uOuterRadius: { value: 5.95 },
-            }}
-          />
-        </points>
-      </group>
-    </group>
-  )
-}
-
 function TechIconBillboard({ item, index, total, reduceMotion }: TechIconBillboardProps) {
   const { locale } = usePreferences()
   const { camera, size: viewportSize } = useThree()
   const groupRef = useRef<Group>(null)
+  const visualRef = useRef<Group>(null)
   const iconRef = useRef<HTMLButtonElement>(null)
   const worldPosRef = useRef(new Vector3())
   const iconCameraPosRef = useRef(new Vector3())
@@ -448,6 +272,9 @@ function TechIconBillboard({ item, index, total, reduceMotion }: TechIconBillboa
     const maskRadius = shouldMask ? (TECH_OCCLUSION_MASK_RADIUS_PX / Math.max(iconPixelSize, 1)) * 100 : 0
     const maskSoftness = (TECH_OCCLUSION_MASK_SOFTNESS_PX / Math.max(iconPixelSize, 1)) * 100
     const hiddenByMask = shouldMask && Math.hypot(maskX - 50, maskY - 50) < maskRadius - 50
+    if (visualRef.current) {
+      visualRef.current.visible = !shouldMask
+    }
 
     if (hiddenByMask && hovered) {
       setHovered(false)
@@ -491,14 +318,16 @@ function TechIconBillboard({ item, index, total, reduceMotion }: TechIconBillboa
           </Html>
         )}
       </Billboard>
-      <mesh>
-        <sphereGeometry args={[size * 1.45, 32, 32]} />
-        <meshBasicMaterial color={item.color} transparent opacity={active ? 0.14 : 0.055} depthWrite={false} blending={AdditiveBlending} />
-      </mesh>
-      <mesh rotation={[Math.PI * 0.5, 0.2, 0]}>
-        <torusGeometry args={[size * 1.25, 0.006, 8, 128]} />
-        <meshBasicMaterial color={item.color} transparent opacity={active ? 0.74 : 0.22} depthWrite={false} blending={AdditiveBlending} />
-      </mesh>
+      <group ref={visualRef}>
+        <mesh>
+          <sphereGeometry args={[size * 1.45, 32, 32]} />
+          <meshBasicMaterial color={item.color} transparent opacity={active ? 0.14 : 0.055} depthWrite={false} blending={AdditiveBlending} />
+        </mesh>
+        <mesh rotation={[Math.PI * 0.5, 0.2, 0]}>
+          <torusGeometry args={[size * 1.25, 0.006, 8, 128]} />
+          <meshBasicMaterial color={item.color} transparent opacity={active ? 0.74 : 0.22} depthWrite={false} blending={AdditiveBlending} />
+        </mesh>
+      </group>
     </group>
   )
 }
@@ -537,19 +366,29 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
     const compCam = new OrthographicCamera(-1, 1, 1, -1, 0, 1)
     const geometry = new PlaneGeometry(2, 2)
     const material = new ShaderMaterial({
-      vertexShader: compositeVertexShader,
-      fragmentShader: compositeFragmentShader,
-      uniforms: createCompositeUniforms(),
+      vertexShader: physicalBlackHoleVertexShader,
+      fragmentShader: physicalBlackHoleFragmentShader,
+      uniforms: createPhysicalBlackHoleUniforms(),
       depthTest: false,
       depthWrite: false,
     })
     const mesh = new Mesh(geometry, material)
     mesh.frustumCulled = false
     compScene.add(mesh)
-    return { scene: compScene, camera: compCam, material }
+    return { scene: compScene, camera: compCam, geometry, material }
   }, [])
 
+  useEffect(() => () => {
+    composite.geometry.dispose()
+    composite.material.dispose()
+  }, [composite])
+
   const bhScreen = useRef(new Vector3())
+  const bhWorld = useRef(new Vector3())
+  const blackHoleView = useRef(new Vector3())
+  const diskMajorWorld = useRef(new Vector3())
+  const diskMajorPoint = useRef(new Vector3())
+  const diskMajorScreen = useRef(new Vector3())
 
   // 拖拽与缓慢自转逻辑
   useFrame((_, delta) => {
@@ -585,19 +424,34 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
   // 双通道渲染：空间场景 → FBO → 透镜合成 → 屏幕
   useFrame((state) => {
     const mat = composite.material
-    // 黑洞世界原点投影到屏幕 UV
-    bhScreen.current.set(0, 0, 0).project(camera)
-    const bhX = bhScreen.current.x * 0.5 + 0.5
-    const bhY = bhScreen.current.y * 0.5 + 0.5
-    mat.uniforms.uBlackHolePosition.value.set(bhX, bhY)
+    // 黑洞盘面固定在世界 XZ 平面；用观察方向求屏幕长轴，避免水平绕行时发生滚转。
+    bhWorld.current.set(0, 0, 0)
+    bhScreen.current.copy(bhWorld.current).project(camera)
+    blackHoleView.current.copy(camera.position).sub(bhWorld.current)
+    diskMajorWorld.current.set(blackHoleView.current.z, 0, -blackHoleView.current.x)
+    if (diskMajorWorld.current.lengthSq() > 1e-6) {
+      diskMajorWorld.current.normalize()
+      diskMajorPoint.current.copy(bhWorld.current).add(diskMajorWorld.current)
+      diskMajorScreen.current.copy(diskMajorPoint.current).project(camera)
+      const axisX = (diskMajorScreen.current.x - bhScreen.current.x) * size.width
+      const axisY = (diskMajorScreen.current.y - bhScreen.current.y) * size.height
+      if (Math.hypot(axisX, axisY) > 0.001) {
+        mat.uniforms.uDiskDirection.value.set(axisX, axisY).normalize()
+      }
+    }
+
+    mat.uniforms.uBlackHolePosition.value.set(bhScreen.current.x * 0.5 + 0.5, bhScreen.current.y * 0.5 + 0.5)
     mat.uniforms.uSpaceTexture.value = fbo.texture
+    mat.uniforms.uAspect.value = size.width / Math.max(size.height, 1)
     mat.uniforms.uTime.value = state.clock.elapsedTime
 
-    // 根据相机距离自适应透镜/视界半径
-    const dist = camera.position.length()
-    const scale = Math.min(2.5, Math.max(0.4, 10.5 / Math.max(dist, 0.001)))
-    mat.uniforms.uHorizonRadius.value = 0.08 * scale
-    mat.uniforms.uLensRadius.value = 0.28 * scale
+    // 屏幕阴影半径对应 Schwarzschild 临界曲线，而非事件视界球体大小。
+    const dist = camera.position.distanceTo(bhWorld.current)
+    const radialDistance = Math.hypot(blackHoleView.current.x, blackHoleView.current.z)
+    mat.uniforms.uObserverElevation.value = Math.min(1.52, Math.max(-1.52, Math.atan2(blackHoleView.current.y, radialDistance)))
+    mat.uniforms.uObserverAzimuth.value = Math.atan2(blackHoleView.current.x, blackHoleView.current.z)
+    const scale = Math.min(2.35, Math.max(0.48, 10.5 / Math.max(dist, 0.001)))
+    mat.uniforms.uShadowRadius.value = 0.066 * scale
 
     gl.setRenderTarget(fbo)
     gl.render(scene, camera)
@@ -631,7 +485,6 @@ function GalaxyScene({ items, reduceMotion }: TechGalaxyProps & { reduceMotion: 
         <VolumetricStarField count={1050} radius={19} layer="farDistant" reduceMotion={reduceMotion} dragIntensity={dragIntensity} dragDirection={dragDirectionRef.current} warpStrength={0.14} />
         <VolumetricStarField count={560} radius={18} layer="galaxyDisk" reduceMotion={reduceMotion} dragIntensity={dragIntensity} dragDirection={dragDirectionRef.current} warpStrength={0.48} />
 
-        <BlackHoleSystem reduceMotion={reduceMotion} />
         {items.map((item, index) => (
           <TechIconBillboard key={item.id} item={item} index={index} total={items.length} reduceMotion={reduceMotion} />
         ))}

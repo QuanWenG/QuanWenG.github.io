@@ -12,6 +12,7 @@ export interface MusicPlayerState {
   volume: number
   repeatMode: RepeatMode
   energy: number
+  spectrum: number[]
   error: string | null
 }
 

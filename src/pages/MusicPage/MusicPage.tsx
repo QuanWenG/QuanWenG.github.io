@@ -1,6 +1,7 @@
 import { Disc3, Pause, Play } from 'lucide-react'
 import { usePreferences } from '../../app/providers/usePreferences'
 import { MusicControls } from '../../components/music/MusicControls'
+import { MusicVisualizer } from '../../components/music/MusicVisualizer'
 import { formatTime } from '../../components/music/musicUtils'
 import { useMusicPlayer } from '../../components/music/useMusicPlayer'
 import { textByLocale } from '../../services/i18n'
@@ -19,9 +20,10 @@ export function MusicPage({ ui }: { ui: UiCopy }) {
       </header>
       {player.tracks.length ? (
         <div className="music-page__layout">
-          <div className="music-page__now" style={{ '--track-accent': player.currentTrack?.accentColor } as React.CSSProperties}>
+          <div className={player.isPlaying ? 'music-page__now is-playing' : 'music-page__now'} style={{ '--track-accent': player.currentTrack?.accentColor, '--music-energy': player.energy } as React.CSSProperties}>
             <div className={player.isPlaying ? 'music-page__vinyl is-spinning' : 'music-page__vinyl'}><Disc3 /></div>
             <div><small>NOW PLAYING</small><h2>{player.currentTrack?.title}</h2><p>{player.currentTrack?.artist}</p></div>
+            <MusicVisualizer className="music-page__equalizer" spectrum={player.spectrum} isPlaying={player.isPlaying} />
             <MusicControls />
           </div>
           <ol className="track-list">

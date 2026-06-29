@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { MusicTrack } from '../../types/music'
 import { MusicContext, type RepeatMode } from './musicContext'
-
-const VOLUME_KEY = 'quanweng-music-volume'
-
-function initialVolume() {
-  const saved = Number(window.localStorage.getItem(VOLUME_KEY))
-  return Number.isFinite(saved) && saved >= 0 && saved <= 1 ? saved : 0.72
-}
+import { initialVolume, MUSIC_VOLUME_KEY } from './musicUtils'
 
 function resolveMediaPath(src: string) {
   if (/^(https?:|data:|blob:)/.test(src)) return src
@@ -27,6 +21,7 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
   const [volume, setVolumeState] = useState(initialVolume)
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('all')
   const [energy, setEnergy] = useState(0)
+  const [spectrum, setSpectrum] = useState([0, 0, 0, 0, 0])
   const [error, setError] = useState<string | null>(null)
 
   const currentTrack = tracks.find((track) => track.id === currentId) || tracks[0] || null
@@ -134,16 +129,25 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
   useEffect(() => {
     if (!isPlaying || !analyserRef.current) {
       setEnergy(0)
+      setSpectrum([0, 0, 0, 0, 0])
       return
     }
     const analyser = analyserRef.current
     const values = new Uint8Array(analyser.frequencyBinCount)
+    const ranges: Array<[number, number]> = [[1, 4], [4, 8], [8, 14], [14, 22], [22, 34]]
     let lastUpdate = 0
     const tick = (time: number) => {
       analyser.getByteFrequencyData(values)
       if (time - lastUpdate > 48) {
-        const average = values.reduce((sum, value) => sum + value, 0) / Math.max(values.length * 255, 1)
-        setEnergy(average)
+        const nextSpectrum = ranges.map(([start, end]) => {
+          let sum = 0
+          const safeEnd = Math.min(end, values.length)
+          for (let index = start; index < safeEnd; index += 1) sum += values[index]
+          const level = sum / Math.max((safeEnd - start) * 255, 1)
+          return Math.min(1, level * 1.8)
+        })
+        setSpectrum(nextSpectrum)
+        setEnergy(nextSpectrum.reduce((sum, value) => sum + value, 0) / nextSpectrum.length)
         lastUpdate = time
       }
       frameRef.current = requestAnimationFrame(tick)
@@ -185,6 +189,7 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
     volume,
     repeatMode,
     energy,
+    spectrum,
     error,
     playTrack: (id: string) => {
       if (id === currentTrack?.id) {
@@ -203,11 +208,11 @@ export function MusicProvider({ tracks, children }: { tracks: MusicTrack[]; chil
     setVolume: (nextVolume: number) => {
       const normalized = Math.max(0, Math.min(nextVolume, 1))
       if (audioRef.current) audioRef.current.volume = normalized
-      window.localStorage.setItem(VOLUME_KEY, String(normalized))
+      window.localStorage.setItem(MUSIC_VOLUME_KEY, String(normalized))
       setVolumeState(normalized)
     },
     toggleRepeat: () => setRepeatMode((mode) => mode === 'all' ? 'one' : 'all'),
-  }), [currentTime, currentTrack, duration, energy, error, isPlaying, next, play, previous, repeatMode, tracks, volume])
+  }), [currentTime, currentTrack, duration, energy, error, isPlaying, next, play, previous, repeatMode, spectrum, tracks, volume])
 
   return <MusicContext.Provider value={value}>{children}</MusicContext.Provider>
 }

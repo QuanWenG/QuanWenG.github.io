@@ -29,9 +29,14 @@
 .music-dock__disc { position: absolute; inset: 5px; z-index: 1; display: grid; place-items: center; color: white; background: radial-gradient(circle at 35% 30%, #fff, var(--music-accent) 18%, #16201e 65%); border-radius: 50%; }
 .music-dock.is-playing .music-dock__disc { animation: music-spin 4s linear infinite; }
 .music-dock__body { display: grid; min-width: 0; flex: 1; }
-.music-dock__body strong, .music-dock__body span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.music-dock__body span { color: var(--color-muted); font-size: 12px; }
+.music-dock__body > strong, .music-dock__body > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-dock__body > span { color: var(--color-muted); font-size: 12px; }
 .music-dock__body small { color: var(--color-coral); font-size: 10px; }
+.music-equalizer { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 22px; overflow: visible; }
+.music-equalizer span { width: 5px; height: 100%; background: linear-gradient(180deg, #fff8d8, var(--music-accent, var(--track-accent, var(--color-primary)))); border-radius: 999px; opacity: .42; transform: scaleY(var(--music-band)); transform-origin: 50% 100%; transition: transform 70ms linear, opacity 140ms ease; }
+.music-equalizer.is-active span { opacity: 1; box-shadow: 0 0 10px color-mix(in srgb, var(--music-accent, var(--track-accent, var(--color-primary))) 58%, transparent); }
+.music-dock__equalizer { justify-content: flex-start; width: 76px; height: 14px; margin-top: 5px; }
+.music-dock__equalizer span { width: 3px; }
 .music-controls { display: grid; gap: 14px; width: 100%; }
 .music-controls__transport { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .music-controls button { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; color: var(--color-text); background: transparent; border: 1px solid transparent; border-radius: 50%; }
