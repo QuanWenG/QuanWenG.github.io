@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run check:bundle",
     "lint": "oxlint",
-    "test": "vitest run && node --test scripts/sync-github.node-test.mjs",
+    "test": "vitest run && node --test scripts/sync-github.node-test.mjs scripts/performance.node-test.mjs",
     "preview": "vite preview",
-    "sync:github": "node scripts/sync-github.mjs"
+    "sync:github": "node scripts/sync-github.mjs",
+    "generate:fonts": "node scripts/generate-font-subsets.mjs",
+    "check:bundle": "node scripts/check-bundle.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
