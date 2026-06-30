@@ -2,18 +2,13 @@
 
 一个使用 React、TypeScript、Vite 和 Three.js 构建的静态个人博客。站点包含双屏首页、技术星图、Markdown 笔记、静态批注、项目瀑布流、全局音乐盒以及中英文/深浅色切换。
 
-### 首页
+### 首页 & 技术星图
 
 <img src="./public/media/screenshots/home.png" alt="博客首页" width="800">
 
 - 展示个人简介，并提供博客与 GitHub 的主要入口。
 - 内置交互式终端，可通过命令快速访问站点内容。
 - 向下滚动即可进入技术星图。
-
-### 技术星图
-
-<img src="./public/media/screenshots/tech-galaxy.png" alt="技术星图" width="800">
-
 - 使用 Three.js 呈现黑洞、星场和三层技术轨道。
 - 技术节点支持交互查看详情、关联项目和相关文章。
 - 提供移动端降级与减少动态效果支持。
