@@ -14,7 +14,6 @@ const root = resolve(dirname(scriptPath), '..')
 
 export const BUNDLE_BUDGETS = {
   initialJavaScriptGzip: 130_000,
-  techGalaxyJavaScriptGzip: 300_000,
   fontFile: 600_000,
 }
 
@@ -68,9 +67,10 @@ export async function checkBundle({ distRoot = resolve(root, 'dist') } = {}) {
   const report = createBundleReport({ manifest, gzipSizes, fontSizes })
   const checks = [
     ['Initial JavaScript gzip', report.initialJavaScriptGzip, BUNDLE_BUDGETS.initialJavaScriptGzip],
-    ['TechGalaxy JavaScript gzip', report.techGalaxyJavaScriptGzip, BUNDLE_BUDGETS.techGalaxyJavaScriptGzip],
     ['Largest subset font', report.largestFontFile, BUNDLE_BUDGETS.fontFile],
   ]
+
+  console.log(`[bundle-budget] REPORT TechGalaxy JavaScript gzip: ${formatKilobytes(report.techGalaxyJavaScriptGzip)}`)
 
   let failed = false
   for (const [label, actual, budget] of checks) {

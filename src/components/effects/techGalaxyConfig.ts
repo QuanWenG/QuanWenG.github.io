@@ -1,3 +1,4 @@
+import type { Vector3 } from 'three'
 import type { TechStackItem, TechTier } from '../../types/content'
 
 export type GalaxyLayer = 'farDistant' | 'galaxyDisk'
@@ -7,7 +8,15 @@ export const STAR_CENTER_CLEAR_RADIUS: Record<GalaxyLayer, number> = {
   galaxyDisk: 12.4,
 }
 export const TECH_TOOLTIP_Z_INDEX_RANGE: [number, number] = [80, 60]
+export const TECH_NODE_BACKGROUND_RENDER_LAYER = 0
+export const TECH_NODE_RENDER_LAYER = 1
 export const BLACK_HOLE_OCCLUDER_RADIUS = 0.68
+
+export function getTechNodeRenderLayer(cameraPosition: Vector3, nodePosition: Vector3) {
+  return cameraPosition.distanceToSquared(nodePosition) < cameraPosition.lengthSq()
+    ? TECH_NODE_RENDER_LAYER
+    : TECH_NODE_BACKGROUND_RENDER_LAYER
+}
 
 export const TECH_GALAXY_CANVAS_CONFIG = {
   background: '#01040a',
@@ -38,6 +47,8 @@ export const TECH_GALAXY_STAR_FIELDS = [
 export const TECH_GALAXY_CONTROLS_CONFIG = {
   minDistance: 4,
   maxDistance: 22,
+  minPolarAngle: Math.PI * 0.34,
+  maxPolarAngle: Math.PI * 0.66,
   autoRotateSpeed: 0.12,
   dampingFactor: 0.08,
 } as const

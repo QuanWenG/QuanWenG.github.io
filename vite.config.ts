@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     manifest: true,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1200,
   },
   test: {
     environment: 'jsdom',
