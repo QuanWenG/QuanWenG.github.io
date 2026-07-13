@@ -24,7 +24,7 @@ describe('initialVolume', () => {
 
 describe('music playback persistence', () => {
   it('round-trips the selected track, time, mode and play intent', () => {
-    const state = { currentId: 'evo', currentTime: 42.5, repeatMode: 'one' as const, wasPlaying: true }
+    const state = { currentId: 'low-earth-drive', currentTime: 42.5, repeatMode: 'one' as const, wasPlaying: true }
     writeMusicPlaybackState(state)
     expect(readMusicPlaybackState()).toEqual(state)
   })

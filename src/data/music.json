@@ -1,12 +1,52 @@
 [
   {
-    "id": "evo",
-    "title": "Evo",
-    "artist": "QuanWenG Playlist",
-    "src": "media/music/evo.mp3",
+    "id": "low-earth-drive",
+    "title": "Low Earth Drive",
+    "artist": "QuanWenG Electronic",
+    "src": "media/music/low-earth-drive.mp3",
     "cover": "",
-    "duration": 121.5,
-    "accentColor": "#6ad7c6",
-    "tags": ["playlist", "seed"]
+    "duration": 72,
+    "accentColor": "#55d6be",
+    "tags": ["melodic house", "drive", "warm"]
+  },
+  {
+    "id": "neon-coastline",
+    "title": "Neon Coastline",
+    "artist": "QuanWenG Electronic",
+    "src": "media/music/neon-coastline.mp3",
+    "cover": "",
+    "duration": 74,
+    "accentColor": "#ff8f70",
+    "tags": ["synthwave", "coast", "summer"]
+  },
+  {
+    "id": "soft-circuit-room",
+    "title": "Soft Circuit Room",
+    "artist": "QuanWenG Electronic",
+    "src": "media/music/soft-circuit-room.mp3",
+    "cover": "",
+    "duration": 76,
+    "accentColor": "#9adf7f",
+    "tags": ["downtempo", "human", "soft"]
+  },
+  {
+    "id": "afterglow-bus",
+    "title": "Afterglow Bus",
+    "artist": "QuanWenG Electronic",
+    "src": "media/music/afterglow-bus.mp3",
+    "cover": "",
+    "duration": 68,
+    "accentColor": "#ffd166",
+    "tags": ["electro", "afterglow", "lift"]
+  },
+  {
+    "id": "blue-hour-engine",
+    "title": "Blue Hour Engine",
+    "artist": "QuanWenG Electronic",
+    "src": "media/music/blue-hour-engine.mp3",
+    "cover": "",
+    "duration": 78,
+    "accentColor": "#7cc7ff",
+    "tags": ["future garage", "blue hour", "flow"]
   }
 ]
