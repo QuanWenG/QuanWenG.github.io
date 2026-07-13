@@ -25,12 +25,51 @@
 
 .music-dock:hover,
 .music-dock:focus-within { clip-path: inset(0 round 24px); transform: translate(0, -50%); }
+.music-dock__close {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  background: color-mix(in srgb, var(--color-surface-strong) 68%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 20%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(.86);
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.music-dock:hover .music-dock__close,
+.music-dock:focus-within .music-dock__close {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.music-dock__close:hover,
+.music-dock__close:focus-visible {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--music-accent) 18%, var(--color-surface-strong));
+  border-color: color-mix(in srgb, var(--music-accent) 38%, var(--color-border));
+  outline: none;
+}
+
+.music-dock__close svg {
+  width: 15px;
+  height: 15px;
+}
 .music-dock__disc-wrap { position: relative; flex: 0 0 58px; width: 58px; height: 58px; }
 .music-dock__progress { position: absolute; inset: -4px; border-radius: 50%; background: conic-gradient(var(--music-accent) var(--music-progress), var(--color-border) 0); filter: drop-shadow(0 0 calc(5px + var(--music-energy) * 14px) var(--music-accent)); }
 .music-dock__progress::after { content: ''; position: absolute; inset: 4px; border-radius: inherit; background: var(--color-surface-strong); }
 .music-dock__disc { position: absolute; inset: 5px; z-index: 1; display: grid; place-items: center; color: white; background: radial-gradient(circle at 35% 30%, #fff, var(--music-accent) 18%, #16201e 65%); border-radius: 50%; }
 .music-dock.is-playing .music-dock__disc { animation: music-spin 4s linear infinite; }
-.music-dock__body { display: grid; min-width: 0; flex: 1; }
+.music-dock__body { display: grid; min-width: 0; flex: 1; padding-right: 28px; }
 .music-dock__body > strong, .music-dock__body > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-dock__body > span { color: var(--color-muted); font-size: 12px; }
 .music-dock__body small { color: var(--color-coral); font-size: 10px; }

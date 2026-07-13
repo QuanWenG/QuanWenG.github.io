@@ -40,16 +40,30 @@ import {
 import { nebulaFragmentShader, nebulaVertexShader } from './nebulaShaders'
 import { TechBeacon } from './TechBeacon'
 import {
+  createOrbitalFocusPath,
   getTechNodePlacement,
+  sampleOrbitalFocusPath,
   TECH_GALAXY_CANVAS_CONFIG,
   TECH_NODE_RENDER_LAYER,
   TECH_GALAXY_CONTROLS_CONFIG,
   TECH_GALAXY_SCENE_CONFIG,
+  type OrbitalFocusPath,
 } from './techGalaxyConfig'
 
 interface DragState {
   direction: MutableRefObject<{ x: number; y: number }>
   intensity: MutableRefObject<number>
+}
+
+interface GalaxyFocusRequest {
+  id: string
+  nonce: number
+}
+
+interface FocusAnimation {
+  duration: number
+  elapsed: number
+  path: OrbitalFocusPath
 }
 
 function CinematicStarField({
@@ -167,13 +181,17 @@ function reportDiagnostics(delta: number, samples: MutableRefObject<number[]>, w
 }
 
 export function GalaxyScene({
+  focusRequest,
   items,
   onSelect,
   reduceMotion,
+  selectedId,
 }: {
+  focusRequest: GalaxyFocusRequest | null
   items: TechStackItem[]
   onSelect: (id: string) => void
   reduceMotion: boolean
+  selectedId: string | null
 }) {
   const profile = ULTRA_GALAXY_QUALITY
   const galaxyRef = useRef<Group>(null)
@@ -184,6 +202,7 @@ export function GalaxyScene({
   const lastPosRef = useRef({ x: 0, y: 0 })
   const isDraggingRef = useRef(false)
   const activeIdRef = useRef<string | null>(null)
+  const focusAnimationRef = useRef<FocusAnimation | null>(null)
   const focusTargetRef = useRef(new Vector3())
   const diagnosticsSamples = useRef<number[]>([])
   const diagnosticsWarmup = useRef(0)
@@ -194,6 +213,15 @@ export function GalaxyScene({
     supporting: items.filter((item) => (item.tier ?? 'supporting') === 'supporting'),
     learning: items.filter((item) => (item.tier ?? 'supporting') === 'learning'),
   }), [items])
+  const placements = useMemo(() => items.map((item, index) => {
+    const tier = item.tier ?? 'supporting'
+    const tierItems = tierGroups[tier]
+    return {
+      index,
+      item,
+      placement: getTechNodePlacement(item, tierItems.findIndex(({ id }) => id === item.id), tierItems.length),
+    }
+  }), [items, tierGroups])
   useEffect(() => {
     const previousMask = raycaster.layers.mask
     raycaster.layers.enable(TECH_NODE_RENDER_LAYER)
@@ -265,6 +293,7 @@ export function GalaxyScene({
   }, [gl, profile, size.height, size.width])
 
   const handleActiveChange = useCallback((id: string, position: Vector3 | null) => {
+    if (selectedId) return
     if (position) {
       activeIdRef.current = id
       focusTargetRef.current.copy(position).multiplyScalar(0.045)
@@ -272,14 +301,61 @@ export function GalaxyScene({
       activeIdRef.current = null
       focusTargetRef.current.set(0, 0, 0)
     }
-  }, [])
+  }, [selectedId])
+
+  useEffect(() => {
+    if (selectedId) return
+    activeIdRef.current = null
+    focusAnimationRef.current = null
+    focusTargetRef.current.set(0, 0, 0)
+  }, [selectedId])
+
+  useEffect(() => {
+    if (!focusRequest || !galaxyRef.current || !controlsRef.current) return
+    const target = placements.find(({ item }) => item.id === focusRequest.id)
+    if (!target) return
+
+    const worldTarget = new Vector3(...target.placement.position)
+    galaxyRef.current.localToWorld(worldTarget)
+    const path = createOrbitalFocusPath({
+      fromCamera: camera.position,
+      fromTarget: controlsRef.current.target,
+      toTarget: worldTarget,
+    })
+
+    focusTargetRef.current.set(...path.toTarget)
+    focusAnimationRef.current = {
+      duration: reduceMotion ? 0.01 : 1.36,
+      elapsed: 0,
+      path,
+    }
+  }, [camera, focusRequest, placements, reduceMotion])
 
   useFrame((_, delta) => {
     reportDiagnostics(delta, diagnosticsSamples, diagnosticsWarmup, gl.domElement)
-    if (!galaxyRef.current || reduceMotion) return
-    if (!isDraggingRef.current) {
-      galaxyRef.current.rotation.y += delta * TECH_GALAXY_SCENE_CONFIG.idleRotationSpeed
-      galaxyRef.current.rotation.x = Math.sin(Date.now() * 0.00006) * 0.045
+    const galaxy = galaxyRef.current
+    if (!galaxy) return
+
+    const focusAnimation = focusAnimationRef.current
+    if (focusAnimation && controlsRef.current) {
+      focusAnimation.elapsed += delta
+      const progress = Math.min(1, focusAnimation.elapsed / focusAnimation.duration)
+      const eased = 1 - (1 - progress) ** 3
+      const frame = sampleOrbitalFocusPath(focusAnimation.path, eased)
+      camera.position.set(...frame.cameraPosition)
+      controlsRef.current.target.set(...frame.targetPosition)
+      controlsRef.current.update()
+      if (progress >= 1) {
+        focusAnimationRef.current = null
+        focusTargetRef.current.set(...focusAnimation.path.toTarget)
+      }
+      return
+    }
+
+    if (reduceMotion) return
+    if (!isDraggingRef.current && !selectedId) {
+      galaxy.rotation.y += delta * TECH_GALAXY_SCENE_CONFIG.idleRotationSpeed
+      galaxy.rotation.x = Math.sin(Date.now() * 0.00006) * 0.045
     }
     dragIntensityRef.current += ((isDraggingRef.current ? 1 : 0) - dragIntensityRef.current) * Math.min(1, delta * 3.2)
     const velocity = Math.hypot(dragVelocityRef.current.x, dragVelocityRef.current.y)
@@ -357,23 +433,19 @@ export function GalaxyScene({
         {profile.starFields.map((config) => (
           <CinematicStarField key={config.seed} config={config} reduceMotion={reduceMotion} drag={drag} />
         ))}
-        {items.map((item) => {
-          const tier = item.tier ?? 'supporting'
-          const tierItems = tierGroups[tier]
-          const placement = getTechNodePlacement(item, tierItems.findIndex(({ id }) => id === item.id), tierItems.length)
-          return (
-            <TechBeacon
-              key={item.id}
-              item={item}
-              index={items.findIndex(({ id }) => id === item.id)}
-              position={placement.position}
-              size={placement.size}
-              reduceMotion={reduceMotion}
-              onSelect={onSelect}
-              onActiveChange={handleActiveChange}
-            />
-          )
-        })}
+        {placements.map(({ index, item, placement }) => (
+          <TechBeacon
+            key={item.id}
+            item={item}
+            index={index}
+            position={placement.position}
+            size={placement.size}
+            reduceMotion={reduceMotion}
+            selected={selectedId === item.id}
+            onSelect={onSelect}
+            onActiveChange={handleActiveChange}
+          />
+        ))}
       </group>
       <OrbitControls
         ref={controlsRef}
@@ -383,7 +455,7 @@ export function GalaxyScene({
         maxDistance={TECH_GALAXY_CONTROLS_CONFIG.maxDistance}
         minPolarAngle={TECH_GALAXY_CONTROLS_CONFIG.minPolarAngle}
         maxPolarAngle={TECH_GALAXY_CONTROLS_CONFIG.maxPolarAngle}
-        autoRotate={!reduceMotion}
+        autoRotate={!reduceMotion && !selectedId}
         autoRotateSpeed={TECH_GALAXY_CONTROLS_CONFIG.autoRotateSpeed}
         onStart={handleStart}
         onEnd={handleEnd}

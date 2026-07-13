@@ -190,5 +190,25 @@
   "projects.updated": {
     "zh": "更新于",
     "en": "Updated"
+  },
+  "tech.search.label": {
+    "zh": "搜索知识星图",
+    "en": "Search knowledge map"
+  },
+  "tech.search.placeholder": {
+    "zh": "搜索技术、项目或文章",
+    "en": "Search tech, projects, or notes"
+  },
+  "tech.search.clear": {
+    "zh": "清空搜索",
+    "en": "Clear search"
+  },
+  "tech.search.noMatches": {
+    "zh": "没有匹配的技术节点。",
+    "en": "No matching technology node."
+  },
+  "tech.search.hint": {
+    "zh": "试试",
+    "en": "Try"
   }
 }

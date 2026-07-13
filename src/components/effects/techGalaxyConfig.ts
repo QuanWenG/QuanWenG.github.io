@@ -18,6 +18,92 @@ export function getTechNodeRenderLayer(cameraPosition: Vector3, nodePosition: Ve
     : TECH_NODE_BACKGROUND_RENDER_LAYER
 }
 
+interface VectorLike {
+  x: number
+  y: number
+  z: number
+}
+
+export interface OrbitalFocusPath {
+  angleDelta: number
+  center: [number, number, number]
+  fromTarget: [number, number, number]
+  fromY: number
+  radius: number
+  startAngle: number
+  toTarget: [number, number, number]
+  toY: number
+}
+
+export function getShortestOrbitalAngleDelta(fromAngle: number, toAngle: number) {
+  const fullTurn = Math.PI * 2
+  let delta = (toAngle - fromAngle) % fullTurn
+  if (delta > Math.PI) delta -= fullTurn
+  if (delta < -Math.PI) delta += fullTurn
+  return delta
+}
+
+export function createOrbitalFocusPath({
+  center = { x: 0, y: 0, z: 0 },
+  fromCamera,
+  fromTarget,
+  minCameraTargetDistance = TECH_GALAXY_CONTROLS_CONFIG.minDistance + 0.6,
+  targetCameraYOffset = 0.45,
+  toTarget,
+}: {
+  center?: VectorLike
+  fromCamera: VectorLike
+  fromTarget: VectorLike
+  minCameraTargetDistance?: number
+  targetCameraYOffset?: number
+  toTarget: VectorLike
+}): OrbitalFocusPath {
+  const fromX = fromCamera.x - center.x
+  const fromZ = fromCamera.z - center.z
+  const targetX = toTarget.x - center.x
+  const targetZ = toTarget.z - center.z
+  const radius = Math.max(0.001, Math.hypot(fromX, fromZ))
+  const startAngle = Math.atan2(fromZ, fromX)
+  const targetRadius = Math.hypot(targetX, targetZ)
+  const targetAngle = targetRadius > 0.001 ? Math.atan2(targetZ, targetX) : startAngle
+  const maxTargetRadius = Math.max(0, radius - minCameraTargetDistance)
+  const targetScale = targetRadius > maxTargetRadius && targetRadius > 0.001
+    ? maxTargetRadius / targetRadius
+    : 1
+
+  return {
+    angleDelta: getShortestOrbitalAngleDelta(startAngle, targetAngle),
+    center: [center.x, center.y, center.z],
+    fromTarget: [fromTarget.x, fromTarget.y, fromTarget.z],
+    fromY: fromCamera.y,
+    radius,
+    startAngle,
+    toTarget: [
+      center.x + targetX * targetScale,
+      toTarget.y,
+      center.z + targetZ * targetScale,
+    ],
+    toY: toTarget.y + targetCameraYOffset,
+  }
+}
+
+export function sampleOrbitalFocusPath(path: OrbitalFocusPath, progress: number) {
+  const clampedProgress = Math.min(1, Math.max(0, progress))
+  const angle = path.startAngle + path.angleDelta * clampedProgress
+  const [centerX, , centerZ] = path.center
+  const cameraPosition: [number, number, number] = [
+    centerX + Math.cos(angle) * path.radius,
+    path.fromY + (path.toY - path.fromY) * clampedProgress,
+    centerZ + Math.sin(angle) * path.radius,
+  ]
+  const targetPosition: [number, number, number] = [
+    path.fromTarget[0] + (path.toTarget[0] - path.fromTarget[0]) * clampedProgress,
+    path.fromTarget[1] + (path.toTarget[1] - path.fromTarget[1]) * clampedProgress,
+    path.fromTarget[2] + (path.toTarget[2] - path.fromTarget[2]) * clampedProgress,
+  ]
+  return { cameraPosition, targetPosition }
+}
+
 export const TECH_GALAXY_CANVAS_CONFIG = {
   background: '#01040a',
   camera: { position: [0, 1.4, 10.5] as [number, number, number], fov: 50 },

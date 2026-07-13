@@ -25,6 +25,7 @@ interface TechBeaconProps {
   onSelect: (id: string) => void
   position: [number, number, number]
   reduceMotion: boolean
+  selected: boolean
   size: number
 }
 
@@ -35,6 +36,7 @@ export function TechBeacon({
   onSelect,
   position,
   reduceMotion,
+  selected,
   size,
 }: TechBeaconProps) {
   const { locale } = usePreferences()
@@ -46,7 +48,7 @@ export function TechBeacon({
   const renderPositionRef = useRef(new Vector3())
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
-  const active = hovered || focused
+  const active = hovered || focused || selected
   const worldPosition = useMemo(() => new Vector3(...position), [position])
   const color = useMemo(() => new Color(item.color), [item.color])
   const beaconSize = size * 1.9

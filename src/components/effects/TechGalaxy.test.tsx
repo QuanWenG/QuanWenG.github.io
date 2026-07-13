@@ -23,17 +23,58 @@ const item: TechStackItem = {
   description: { zh: '组件化界面', en: 'Component UI' }, color: '#61dafb', level: 90, icon: 'react',
 }
 
+function renderGalaxy() {
+  render(<MemoryRouter><PreferencesProvider><TechGalaxy items={[item]} projects={[project]} ui={uiData as UiCopy} /></PreferencesProvider></MemoryRouter>)
+}
+
 describe('TechGalaxy fallback details', () => {
   afterEach(cleanup)
 
   it('opens related content and closes with Escape', () => {
-    render(<MemoryRouter><PreferencesProvider><TechGalaxy items={[item]} projects={[project]} ui={uiData as UiCopy} /></PreferencesProvider></MemoryRouter>)
+    renderGalaxy()
     fireEvent.click(screen.getByRole('button', { name: 'React' }))
     expect(screen.getByRole('heading', { name: 'React' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Site' })).toHaveAttribute('href', 'https://example.com')
     expect(screen.getByRole('link', { name: 'React 笔记' })).toHaveAttribute('href', '/blog/react/note')
     expect(screen.getByRole('link', { name: /查看相关项目/ })).toHaveAttribute('href', '/projects')
     fireEvent.keyDown(window, { key: 'Escape' })
+    expect(screen.queryByRole('heading', { name: 'React' })).not.toBeInTheDocument()
+  })
+
+  it('searches related project text with Enter, opens details, and closes suggestions', () => {
+    renderGalaxy()
+    const searchbox = screen.getByRole('searchbox', { name: '搜索知识星图' })
+    fireEvent.change(searchbox, { target: { value: 'Site' } })
+    expect(document.querySelector('.tech-search__results')).toBeInTheDocument()
+    fireEvent.keyDown(searchbox, { key: 'Enter' })
+    expect(screen.getByRole('heading', { name: 'React' })).toBeInTheDocument()
+    expect(document.querySelector('.tech-search__results')).not.toBeInTheDocument()
+  })
+
+  it('uses Enter to search the first result and ignores blank queries', () => {
+    renderGalaxy()
+    const searchbox = screen.getByRole('searchbox', { name: '搜索知识星图' })
+    fireEvent.keyDown(searchbox, { key: 'Enter' })
+    expect(screen.queryByRole('heading', { name: 'React' })).not.toBeInTheDocument()
+    fireEvent.change(searchbox, { target: { value: 'React' } })
+    fireEvent.keyDown(searchbox, { key: 'Enter' })
+    expect(screen.getByRole('heading', { name: 'React' })).toBeInTheDocument()
+  })
+
+  it('focuses the search input when the left side of the field is pressed', () => {
+    renderGalaxy()
+    const searchbox = screen.getByRole('searchbox', { name: '搜索知识星图' })
+    const field = document.querySelector('.tech-search__field') as HTMLElement
+    fireEvent.mouseDown(field)
+    expect(searchbox).toHaveFocus()
+  })
+
+  it('clears search text without opening details', () => {
+    renderGalaxy()
+    const searchbox = screen.getByRole('searchbox', { name: '搜索知识星图' })
+    fireEvent.change(searchbox, { target: { value: 'React' } })
+    fireEvent.click(screen.getByRole('button', { name: '清空搜索' }))
+    expect(searchbox).toHaveValue('')
     expect(screen.queryByRole('heading', { name: 'React' })).not.toBeInTheDocument()
   })
 })
