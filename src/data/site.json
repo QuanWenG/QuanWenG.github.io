@@ -9,6 +9,12 @@
     "en": "A fresh technical garden for notes, projects, and music."
   },
   "githubUrl": "https://github.com/QuanWenG",
+  "compliance": {
+    "icp": {
+      "number": "ICP备案号待填写",
+      "href": "https://beian.miit.gov.cn/"
+    }
+  },
   "terminal": {
     "prompt": "quanweng@blog:~$",
     "welcome": [

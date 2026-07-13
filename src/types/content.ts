@@ -7,11 +7,22 @@ export interface LocalizedText {
   en: string
 }
 
+export interface ComplianceRecord {
+  number: string
+  href?: string
+}
+
+export interface SiteCompliance {
+  icp?: ComplianceRecord
+  publicSecurity?: ComplianceRecord
+}
+
 export interface SiteConfig {
   author: string
   title: LocalizedText
   subtitle: LocalizedText
   githubUrl: string
+  compliance?: SiteCompliance
   terminal: {
     prompt: string
     welcome: LocalizedText[]

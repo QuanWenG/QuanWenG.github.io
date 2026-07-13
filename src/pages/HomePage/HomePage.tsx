@@ -8,6 +8,7 @@ import { ScrollCue } from '../../components/common/ScrollCue'
 import { useScrollSnap } from '../../components/common/useScrollSnap'
 import { GridWaveBackground } from '../../components/effects/GridWaveBackground'
 import { QuanWenGTerminal } from '../../components/effects/QuanWenGTerminal'
+import { IcpRecordFooter } from '../../components/layout/IcpRecordFooter'
 import { textByLocale } from '../../services/i18n'
 import type { ContentIndexEntry, NavigationItem, SiteConfig, TechStackItem, UiCopy } from '../../types/content'
 import type { ProjectItem } from '../../types/project'
@@ -90,6 +91,8 @@ export function HomePage({ site, navigation, techStack, projects, contentIndex, 
           </Suspense>
         </CosmicMapBoundary>
       </section>
+
+      <IcpRecordFooter site={site} />
     </>
   )
 }
