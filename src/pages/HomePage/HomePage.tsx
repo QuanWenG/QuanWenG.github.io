@@ -7,9 +7,9 @@ import { APP_ROUTES, TECH_STACK_ANCHOR_ID } from '../../config/routes'
 import { ScrollCue } from '../../components/common/ScrollCue'
 import { useScrollSnap } from '../../components/common/useScrollSnap'
 import { GridWaveBackground } from '../../components/effects/GridWaveBackground'
-import { HeroTerminal } from '../../components/effects/HeroTerminal'
+import { QuanWenGTerminal } from '../../components/effects/QuanWenGTerminal'
 import { textByLocale } from '../../services/i18n'
-import type { SiteConfig, TechStackItem, UiCopy } from '../../types/content'
+import type { ContentIndexEntry, NavigationItem, SiteConfig, TechStackItem, UiCopy } from '../../types/content'
 import type { ProjectItem } from '../../types/project'
 
 const LazyTechGalaxy = lazy(() =>
@@ -18,8 +18,10 @@ const LazyTechGalaxy = lazy(() =>
 
 interface HomePageProps {
   site: SiteConfig
+  navigation: NavigationItem[]
   techStack: TechStackItem[]
   projects: ProjectItem[]
+  contentIndex: ContentIndexEntry[]
   ui: UiCopy
 }
 
@@ -49,7 +51,7 @@ class CosmicMapBoundary extends Component<CosmicMapBoundaryProps, CosmicMapBound
   }
 }
 
-export function HomePage({ site, techStack, projects, ui }: HomePageProps) {
+export function HomePage({ site, navigation, techStack, projects, contentIndex, ui }: HomePageProps) {
   const { locale } = usePreferences()
   useScrollSnap()
 
@@ -71,7 +73,7 @@ export function HomePage({ site, techStack, projects, ui }: HomePageProps) {
               GitHub
             </a>
           </div>
-          <HeroTerminal site={site} />
+          <QuanWenGTerminal site={site} navigation={navigation} contentIndex={contentIndex} />
         </div>
         <ScrollCue />
       </section>

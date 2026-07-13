@@ -11,6 +11,7 @@ export interface AppContent {
   techStack: TechStackItem[]
   projects: ProjectItem[]
   musicTracks: MusicTrack[]
+  blogIndex: BlogArticleMeta[]
 }
 
 export interface BlogLibrary {
@@ -28,15 +29,16 @@ export interface ContentService {
 export function createContentService(source: DataSource): ContentService {
   return {
     async loadAppContent() {
-      const [site, ui, navigation, techStack, projects, musicTracks] = await Promise.all([
+      const [site, ui, navigation, techStack, projects, musicTracks, blogIndex] = await Promise.all([
         source.getSiteConfig(),
         source.getUiCopy(),
         source.getNavigation(),
         source.getTechStack(),
         source.getProjects(),
         source.getMusicTracks(),
+        source.getBlogIndex(),
       ])
-      return { site, ui, navigation, techStack, projects, musicTracks }
+      return { site, ui, navigation, techStack, projects, musicTracks, blogIndex }
     },
     async loadBlogLibrary() {
       const [index, annotations] = await Promise.all([

@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
 import { APP_ROUTES } from '../config/routes'
 import { HomePage } from '../pages/HomePage/HomePage'
 import type { AppContent, ContentService } from '../services'
+import { buildContentIndex } from '../services/contentIndex'
 import { AppProviders } from './providers/AppProviders'
 import { useAppContent } from './useAppContent'
 
@@ -18,8 +19,10 @@ function LoadingScreen({ error, onRetry }: { error?: boolean; onRetry?: () => vo
 
 function AppRoutes({ data, contentService }: { data: AppContent; contentService: ContentService }) {
   const fallback = <LoadingScreen />
+  const contentIndex = useMemo(() => buildContentIndex(data.blogIndex, data.projects, data.musicTracks, data.techStack), [data.blogIndex, data.musicTracks, data.projects, data.techStack])
+
   return <BrowserRouter><Suspense fallback={fallback}><Routes><Route element={<AppLayout navigation={data.navigation} />}>
-    <Route index element={<HomePage site={data.site} techStack={data.techStack} projects={data.projects} ui={data.ui} />} />
+    <Route index element={<HomePage site={data.site} navigation={data.navigation} techStack={data.techStack} projects={data.projects} contentIndex={contentIndex} ui={data.ui} />} />
     <Route path={`${APP_ROUTES.blog}/*`} element={<BlogPage ui={data.ui} contentService={contentService} />} />
     <Route path={APP_ROUTES.projects} element={<ProjectsPage ui={data.ui} projects={data.projects} />} />
     <Route path={APP_ROUTES.music} element={<MusicPage ui={data.ui} />} />

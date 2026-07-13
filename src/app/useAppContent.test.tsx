@@ -10,6 +10,7 @@ const content = {
   techStack: [],
   projects: [],
   musicTracks: [],
+  blogIndex: [],
 }
 
 describe('useAppContent', () => {

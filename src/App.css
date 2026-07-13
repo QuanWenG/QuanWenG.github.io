@@ -274,79 +274,116 @@ body.snap-scroll {
   box-shadow: var(--shadow-soft);
 }
 
-.hero-terminal {
-  width: min(580px, 100%);
-  min-height: 94px;
-  margin: 24px auto 0;
-  padding: 10px 12px 11px;
+.quanweng-terminal {
+  position: relative;
+  width: min(560px, 100%);
+  min-height: 108px;
+  margin: 22px auto 0;
+  padding: 10px 12px;
   text-align: left;
   color: color-mix(in srgb, var(--color-text) 92%, var(--color-primary));
-  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-subtle);
-  backdrop-filter: blur(20px) saturate(1.1);
+  background: color-mix(in srgb, var(--color-surface) 46%, transparent);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--color-text) 8%, transparent);
+  backdrop-filter: blur(16px) saturate(1.06);
 }
 
-.hero-terminal__bar {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.hero-terminal__bar span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-}
-
-.hero-terminal__bar span:nth-child(1) {
-  background: var(--color-coral);
-}
-
-.hero-terminal__bar span:nth-child(2) {
-  background: var(--color-gold);
-}
-
-.hero-terminal__bar span:nth-child(3) {
-  background: var(--color-primary);
-}
-
-.hero-terminal p {
+.quanweng-terminal p {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 12px;
-  line-height: 1.58;
+  line-height: 1.55;
 }
 
-.hero-terminal__line {
-  white-space: nowrap;
+.quanweng-terminal__line {
+  padding: 0 2px 7px;
   overflow: hidden;
+  color: var(--color-muted);
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.hero-terminal__line span {
+.quanweng-terminal__line span {
   color: var(--color-primary);
 }
 
-.hero-terminal__output {
-  color: var(--color-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.quanweng-terminal__outputs {
+  display: grid;
+  gap: 2px;
+  max-height: 104px;
+  margin-top: 4px;
+  overflow: auto;
 }
 
-.hero-terminal__form {
+.quanweng-terminal__output {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--color-muted);
+}
+
+.quanweng-terminal__output span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quanweng-terminal__output code {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.quanweng-terminal__output--success {
+  color: color-mix(in srgb, var(--color-primary) 72%, var(--color-text));
+}
+
+.quanweng-terminal__output--error {
+  color: var(--color-coral);
+}
+
+.quanweng-terminal__output--result {
+  color: color-mix(in srgb, var(--color-muted) 82%, var(--color-text));
+}
+
+.quanweng-terminal__command {
+  position: relative;
+  margin-top: 6px;
+}
+
+.quanweng-terminal__form {
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 7px;
+  min-height: 30px;
+  padding: 0 2px;
   color: var(--color-primary);
+  background: transparent;
+  border: 0;
 }
 
-.hero-terminal__form input {
+.quanweng-terminal__form::before {
+  content: '$';
+  flex: 0 0 auto;
+  margin-right: 8px;
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.quanweng-terminal__form:focus-within {
+  box-shadow: none;
+}
+
+.quanweng-terminal__form input {
   flex: 1;
   min-width: 0;
+  height: 30px;
   color: var(--color-text);
   background: transparent;
   border: 0;
@@ -355,6 +392,66 @@ body.snap-scroll {
   font-size: 13px;
 }
 
+.quanweng-terminal__suggestions {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 6;
+  display: grid;
+  gap: 1px;
+  max-height: min(140px, 42vh);
+  margin: 0;
+  padding: 3px;
+  overflow: auto;
+  background: color-mix(in srgb, var(--color-surface-strong) 88%, transparent);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--color-text) 14%, transparent);
+  backdrop-filter: blur(14px) saturate(1.05);
+}
+
+.quanweng-terminal__suggestion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  width: 100%;
+  padding: 5px 7px;
+  color: var(--color-muted);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.quanweng-terminal__suggestion:hover,
+.quanweng-terminal__suggestion:focus-visible,
+.quanweng-terminal__suggestion.is-active {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
+  outline: none;
+}
+
+.quanweng-terminal__suggestion strong,
+.quanweng-terminal__suggestion small {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quanweng-terminal__suggestion strong {
+  color: color-mix(in srgb, var(--color-text) 94%, var(--color-primary));
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quanweng-terminal__suggestion small {
+  color: var(--color-muted);
+  font-size: 11px;
+}
 .scroll-cue {
   position: absolute;
   left: 50%;
@@ -621,7 +718,9 @@ body,
 .markdown-article pre,
 .tech-cosmos-fallback,
 .tech-detail-panel,
-.tech-search__results {
+.tech-search__results,
+.quanweng-terminal__suggestions,
+.quanweng-terminal__outputs {
   scrollbar-width: thin;
   scrollbar-color: rgba(143, 255, 238, .58) transparent;
 }
@@ -634,7 +733,9 @@ body::-webkit-scrollbar,
 .markdown-article pre::-webkit-scrollbar,
 .tech-cosmos-fallback::-webkit-scrollbar,
 .tech-detail-panel::-webkit-scrollbar,
-.tech-search__results::-webkit-scrollbar {
+.tech-search__results::-webkit-scrollbar,
+.quanweng-terminal__suggestions::-webkit-scrollbar,
+.quanweng-terminal__outputs::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
@@ -647,7 +748,9 @@ body::-webkit-scrollbar-track,
 .markdown-article pre::-webkit-scrollbar-track,
 .tech-cosmos-fallback::-webkit-scrollbar-track,
 .tech-detail-panel::-webkit-scrollbar-track,
-.tech-search__results::-webkit-scrollbar-track {
+.tech-search__results::-webkit-scrollbar-track,
+.quanweng-terminal__suggestions::-webkit-scrollbar-track,
+.quanweng-terminal__outputs::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 999px;
 }
@@ -660,7 +763,9 @@ body::-webkit-scrollbar-thumb,
 .markdown-article pre::-webkit-scrollbar-thumb,
 .tech-cosmos-fallback::-webkit-scrollbar-thumb,
 .tech-detail-panel::-webkit-scrollbar-thumb,
-.tech-search__results::-webkit-scrollbar-thumb {
+.tech-search__results::-webkit-scrollbar-thumb,
+.quanweng-terminal__suggestions::-webkit-scrollbar-thumb,
+.quanweng-terminal__outputs::-webkit-scrollbar-thumb {
   min-height: 34px;
   background: linear-gradient(180deg, rgba(196, 255, 248, .86), rgba(106, 215, 198, .5));
   background-clip: padding-box;
@@ -677,7 +782,9 @@ body::-webkit-scrollbar-thumb:hover,
 .markdown-article pre::-webkit-scrollbar-thumb:hover,
 .tech-cosmos-fallback::-webkit-scrollbar-thumb:hover,
 .tech-detail-panel::-webkit-scrollbar-thumb:hover,
-.tech-search__results::-webkit-scrollbar-thumb:hover {
+.tech-search__results::-webkit-scrollbar-thumb:hover,
+.quanweng-terminal__suggestions::-webkit-scrollbar-thumb:hover,
+.quanweng-terminal__outputs::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, rgba(247, 255, 253, .95), rgba(143, 255, 238, .68));
   background-clip: padding-box;
 }
@@ -690,7 +797,9 @@ body::-webkit-scrollbar-corner,
 .markdown-article pre::-webkit-scrollbar-corner,
 .tech-cosmos-fallback::-webkit-scrollbar-corner,
 .tech-detail-panel::-webkit-scrollbar-corner,
-.tech-search__results::-webkit-scrollbar-corner {
+.tech-search__results::-webkit-scrollbar-corner,
+.quanweng-terminal__suggestions::-webkit-scrollbar-corner,
+.quanweng-terminal__outputs::-webkit-scrollbar-corner {
   background: transparent;
 }
 
@@ -813,13 +922,13 @@ body::-webkit-scrollbar-corner,
     margin-top: 22px;
   }
 
-  .hero-terminal {
+  .quanweng-terminal {
     width: min(360px, 100%);
     min-height: 104px;
     margin-top: 22px;
   }
 
-  .hero-terminal__line {
+  .quanweng-terminal__line {
     white-space: normal;
   }
 
