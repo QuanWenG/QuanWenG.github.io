@@ -53,7 +53,7 @@ class CosmicMapBoundary extends Component<CosmicMapBoundaryProps, CosmicMapBound
 }
 
 export function HomePage({ site, navigation, techStack, projects, contentIndex, ui }: HomePageProps) {
-  const { locale } = usePreferences()
+  const { locale, uiVisibility } = usePreferences()
   useScrollSnap()
 
   return (
@@ -74,9 +74,9 @@ export function HomePage({ site, navigation, techStack, projects, contentIndex, 
               GitHub
             </a>
           </div>
-          <QuanWenGTerminal site={site} navigation={navigation} contentIndex={contentIndex} />
+          {uiVisibility.homeTerminal && <QuanWenGTerminal site={site} navigation={navigation} contentIndex={contentIndex} />}
         </div>
-        <ScrollCue />
+        {uiVisibility.scrollCue && <ScrollCue />}
       </section>
 
       <section className="tech-section snap-panel" id={TECH_STACK_ANCHOR_ID} aria-labelledby="tech-title">
@@ -96,3 +96,4 @@ export function HomePage({ site, navigation, techStack, projects, contentIndex, 
     </>
   )
 }
+

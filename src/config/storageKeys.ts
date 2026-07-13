@@ -3,4 +3,5 @@ export const STORAGE_KEYS = {
   locale: 'quanweng-locale',
   musicVolume: 'quanweng-music-volume',
   musicPlaybackState: 'quanweng-music-playback-state',
+  uiVisibility: 'quanweng-ui-visibility',
 } as const

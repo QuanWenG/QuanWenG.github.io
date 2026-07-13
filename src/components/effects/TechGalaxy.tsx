@@ -19,7 +19,7 @@ interface TechGalaxyProps {
 }
 
 export function TechGalaxy({ items, projects, ui }: TechGalaxyProps) {
-  const { locale } = usePreferences()
+  const { locale, uiVisibility } = usePreferences()
   const reduceMotion = useMediaQuery(MEDIA_QUERIES.reducedMotion)
   const compact = useMediaQuery(MEDIA_QUERIES.techGalaxyCompact)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -115,8 +115,8 @@ export function TechGalaxy({ items, projects, ui }: TechGalaxyProps) {
   if (compact || reduceMotion) {
     return <div className={warping ? 'tech-cosmos-fallback is-search-warping' : 'tech-cosmos-fallback'} aria-label="Tech stack list">
       <div className="tech-cosmos-fallback__stars" aria-hidden="true" />
-      {searchBox}
-      <TechTierLegend ui={ui} locale={locale} />
+      {uiVisibility.techGalaxySearch && searchBox}
+      {uiVisibility.techGalaxyLegend && <TechTierLegend ui={ui} locale={locale} />}
       {items.map((item) => <button
         key={item.id}
         ref={(node) => { fallbackItemRefs.current[item.id] = node }}
@@ -144,8 +144,11 @@ export function TechGalaxy({ items, projects, ui }: TechGalaxyProps) {
         <GalaxyScene items={items} reduceMotion={reduceMotion} selectedId={selectedId} focusRequest={focusRequest} onSelect={focusTechItem} />
       </Canvas>
     </div>
-    {searchBox}
-    <TechTierLegend ui={ui} locale={locale} />
+    {uiVisibility.techGalaxySearch && searchBox}
+    {uiVisibility.techGalaxyLegend && <TechTierLegend ui={ui} locale={locale} />}
     {selectedItem && <TechDetailPanel item={selectedItem} projects={projects} ui={ui} locale={locale} onClose={() => setSelectedId(null)} />}
   </>
 }
+
+
+

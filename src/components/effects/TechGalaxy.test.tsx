@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { PreferencesProvider } from '../../app/providers/PreferencesProvider'
+import { STORAGE_KEYS } from '../../config/storageKeys'
 import uiData from '../../data/ui.json'
 import type { TechStackItem, UiCopy } from '../../types/content'
 import type { ProjectItem } from '../../types/project'
@@ -28,7 +29,26 @@ function renderGalaxy() {
 }
 
 describe('TechGalaxy fallback details', () => {
-  afterEach(cleanup)
+  afterEach(() => {
+    cleanup()
+    window.localStorage.clear()
+  })
+
+  it('can hide only the search overlay', () => {
+    window.localStorage.setItem(STORAGE_KEYS.uiVisibility, JSON.stringify({ techGalaxySearch: false }))
+    renderGalaxy()
+    expect(screen.queryByRole('searchbox', { name: '搜索知识星图' })).not.toBeInTheDocument()
+    expect(document.querySelector('.tech-tier-legend')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'React' })).toBeInTheDocument()
+  })
+
+  it('can hide only the orbit legend overlay', () => {
+    window.localStorage.setItem(STORAGE_KEYS.uiVisibility, JSON.stringify({ techGalaxyLegend: false }))
+    renderGalaxy()
+    expect(screen.getByRole('searchbox', { name: '搜索知识星图' })).toBeInTheDocument()
+    expect(document.querySelector('.tech-tier-legend')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'React' })).toBeInTheDocument()
+  })
 
   it('opens related content and closes with Escape', () => {
     renderGalaxy()

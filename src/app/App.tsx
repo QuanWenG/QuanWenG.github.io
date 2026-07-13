@@ -21,7 +21,7 @@ function AppRoutes({ data, contentService }: { data: AppContent; contentService:
   const fallback = <LoadingScreen />
   const contentIndex = useMemo(() => buildContentIndex(data.blogIndex, data.projects, data.musicTracks, data.techStack), [data.blogIndex, data.musicTracks, data.projects, data.techStack])
 
-  return <BrowserRouter><Suspense fallback={fallback}><Routes><Route element={<AppLayout navigation={data.navigation} />}>
+  return <BrowserRouter><Suspense fallback={fallback}><Routes><Route element={<AppLayout navigation={data.navigation} ui={data.ui} />}>
     <Route index element={<HomePage site={data.site} navigation={data.navigation} techStack={data.techStack} projects={data.projects} contentIndex={contentIndex} ui={data.ui} />} />
     <Route path={`${APP_ROUTES.blog}/*`} element={<BlogPage ui={data.ui} contentService={contentService} />} />
     <Route path={APP_ROUTES.projects} element={<ProjectsPage ui={data.ui} projects={data.projects} />} />
@@ -37,3 +37,4 @@ function App({ contentService }: { contentService: ContentService }) {
 }
 
 export default App
+

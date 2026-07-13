@@ -8,6 +8,7 @@ describe('storage keys', () => {
       locale: 'quanweng-locale',
       musicVolume: 'quanweng-music-volume',
       musicPlaybackState: 'quanweng-music-playback-state',
+      uiVisibility: 'quanweng-ui-visibility',
     })
     expect(new Set(Object.values(STORAGE_KEYS)).size).toBe(Object.keys(STORAGE_KEYS).length)
   })

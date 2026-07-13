@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { MEDIA_QUERIES } from '../../config/mediaQueries'
 import { STORAGE_KEYS } from '../../config/storageKeys'
 import type { Locale } from '../../types/content'
-import { PreferencesContext, type PreferencesContextValue } from './preferencesContext'
+import { DEFAULT_UI_VISIBILITY, PreferencesContext, type PreferencesContextValue, type UiVisibility, type UiVisibilityKey } from './preferencesContext'
 
 function getInitialTheme(): 'light' | 'dark' {
   if (typeof window === 'undefined') return 'light'
@@ -16,13 +16,34 @@ function getInitialLocale(): Locale {
   return window.localStorage.getItem(STORAGE_KEYS.locale) === 'en' ? 'en' : 'zh'
 }
 
+function getInitialUiVisibility(): UiVisibility {
+  if (typeof window === 'undefined') return DEFAULT_UI_VISIBILITY
+  const saved = window.localStorage.getItem(STORAGE_KEYS.uiVisibility)
+  if (!saved) return DEFAULT_UI_VISIBILITY
+  try {
+    const parsed = JSON.parse(saved) as Partial<Record<UiVisibilityKey, unknown>>
+    return Object.fromEntries(Object.entries(DEFAULT_UI_VISIBILITY).map(([key, fallback]) => {
+      const typedKey = key as UiVisibilityKey
+      return [key, typeof parsed[typedKey] === 'boolean' ? parsed[typedKey] : fallback]
+    })) as UiVisibility
+  } catch {
+    return DEFAULT_UI_VISIBILITY
+  }
+}
+
+function persistUiVisibility(nextVisibility: UiVisibility) {
+  window.localStorage.setItem(STORAGE_KEYS.uiVisibility, JSON.stringify(nextVisibility))
+}
+
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(getInitialLocale)
   const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme)
+  const [uiVisibility, setUiVisibilityState] = useState<UiVisibility>(getInitialUiVisibility)
 
   const value = useMemo<PreferencesContextValue>(() => ({
     locale,
     theme,
+    uiVisibility,
     setLocale: (nextLocale) => {
       window.localStorage.setItem(STORAGE_KEYS.locale, nextLocale)
       setLocaleState(nextLocale)
@@ -37,7 +58,17 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem(STORAGE_KEYS.theme, next)
       return next
     }),
-  }), [locale, theme])
+    setUiVisibility: (key, visible) => setUiVisibilityState((current) => {
+      const next = { ...current, [key]: visible }
+      persistUiVisibility(next)
+      return next
+    }),
+    toggleUiVisibility: (key) => setUiVisibilityState((current) => {
+      const next = { ...current, [key]: !current[key] }
+      persistUiVisibility(next)
+      return next
+    }),
+  }), [locale, theme, uiVisibility])
 
   return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>
 }

@@ -210,5 +210,57 @@
   "tech.search.hint": {
     "zh": "试试",
     "en": "Try"
+  },
+  "settings.label": {
+    "zh": "显示设置",
+    "en": "Display settings"
+  },
+  "settings.title": {
+    "zh": "显示设置",
+    "en": "Display settings"
+  },
+  "settings.description": {
+    "zh": "调整页面辅助 UI 的显示隐藏。",
+    "en": "Show or hide supporting interface elements."
+  },
+  "settings.musicDock": {
+    "zh": "全局音乐盒",
+    "en": "Music dock"
+  },
+  "settings.musicDockDescription": {
+    "zh": "显示右侧悬浮播放器。",
+    "en": "Show the floating player."
+  },
+  "settings.homeTerminal": {
+    "zh": "首页终端",
+    "en": "Home terminal"
+  },
+  "settings.homeTerminalDescription": {
+    "zh": "显示首页命令行入口。",
+    "en": "Show the command-line entry on home."
+  },
+  "settings.scrollCue": {
+    "zh": "滚动提示",
+    "en": "Scroll cue"
+  },
+  "settings.scrollCueDescription": {
+    "zh": "显示首页底部下滑提示。",
+    "en": "Show the down-scroll hint on home."
+  },
+  "settings.techGalaxySearch": {
+    "zh": "星图搜索框",
+    "en": "Galaxy search"
+  },
+  "settings.techGalaxySearchDescription": {
+    "zh": "显示技术星图右上角搜索入口。",
+    "en": "Show the tech galaxy search field."
+  },
+  "settings.techGalaxyLegend": {
+    "zh": "星图轨道图例",
+    "en": "Galaxy legend"
+  },
+  "settings.techGalaxyLegendDescription": {
+    "zh": "显示主轨、实践轨和学习外轨图例。",
+    "en": "Show the orbit tier legend."
   }
 }
