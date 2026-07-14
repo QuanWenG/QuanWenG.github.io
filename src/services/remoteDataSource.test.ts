@@ -9,6 +9,7 @@ function createFallback(): DataSource {
     getNavigation: vi.fn(async () => []),
     getTechStack: vi.fn(async () => []),
     getProjects: vi.fn(async () => []),
+    getProjectSourceConfig: vi.fn(async () => ({ owner: 'local', projects: [] })),
     getMusicTracks: vi.fn(async () => []),
     getAnnotations: vi.fn(async () => ({})),
     getBlogIndex: vi.fn(async () => []),

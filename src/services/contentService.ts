@@ -2,6 +2,7 @@ import type { BlogArticle, BlogArticleMeta } from '../types/blog'
 import type { AnnotationMap, NavigationItem, SiteConfig, TechStackItem, UiCopy } from '../types/content'
 import type { MusicTrack } from '../types/music'
 import type { ProjectItem } from '../types/project'
+import type { ProjectSourceConfig } from '../types/workspace'
 import type { DataSource } from './dataSource'
 
 export interface AppContent {
@@ -10,6 +11,7 @@ export interface AppContent {
   navigation: NavigationItem[]
   techStack: TechStackItem[]
   projects: ProjectItem[]
+  projectSourceConfig: ProjectSourceConfig
   musicTracks: MusicTrack[]
   blogIndex: BlogArticleMeta[]
 }
@@ -29,16 +31,17 @@ export interface ContentService {
 export function createContentService(source: DataSource): ContentService {
   return {
     async loadAppContent() {
-      const [site, ui, navigation, techStack, projects, musicTracks, blogIndex] = await Promise.all([
+      const [site, ui, navigation, techStack, projects, projectSourceConfig, musicTracks, blogIndex] = await Promise.all([
         source.getSiteConfig(),
         source.getUiCopy(),
         source.getNavigation(),
         source.getTechStack(),
         source.getProjects(),
+        source.getProjectSourceConfig(),
         source.getMusicTracks(),
         source.getBlogIndex(),
       ])
-      return { site, ui, navigation, techStack, projects, musicTracks, blogIndex }
+      return { site, ui, navigation, techStack, projects, projectSourceConfig, musicTracks, blogIndex }
     },
     async loadBlogLibrary() {
       const [index, annotations] = await Promise.all([

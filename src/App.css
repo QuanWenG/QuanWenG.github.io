@@ -97,11 +97,29 @@ body.snap-scroll {
   text-decoration: none;
 }
 
+.top-nav__brand-wrap {
+  position: relative;
+  display: inline-flex;
+  min-width: max-content;
+  color: var(--color-text);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
 .top-nav__brand {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   min-width: max-content;
+  color: var(--color-text);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.top-nav__brand > svg {
+  color: var(--color-primary);
 }
 
 .top-nav__brand span {
@@ -119,6 +137,10 @@ body.snap-scroll {
 .top-nav__brand strong {
   font-size: 14px;
   letter-spacing: 0;
+}
+
+.top-nav__brand:hover {
+  color: var(--color-primary);
 }
 
 .top-nav__links {
@@ -172,6 +194,19 @@ body.snap-scroll {
   border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
   transform: translateY(-1px);
 }
+.icon-button:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.icon-button:disabled:hover {
+  border-color: var(--color-border);
+  transform: none;
+}
+
+
 
 .home-hero {
   position: relative;
@@ -906,6 +941,7 @@ body::-webkit-scrollbar-corner,
     min-width: 32px;
   }
 
+
   .home-hero {
     padding-top: 50px;
   }
@@ -1338,12 +1374,110 @@ body::-webkit-scrollbar-corner,
   }
 }
 
-/* Navigation display settings */
+/* Navigation account and display settings */
 .top-nav__settings-wrap {
   position: relative;
   display: inline-flex;
 }
 
+.login-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 82;
+  display: grid;
+  gap: 11px;
+  width: min(300px, calc(100vw - 28px));
+  padding: 14px;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-surface-strong) 94%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(22px) saturate(1.16);
+}
+
+.login-popover::before {
+  position: absolute;
+  top: -6px;
+  right: 28px;
+  width: 10px;
+  height: 10px;
+  content: '';
+  background: inherit;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  transform: rotate(45deg);
+}
+
+.login-popover__header {
+  display: grid;
+  gap: 3px;
+}
+
+.login-popover__header strong {
+  color: var(--color-primary);
+  font-size: 15px;
+}
+
+.login-popover__header span,
+.login-popover small {
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.login-popover label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 7px 8px;
+  align-items: center;
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.login-popover label svg {
+  color: var(--color-primary);
+}
+
+.login-popover input {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 40px;
+  min-width: 0;
+  padding: 0 12px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.login-popover .primary-link {
+  width: 100%;
+  min-height: 40px;
+}
+
+.login-popover small,
+.login-popover p {
+  margin: 0;
+}
+
+.login-popover p {
+  color: var(--color-coral);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.top-nav__brand-wrap .login-popover {
+  right: auto;
+  left: 0;
+}
+
+.top-nav__brand-wrap .login-popover::before {
+  right: auto;
+  left: 24px;
+}
 .settings-popover {
   position: absolute;
   top: calc(100% + 10px);
@@ -1474,6 +1608,10 @@ body::-webkit-scrollbar-corner,
 }
 
 @media (max-width: 720px) {
+  .top-nav__brand-wrap .login-popover {
+    left: -8px;
+  }
+
   .settings-popover {
     right: -45px;
   }

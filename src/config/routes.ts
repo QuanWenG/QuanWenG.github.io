@@ -3,6 +3,7 @@ export const APP_ROUTES = {
   blog: '/blog',
   projects: '/projects',
   music: '/music',
+  profile: '/profile',
 } as const
 
 export const TECH_STACK_ANCHOR_ID = 'tech-stack'

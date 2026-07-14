@@ -2,6 +2,7 @@ import type { BlogArticle, BlogArticleMeta } from '../types/blog'
 import type { AnnotationMap, NavigationItem, SiteConfig, TechStackItem, UiCopy } from '../types/content'
 import type { MusicTrack } from '../types/music'
 import type { ProjectItem } from '../types/project'
+import type { ProjectSourceConfig } from '../types/workspace'
 
 export interface DataSource {
   getSiteConfig: () => Promise<SiteConfig>
@@ -9,6 +10,7 @@ export interface DataSource {
   getNavigation: () => Promise<NavigationItem[]>
   getTechStack: () => Promise<TechStackItem[]>
   getProjects: () => Promise<ProjectItem[]>
+  getProjectSourceConfig: () => Promise<ProjectSourceConfig>
   getMusicTracks: () => Promise<MusicTrack[]>
   getAnnotations: () => Promise<AnnotationMap>
   getBlogIndex: () => Promise<BlogArticleMeta[]>

@@ -5,6 +5,8 @@ describe('API_ENDPOINTS', () => {
   it('keeps static endpoint paths stable', () => {
     expect(API_ENDPOINTS.projects).toBe('/projects')
     expect(API_ENDPOINTS.blogIndex).toBe('/blog')
+    expect(API_ENDPOINTS.projectSourceConfig).toBe('/projects/source-config')
+    expect(API_ENDPOINTS.login).toBe('/auth/login')
   })
 
   it('encodes a nested Unicode article id as one path parameter', () => {

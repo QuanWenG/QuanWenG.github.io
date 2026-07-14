@@ -1,4 +1,5 @@
 import type { ProjectItem } from '../types/project'
+import type { ProjectSourceConfig } from '../types/workspace'
 import { API_ENDPOINTS } from './apiEndpoints'
 import type { DataSource } from './dataSource'
 import { normalizeProjects } from './projects'
@@ -33,6 +34,7 @@ export function createRemoteDataSource({
     getNavigation: () => readRemote(API_ENDPOINTS.navigation, fallback.getNavigation),
     getTechStack: () => readRemote(API_ENDPOINTS.techStack, fallback.getTechStack),
     getProjects: async () => normalizeProjects(await readRemote<ProjectItem[]>(API_ENDPOINTS.projects, fallback.getProjects)),
+    getProjectSourceConfig: () => readRemote<ProjectSourceConfig>(API_ENDPOINTS.projectSourceConfig, fallback.getProjectSourceConfig),
     getMusicTracks: () => readRemote(API_ENDPOINTS.music, fallback.getMusicTracks),
     getAnnotations: () => readRemote(API_ENDPOINTS.annotations, fallback.getAnnotations),
     getBlogIndex: () => readRemote(API_ENDPOINTS.blogIndex, fallback.getBlogIndex),

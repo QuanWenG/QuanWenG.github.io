@@ -9,6 +9,7 @@ function createSource(): DataSource {
     getNavigation: vi.fn(async () => []),
     getTechStack: vi.fn(async () => []),
     getProjects: vi.fn(async () => []),
+    getProjectSourceConfig: vi.fn(async () => ({ owner: 'Q', projects: [] })),
     getMusicTracks: vi.fn(async () => []),
     getAnnotations: vi.fn(async () => ({})),
     getBlogIndex: vi.fn(async () => [
@@ -27,6 +28,7 @@ describe('ContentService', () => {
     const content = await createContentService(source).loadAppContent()
     expect(content.site.author).toBe('Q')
     expect(source.getProjects).toHaveBeenCalledOnce()
+    expect(source.getProjectSourceConfig).toHaveBeenCalledOnce()
     expect(source.getMusicTracks).toHaveBeenCalledOnce()
   })
 

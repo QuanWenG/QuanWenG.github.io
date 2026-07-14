@@ -19,6 +19,20 @@ describe('TopNavigation settings popover', () => {
     vi.restoreAllMocks()
   })
 
+  it('uses the left brand as the account login trigger', () => {
+    renderNav()
+    expect(screen.queryByText('未登录')).not.toBeInTheDocument()
+    const loginTrigger = screen.getByRole('button', { name: '账号登录' })
+    expect(loginTrigger).toHaveTextContent('登录')
+    expect(loginTrigger).not.toHaveTextContent('QuanWenG')
+    expect(document.querySelector('.top-nav__actions')?.textContent).not.toContain('登录')
+    expect(screen.getByRole('button', { name: '未登录' })).toBeDisabled()
+    fireEvent.click(loginTrigger)
+    expect(screen.getByRole('dialog', { name: '账号登录' })).toBeInTheDocument()
+    expect(screen.getByLabelText('账号')).toHaveValue('quanweng')
+    expect(screen.getByLabelText('密码')).toHaveValue('admin')
+  })
+
   it('opens display settings and toggles visibility switches', () => {
     renderNav()
     fireEvent.click(screen.getByRole('button', { name: '显示设置' }))
