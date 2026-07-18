@@ -1,5 +1,5 @@
 import { ArrowRight, ExternalLink } from 'lucide-react'
-import { Component, lazy, Suspense } from 'react'
+import { Component, lazy, Suspense, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { usePreferences } from '../../app/providers/usePreferences'
@@ -16,6 +16,9 @@ import type { ProjectItem } from '../../types/project'
 const LazyTechGalaxy = lazy(() =>
   import('../../components/effects/TechGalaxy').then((module) => ({ default: module.TechGalaxy })),
 )
+
+const TECH_INTRO_VISIBLE_MS = 3800
+const TECH_INTRO_OBSERVER_THRESHOLD = 0.35
 
 interface HomePageProps {
   site: SiteConfig
@@ -54,7 +57,27 @@ class CosmicMapBoundary extends Component<CosmicMapBoundaryProps, CosmicMapBound
 
 export function HomePage({ site, navigation, techStack, projects, contentIndex, ui }: HomePageProps) {
   const { locale, uiVisibility } = usePreferences()
+  const techIntroRef = useRef<HTMLDivElement>(null)
+  const [techIntroDismissed, setTechIntroDismissed] = useState(false)
   useScrollSnap()
+
+  useEffect(() => {
+    const intro = techIntroRef.current
+    if (!intro) return
+
+    let dismissTimer: number | undefined
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return
+      observer.disconnect()
+      dismissTimer = window.setTimeout(() => setTechIntroDismissed(true), TECH_INTRO_VISIBLE_MS)
+    }, { threshold: TECH_INTRO_OBSERVER_THRESHOLD })
+
+    observer.observe(intro)
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(dismissTimer)
+    }
+  }, [])
 
   return (
     <>
@@ -80,7 +103,7 @@ export function HomePage({ site, navigation, techStack, projects, contentIndex, 
       </section>
 
       <section className="tech-section snap-panel" id={TECH_STACK_ANCHOR_ID} aria-labelledby="tech-title">
-        <div className="tech-section__intro">
+        <div ref={techIntroRef} className={techIntroDismissed ? 'tech-section__intro is-dismissed' : 'tech-section__intro'} data-testid="tech-intro">
           <p>{textByLocale(ui['home.knowledgeMap'], locale)}</p>
           <h2 id="tech-title">{textByLocale(ui['home.techTitle'], locale)}</h2>
           <span>{textByLocale(ui['home.techDescription'], locale)}</span>

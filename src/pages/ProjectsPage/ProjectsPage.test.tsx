@@ -1,5 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { PreferencesProvider } from '../../app/providers/PreferencesProvider'
 import projectsData from '../../data/projects.json'
@@ -7,6 +7,10 @@ import uiData from '../../data/ui.json'
 import type { UiCopy } from '../../types/content'
 import type { ProjectItem } from '../../types/project'
 import { ProjectsPage } from './ProjectsPage'
+
+vi.mock('../../components/effects/AmbientPixelField', () => ({
+  AmbientPixelField: ({ variant }: { variant: string }) => <canvas data-testid={`ambient-pixel-${variant}`} />,
+}))
 
 function renderPage() {
   return render(<MemoryRouter><PreferencesProvider><ProjectsPage ui={uiData as UiCopy} projects={projectsData as ProjectItem[]} /></PreferencesProvider></MemoryRouter>)
@@ -17,6 +21,7 @@ describe('ProjectsPage masonry', () => {
 
   it('renders every project in top-aligned waterfall lanes without filter or stats UI', () => {
     const { container } = renderPage()
+    expect(screen.getByTestId('ambient-pixel-projects')).toBeInTheDocument()
     const lanes = [...container.querySelectorAll<HTMLElement>('.project-waterfall__lane')]
     expect(lanes).toHaveLength(3)
     expect(container.querySelectorAll('.project-waterfall__lane > .project-card')).toHaveLength(projectsData.length)

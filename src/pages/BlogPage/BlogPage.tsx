@@ -2,6 +2,7 @@ import { Menu, MessageCircle } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { usePreferences } from '../../app/providers/usePreferences'
+import { AmbientPixelField } from '../../components/effects/AmbientPixelField'
 import { buildBlogArticleRoute } from '../../config/routes'
 import type { ContentService } from '../../services'
 import { buildBlogTree } from '../../services/blogContent'
@@ -54,6 +55,7 @@ export function BlogPage({ ui, contentService }: { ui: UiCopy; contentService: C
 
   return (
     <section className="blog-page" aria-labelledby="blog-title">
+      <AmbientPixelField variant="blog" />
       <header className="blog-page__mobile-bar">
         <button type="button" onClick={() => setNavOpen(true)} aria-label="Open article navigation"><Menu /></button>
         <strong>{library.activeArticle?.title || textByLocale(ui['blog.title'], locale)}</strong>

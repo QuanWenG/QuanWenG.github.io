@@ -6,6 +6,7 @@ import './styles/fonts.css'
 import './styles/tokens.css'
 import './styles/global.css'
 import './App.css'
+import './styles/apple-polish.css'
 
 const redirectPath = new URLSearchParams(window.location.search).get('p')
 if (redirectPath) {

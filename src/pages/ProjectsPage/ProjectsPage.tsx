@@ -2,6 +2,7 @@ import { Archive, ArrowUpRight, Clock3, Code2, GitBranch, Sparkles, Star } from 
 import { useMemo, type CSSProperties } from 'react'
 import { usePreferences } from '../../app/providers/usePreferences'
 import { useMediaQuery } from '../../components/common/useMediaQuery'
+import { AmbientPixelField } from '../../components/effects/AmbientPixelField'
 import { MEDIA_QUERIES } from '../../config/mediaQueries'
 import { textByLocale } from '../../services/i18n'
 import { resolvePublicAssetPath } from '../../services/publicAssetPath'
@@ -74,6 +75,7 @@ export function ProjectsPage({ ui, projects }: { ui: UiCopy; projects: ProjectIt
 
   return (
     <section className="content-page projects-page" aria-labelledby="projects-title">
+      <AmbientPixelField variant="projects" />
       <header className="content-page__header projects-hero">
         <p>GITHUB / BUILDS</p>
         <h1 id="projects-title">{textByLocale(ui['projects.title'], locale)}</h1>

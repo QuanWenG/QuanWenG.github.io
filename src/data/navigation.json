@@ -10,7 +10,7 @@
     "label": { "zh": "技术栈", "en": "Stack" },
     "path": "/",
     "anchor": "tech-stack",
-    "showInNav": true
+    "showInNav": false
   },
   {
     "id": "blog",

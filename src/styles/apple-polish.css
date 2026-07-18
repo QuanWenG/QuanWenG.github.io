@@ -1,0 +1,189 @@
+/* Visual and motion polish only: no layout or interaction rules live here. */
+:root {
+  color-scheme: light;
+  --color-bg: #f4f9f7;
+  --color-surface: rgba(255, 255, 255, .70);
+  --color-surface-strong: #fff;
+  --color-text: #10231f;
+  --color-muted: #61736e;
+  --color-border: rgba(20, 54, 46, .11);
+  --color-primary: #0b806d;
+  --color-primary-soft: rgba(11, 128, 109, .11);
+  --color-sky: #397bf6;
+  --shadow-subtle: 0 1px 1px rgba(15, 42, 35, .025), 0 8px 26px rgba(15, 42, 35, .065);
+  --shadow-soft: 0 2px 3px rgba(15, 42, 35, .03), 0 22px 64px rgba(15, 42, 35, .105);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --duration-fast: 140ms;
+  --duration-base: 360ms;
+  --duration-slow: 640ms;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #07110f;
+  --color-surface: rgba(15, 29, 25, .72);
+  --color-surface-strong: #10201c;
+  --color-text: #edf8f4;
+  --color-muted: #9eb1aa;
+  --color-border: rgba(221, 246, 237, .12);
+  --color-primary: #65d5c1;
+  --color-primary-soft: rgba(101, 213, 193, .13);
+  --color-sky: #74a5ff;
+  --shadow-subtle: 0 1px 1px rgba(0, 0, 0, .12), 0 10px 30px rgba(0, 0, 0, .22);
+  --shadow-soft: 0 2px 3px rgba(0, 0, 0, .16), 0 24px 70px rgba(0, 0, 0, .38);
+}
+
+html { font-optical-sizing: auto; }
+body {
+  background: radial-gradient(circle at 8% -8%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 32rem), radial-gradient(circle at 92% 2%, color-mix(in srgb, var(--color-sky) 8%, transparent), transparent 30rem), var(--color-bg);
+}
+
+body, .content-page, .top-nav, .project-card, .profile-side, .profile-section, .profile-records, .profile-source, .blog-sidebar, .annotation-panel, .music-page__now, .track-list li, .music-dock {
+  transition: color 280ms var(--ease-in-out), background-color 280ms var(--ease-in-out), border-color 280ms var(--ease-in-out), box-shadow 280ms var(--ease-in-out);
+}
+
+h1, h2, h3, .profile-identity strong, .profile-brand strong { letter-spacing: -.025em; }
+:where(a, button, input, textarea, select, [tabindex]:not([tabindex='-1'])):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 48%, transparent);
+  outline-offset: 3px;
+}
+:where(button, a, .project-card, .track-list li) { -webkit-tap-highlight-color: transparent; }
+.settings-toggle:focus-visible,
+.quanweng-terminal__suggestion:focus-visible,
+.blog-tree button:focus-visible,
+.blog-search-results button:focus-visible,
+.blog-landing > div button:focus-visible,
+.music-controls button:focus-visible,
+.music-dock__close:focus-visible,
+.tech-detail-panel:focus-visible,
+.tech-detail-panel__close:focus-visible,
+.tech-search__clear:focus-visible,
+.tech-search__results button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 48%, transparent);
+  outline-offset: 3px;
+}
+
+:where(.primary-link, .secondary-link, .icon-button, .top-nav__brand, .top-nav__links a, .top-nav__links button, .settings-toggle, .profile-composer-tabs button, .project-card__links a, .blog-tree button, .blog-search-results button, .blog-landing > div button, .annotation-bubble, .blog-panel-close, .track-list button, .music-controls button, .music-dock__close, .tech-detail-panel__close, .tech-detail-panel__links a, .tech-detail-panel__cta, .tech-search__clear, .tech-search__results button) {
+  transition: color var(--duration-fast) ease-out, background-color var(--duration-fast) ease-out, border-color var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out, opacity var(--duration-fast) ease-out, transform var(--duration-fast) ease-out;
+}
+
+:where(.primary-link, .secondary-link, .icon-button, .top-nav__brand, .top-nav__links a, .top-nav__links button, .settings-toggle, .profile-composer-tabs button, .project-card__links a, .blog-tree button, .blog-search-results button, .blog-landing > div button, .annotation-bubble, .blog-panel-close, .track-list button, .music-controls button, .music-dock__close, .tech-detail-panel__close, .tech-detail-panel__links a, .tech-detail-panel__cta, .tech-search__clear, .tech-search__results button):active {
+  transform: scale(.97);
+  transition-duration: 80ms;
+}
+
+/* Floating chrome */
+.top-nav {
+  background: linear-gradient(180deg, color-mix(in srgb, #fff 18%, transparent), transparent), color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border-color: color-mix(in srgb, var(--color-border) 74%, #fff 26%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent), 0 12px 36px rgba(11, 42, 34, .11);
+  -webkit-backdrop-filter: blur(26px) saturate(1.35);
+  backdrop-filter: blur(26px) saturate(1.35);
+  will-change: transform;
+}
+:root[data-theme='dark'] .top-nav { border-color: rgba(223, 255, 245, .1); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 14px 42px rgba(0,0,0,.34); }
+.top-nav__brand span { background: linear-gradient(145deg, rgba(255,255,255,.22), transparent 48%), linear-gradient(135deg, var(--color-primary), var(--color-sky)); box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 5px 15px color-mix(in srgb, var(--color-primary) 24%, transparent); }
+.top-nav__brand:hover { transform: translateY(-1px); }
+.top-nav__links .is-active { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 9%, transparent); }
+.icon-button { background: linear-gradient(180deg, color-mix(in srgb, #fff 18%, transparent), transparent), color-mix(in srgb, var(--color-surface-strong) 68%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 32%, transparent); }
+.icon-button:hover { background-color: color-mix(in srgb, var(--color-primary) 9%, var(--color-surface-strong)); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 38%, transparent), 0 7px 18px color-mix(in srgb, var(--color-primary) 12%, transparent); }
+
+.settings-popover, .login-popover {
+  background: linear-gradient(180deg, color-mix(in srgb, #fff 12%, transparent), transparent 35%), color-mix(in srgb, var(--color-surface-strong) 86%, transparent);
+  border-color: color-mix(in srgb, var(--color-border) 76%, #fff 24%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 34%, transparent), var(--shadow-soft);
+  -webkit-backdrop-filter: blur(30px) saturate(1.45);
+  backdrop-filter: blur(30px) saturate(1.45);
+  transform-origin: calc(100% - 20px) -8px;
+  animation: materialize 280ms var(--ease-out) both;
+}
+.top-nav__brand-wrap .login-popover { transform-origin: 24px -8px; }
+.settings-toggle i::after { box-shadow: 0 2px 7px color-mix(in srgb, var(--color-text) 18%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 56%, transparent); }
+.settings-toggle.is-on i { box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 22%, transparent), 0 3px 10px color-mix(in srgb, var(--color-primary) 26%, transparent); }
+
+/* Hero */
+.home-hero::after { background: linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 12%, transparent), var(--color-bg) 94%), radial-gradient(ellipse at 50% 8%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 54%), radial-gradient(ellipse at 78% 28%, color-mix(in srgb, var(--color-sky) 8%, transparent), transparent 42%); }
+.home-hero__content { animation: hero-arrive var(--duration-slow) var(--ease-out) both; }
+.home-hero__eyebrow, .tech-section__intro p, .content-page__header > p, .blog-landing > p { letter-spacing: .13em; }
+.home-hero h1 { letter-spacing: -.042em; text-shadow: 0 1px 0 color-mix(in srgb, #fff 24%, transparent), 0 18px 52px color-mix(in srgb, var(--color-primary) 16%, transparent); }
+.home-hero__subtitle { letter-spacing: -.006em; }
+
+.primary-link { background: linear-gradient(180deg, rgba(255,255,255,.16), transparent 48%), linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-sky) 76%, var(--color-primary))); box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 9px 24px color-mix(in srgb, var(--color-primary) 20%, transparent); }
+.primary-link:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.34), 0 14px 34px color-mix(in srgb, var(--color-primary) 28%, transparent); }
+.secondary-link { background: linear-gradient(180deg, color-mix(in srgb, #fff 16%, transparent), transparent), var(--color-surface); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 34%, transparent), 0 7px 18px rgba(15,42,35,.055); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); }
+
+.quanweng-terminal { background: linear-gradient(145deg, color-mix(in srgb, #fff 12%, transparent), transparent 42%), color-mix(in srgb, var(--color-surface) 54%, transparent); border: 1px solid color-mix(in srgb, var(--color-border) 68%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent), 0 18px 48px color-mix(in srgb, var(--color-text) 8%, transparent); -webkit-backdrop-filter: blur(24px) saturate(1.24); backdrop-filter: blur(24px) saturate(1.24); animation: surface-rise 520ms 100ms var(--ease-out) both; }
+.quanweng-terminal:focus-within { border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border)); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 34%, transparent), 0 22px 56px color-mix(in srgb, var(--color-primary) 13%, transparent); }
+.quanweng-terminal__suggestions, .tech-search__results { transform-origin: 50% 100%; animation: materialize 220ms var(--ease-out) both; }
+.scroll-cue { background: linear-gradient(180deg, color-mix(in srgb, #fff 16%, transparent), transparent), var(--color-surface); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent), 0 12px 28px color-mix(in srgb, var(--color-primary) 16%, transparent); }
+
+/* Existing content surfaces: appearance only */
+.content-page { background: radial-gradient(circle at 12% 4%, var(--color-primary-soft), transparent 30rem), radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--color-sky) 7%, transparent), transparent 28rem), var(--color-bg); }
+.content-page__header { animation: surface-rise 480ms var(--ease-out) both; }
+.content-page__header h1, .blog-landing h1, .markdown-article > header h1 { letter-spacing: -.045em; }
+.project-card, .profile-side, .profile-section, .profile-records, .profile-source, .music-page__now, .track-list li, .blog-landing > div button { background: linear-gradient(155deg, color-mix(in srgb, #fff 13%, transparent), transparent 38%), var(--color-surface); border-color: color-mix(in srgb, var(--color-border) 82%, #fff 18%); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 28%, transparent), var(--shadow-subtle); -webkit-backdrop-filter: blur(18px) saturate(1.18); backdrop-filter: blur(18px) saturate(1.18); }
+.project-waterfall__lane, .profile-layout, .music-page__layout, .blog-landing > div { animation: surface-rise 520ms 60ms var(--ease-out) both; }
+.project-card:hover, .blog-landing > div button:hover { border-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-border)); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 38%, transparent), 0 20px 52px color-mix(in srgb, var(--color-primary) 13%, transparent); transform: translateY(-3px); }
+.project-card__cover img { transition: transform 700ms var(--ease-out), filter 400ms ease-out; }
+.project-card:hover .project-card__cover img { filter: saturate(1.06) contrast(1.02); transform: scale(1.025); }
+.project-card__links a:hover { background: var(--color-primary-soft); }
+
+.profile-form input, .profile-form textarea, .profile-form select, .profile-info-form input, .profile-info-form textarea, .login-popover input, .blog-search { box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent); transition: background-color var(--duration-fast) ease-out, border-color var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out; }
+:where(.profile-form input, .profile-form textarea, .profile-form select, .profile-info-form input, .profile-info-form textarea, .login-popover input, .blog-search):focus-within,
+:where(.profile-form input, .profile-form textarea, .profile-form select, .profile-info-form input, .profile-info-form textarea, .login-popover input):focus { border-color: color-mix(in srgb, var(--color-primary) 52%, var(--color-border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent), inset 0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent); outline: none; }
+
+/* Blog reading chrome */
+.blog-sidebar, .annotation-panel, .blog-page__mobile-bar { background: linear-gradient(180deg, color-mix(in srgb, #fff 10%, transparent), transparent 24%), color-mix(in srgb, var(--color-surface) 84%, var(--color-bg)); -webkit-backdrop-filter: blur(24px) saturate(1.25); backdrop-filter: blur(24px) saturate(1.25); }
+.blog-sidebar { box-shadow: 12px 0 42px color-mix(in srgb, var(--color-text) 4%, transparent); }
+.annotation-panel { box-shadow: -12px 0 42px color-mix(in srgb, var(--color-text) 4%, transparent); }
+.blog-search:focus-within { border-color: color-mix(in srgb, var(--color-primary) 44%, var(--color-border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.blog-tree button.is-active { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-primary) 72%, transparent); }
+.blog-reader { animation: reader-arrive 460ms var(--ease-out) both; }
+.markdown-article { letter-spacing: -.005em; }
+.markdown-article > header { border-bottom-color: color-mix(in srgb, var(--color-border) 74%, transparent); }
+.markdown-article pre { background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 35%), #0c1714; border: 1px solid rgba(205,255,239,.08); box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 16px 40px rgba(0,0,0,.14); }
+.commentable-block { transition: background-color var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out; }
+.commentable-block:hover { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-primary) 28%, transparent); }
+
+/* Music feedback */
+.music-page__vinyl { box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), inset 0 0 36px rgba(0,0,0,.62), 0 24px 70px color-mix(in srgb, var(--track-accent) 28%, transparent); }
+.track-list li { transition: color 280ms var(--ease-in-out), background-color 280ms var(--ease-in-out), border-color var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out, transform var(--duration-fast) ease-out; }
+.track-list li:hover { border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border)); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 24%, transparent), 0 12px 32px color-mix(in srgb, var(--color-primary) 10%, transparent); transform: translateY(-2px); }
+.track-list li:active { transform: scale(.992); }
+.track-list li.is-active { background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 48%), var(--color-surface); }
+.music-dock { background: linear-gradient(155deg, color-mix(in srgb, #fff 14%, transparent), transparent 40%), color-mix(in srgb, var(--color-surface) 90%, transparent); border-color: color-mix(in srgb, var(--color-border) 78%, #fff 22%); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 28%, transparent), 0 18px calc(42px + var(--music-energy) * 28px) color-mix(in srgb, var(--music-accent) calc(16% + var(--music-energy) * 32%), transparent); -webkit-backdrop-filter: blur(28px) saturate(1.36); backdrop-filter: blur(28px) saturate(1.36); }
+.music-controls button:hover { box-shadow: 0 6px 16px color-mix(in srgb, var(--color-primary) 12%, transparent); transform: translateY(-1px); }
+.music-controls .music-controls__play { box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 20px color-mix(in srgb, var(--color-primary) 24%, transparent); }
+
+/* Cosmic surfaces keep their identity */
+.tech-search__field, .tech-search__results, .tech-detail-panel, .tech-tier-legend span, .tech-detail-panel__tier { box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 20px 54px rgba(0,0,0,.32); }
+.tech-detail-panel { transform-origin: 100% 18%; animation: materialize 320ms var(--ease-out) both; }
+.tech-search__field:active, .tech-search__clear:active, .tech-detail-panel__close:active { transform: scale(.97); }
+.tech-cosmos-fallback__item { transition: border-color var(--duration-fast) ease-out, background-color var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out, transform var(--duration-fast) ease-out; }
+.tech-cosmos-fallback__item:hover { background: rgba(255,255,255,.075); transform: translateY(-2px); }
+
+@keyframes hero-arrive { from { opacity: 0; transform: translateY(14px) scale(.992); } to { opacity: 1; transform: none; } }
+@keyframes surface-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes reader-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes materialize { from { opacity: 0; filter: blur(6px); transform: translateY(-5px) scale(.975); } to { opacity: 1; filter: blur(0); transform: none; } }
+
+@media (hover: none) {
+  .project-card:hover, .blog-landing > div button:hover, .track-list li:hover, .tech-cosmos-fallback__item:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__content, .quanweng-terminal, .content-page__header, .project-waterfall__lane, .profile-layout, .music-page__layout, .blog-landing > div, .blog-reader, .settings-popover, .login-popover, .quanweng-terminal__suggestions, .tech-search__results, .tech-detail-panel { animation: none !important; filter: none !important; transform: none; }
+  .project-card__cover img, .project-card:hover .project-card__cover img { filter: none; transform: none; }
+  :where(.primary-link, .secondary-link, .icon-button, .top-nav__brand, .top-nav__links a, .top-nav__links button, .settings-toggle, .project-card, .track-list li, .music-controls button):active { transform: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .top-nav, .settings-popover, .login-popover, .quanweng-terminal, .secondary-link, .project-card, .profile-side, .profile-section, .profile-records, .profile-source, .music-page__now, .track-list li, .blog-landing > div button, .blog-sidebar, .annotation-panel, .blog-page__mobile-bar, .music-dock { background-color: var(--color-surface-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --color-border: rgba(20, 54, 46, .34); }
+  :root[data-theme='dark'] { --color-border: rgba(221, 246, 237, .34); }
+  .top-nav, .settings-popover, .login-popover, .project-card, .profile-side, .profile-section, .profile-records, .profile-source, .music-page__now, .track-list li, .blog-sidebar, .annotation-panel, .music-dock { background-color: var(--color-surface-strong); }
+}

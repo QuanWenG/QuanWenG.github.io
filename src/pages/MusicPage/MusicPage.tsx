@@ -1,5 +1,6 @@
 import { Disc3, Pause, Play } from 'lucide-react'
 import { usePreferences } from '../../app/providers/usePreferences'
+import { AmbientPixelField } from '../../components/effects/AmbientPixelField'
 import { MusicControls } from '../../components/music/MusicControls'
 import { MusicVisualizer } from '../../components/music/MusicVisualizer'
 import { formatTime } from '../../components/music/musicUtils'
@@ -13,6 +14,7 @@ export function MusicPage({ ui }: { ui: UiCopy }) {
   const player = useMusicPlayer()
   return (
     <section className="content-page music-page" aria-labelledby="music-title">
+      <AmbientPixelField variant="music" accent={player.currentTrack?.accentColor} />
       <header className="content-page__header">
         <p>PLAYLIST / AUDIO</p>
         <h1 id="music-title">{textByLocale(ui['music.title'], locale)}</h1>

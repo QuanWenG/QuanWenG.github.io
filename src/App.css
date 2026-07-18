@@ -531,6 +531,14 @@ body.snap-scroll {
   width: min(760px, 100%);
   margin: 0 auto 8px;
   text-align: center;
+  opacity: 1;
+  transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+}
+
+.tech-section__intro.is-dismissed {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .tech-section__intro h2 {
